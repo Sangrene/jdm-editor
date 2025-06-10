@@ -1,26 +1,22 @@
-import { ArrowDownOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import React from 'react';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 
 export const ArrowDiffIcon: React.FC<{ direction?: 'right' | 'down'; size?: 'small' | 'medium' }> = ({
   direction = 'right',
   size = 'small',
 }) => {
-  const fontSize = size === 'small' ? 12 : 16;
   if (direction === 'down')
     return (
-      <ArrowDownOutlined
+      <ArrowDownwardIcon
         className={'text-modified'}
-        style={{
-          fontSize,
-        }}
+        fontSize={size}
       />
     );
   return (
-    <ArrowRightOutlined
+    <ArrowRightIcon
       className={'text-modified'}
-      style={{
-        fontSize,
-      }}
+      fontSize={size}
     />
   );
 };

@@ -1,5 +1,3 @@
-import { WarningFilled } from '@ant-design/icons';
-import { Button, Tooltip, Typography } from 'antd';
 import _ from 'lodash';
 import React from 'react';
 import { P, match } from 'ts-pattern';
@@ -12,6 +10,8 @@ import { GraphNode } from '../graph-node';
 import { NodeColor } from './colors';
 import type { NodeSpecification } from './specification-types';
 import { NodeKind } from './specification-types';
+import { Button, Tooltip, Typography } from '@mui/material';
+import { Warning } from '@mui/icons-material';
 
 export type NodeFunctionData =
   | string
@@ -21,7 +21,7 @@ export type NodeFunctionData =
 
 export const functionSpecification: NodeSpecification<NodeFunctionData> = {
   type: NodeKind.Function,
-  icon: <Typography.Text style={{ color: 'white', fontSize: 'inherit' }}>JS</Typography.Text>,
+  icon: <Typography style={{ color: 'white', fontSize: 'inherit' }}>JS</Typography>,
   displayName: 'Function',
   documentationUrl: 'https://gorules.io/docs/user-manual/decision-modeling/decisions/functions',
   shortDescription: 'Javascript lambda',
@@ -93,7 +93,7 @@ export const functionSpecification: NodeSpecification<NodeFunctionData> = {
         isSelected={selected}
         helper={[kind === FunctionKind.Deprecated && <DeprecatedFunctionWarning size={16} />]}
         actions={[
-          <Button key='edit-function' type='text' onClick={() => graphActions.openTab(id)}>
+          <Button key='edit-function' variant='text' onClick={() => graphActions.openTab(id)}>
             Edit Function
           </Button>,
         ]}
@@ -122,6 +122,6 @@ const DeprecatedFunctionWarning: React.FC<{ size?: number }> = ({ size }) => (
     placement='top'
     title='Function v1 will be deprecated in one of the upcoming releases. To use a new Function, drag and drop a new Function Node and copy your logic. For more information click "Documentation". '
   >
-    <WarningFilled style={{ color: 'var(--grl-color-warning-text)', fontSize: size }} />
+    <Warning style={{ color: 'var(--grl-color-warning-text)', fontSize: size }} />
   </Tooltip>
 );

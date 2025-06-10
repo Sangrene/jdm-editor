@@ -1,10 +1,10 @@
 import { Editor } from '@monaco-editor/react';
-import { Modal, Spin, Typography, message, theme } from 'antd';
 import json5 from 'json5';
 import React, { useEffect, useState } from 'react';
 import toJsonSchema from 'to-json-schema';
 
 import { copyToClipboard } from '../../../helpers/utility';
+import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material';
 
 export type JsonToJsonSchemaDialogProps = {
   id?: string;
@@ -17,8 +17,6 @@ export type JsonToJsonSchemaDialogProps = {
 export const JsonToJsonSchemaDialog: React.FC<JsonToJsonSchemaDialogProps> = (props) => {
   const { isOpen, onDismiss, onSuccess, model } = props;
 
-  const { token } = theme.useToken();
-
   const [value, setValue] = useState<string>('');
 
   useEffect(() => {
@@ -28,29 +26,27 @@ export const JsonToJsonSchemaDialog: React.FC<JsonToJsonSchemaDialogProps> = (pr
   }, [isOpen]);
 
   return (
-    <Modal
-      title='Convert to JSON Schema'
-      open={isOpen}
-      destroyOnClose
-      onCancel={onDismiss}
-      width={540}
-      okText='Convert'
-      onOk={() => {
+    <Dialog  
+      open={!!isOpen}
+      onClose={onDismiss}
+      onSubmit={() => {
         try {
           onSuccess?.({
             schema: JSON.stringify(toJsonSchema(json5.parse(value)), null, 2),
             model: value,
           });
         } catch (e: any) {
-          message.error(e?.message);
+          // message.error(e?.message);
         }
       }}
     >
-      <Typography.Text>Type or paste JSON or JSON5 model here and covert it to JSON Schema</Typography.Text>
+      <DialogTitle>Convert to JSON Schema</DialogTitle>
+      <DialogContent>
+        <Typography>Type or paste JSON or JSON5 model here and covert it to JSON Schema</Typography>
       <Editor
-        loading={<Spin size='large' />}
+        loading={<CircularProgress size='large' />}
         language='javascript'
-        theme={token.mode === 'dark' ? 'vs-dark' : 'light'}
+        theme={'light'}
         height='400px'
         onChange={(val) => setValue(val || '')}
         value={value || ''}
@@ -71,9 +67,9 @@ export const JsonToJsonSchemaDialog: React.FC<JsonToJsonSchemaDialogProps> = (pr
             run: async (editor) => {
               try {
                 await copyToClipboard(JSON.stringify(json5.parse(editor.getValue())));
-                message.success('Copied to clipboard!');
+                // message.success('Copied to clipboard!');
               } catch {
-                message.error('Failed to copy to clipboard.');
+                // message.error('Failed to copy to clipboard.');
               }
             },
           });
@@ -109,6 +105,16 @@ export const JsonToJsonSchemaDialog: React.FC<JsonToJsonSchemaDialogProps> = (pr
           lineNumbersMinChars: 3,
         }}
       />
-    </Modal>
+      <DialogActions>
+        <Button onClick={onDismiss}>Cancel</Button>
+        <Button onClick={() => {
+          onSuccess?.({
+            schema: JSON.stringify(toJsonSchema(json5.parse(value)), null, 2),
+            model: value,
+          });
+        }}>Convert</Button>
+      </DialogActions>
+      </DialogContent>
+    </Dialog>
   );
 };

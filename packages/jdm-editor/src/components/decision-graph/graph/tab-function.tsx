@@ -1,5 +1,4 @@
 import type { Monaco } from '@monaco-editor/react';
-import { Spin } from 'antd';
 import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import { P, match } from 'ts-pattern';
 
@@ -12,6 +11,7 @@ import {
 } from '../context/dg-store.context';
 import { FunctionKind, useFunctionKind } from '../nodes/specifications/function.specification';
 import type { SimulationTrace, SimulationTraceDataFunction } from '../simulator/simulation.types';
+import { CircularProgress } from '@mui/material';
 
 const Function = React.lazy(async () => {
   const functionImport = await import('../../function');
@@ -66,7 +66,7 @@ export const TabFunction: React.FC<TabFunctionProps> = ({ id }) => {
   }, [monaco, onFunctionReady]);
 
   return (
-    <Suspense fallback={<Spin />}>
+    <Suspense fallback={<CircularProgress />}>
       <Function
         onMonacoReady={(monaco) => setMonaco(monaco)}
         value={kind === FunctionKind.Stable ? content.source : content}

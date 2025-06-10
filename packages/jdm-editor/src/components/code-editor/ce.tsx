@@ -2,7 +2,6 @@ import { bracketMatching } from '@codemirror/language';
 import { Compartment, EditorState, type Extension, Text } from '@codemirror/state';
 import { EditorView, placeholder as placeholderExt } from '@codemirror/view';
 import { createVariableType } from '@gorules/zen-engine-wasm';
-import { theme } from 'antd';
 import clsx from 'clsx';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { match } from 'ts-pattern';
@@ -16,7 +15,7 @@ import {
   updateStrictModeEffect,
   updateVariableTypeEffect,
 } from './extensions/types';
-import { zenExtensions, zenHighlightDark, zenHighlightLight } from './extensions/zen';
+import { zenExtensions, zenHighlightLight } from './extensions/zen';
 
 const updateListener = (onChange?: (data: string) => void, onStateChange?: (state: EditorState) => void) =>
   EditorView.updateListener.of((update) => {
@@ -28,7 +27,6 @@ const updateListener = (onChange?: (data: string) => void, onStateChange?: (stat
     onChange?.(update.state.doc.toString());
   });
 
-const editorTheme = (isDark = false) => (isDark ? zenHighlightDark : zenHighlightLight);
 
 type ExtensionParams = {
   type?: 'standard' | 'unary' | 'template';
@@ -80,7 +78,6 @@ export const CodeEditor = React.forwardRef<CodeEditorRef, CodeEditorProps>(
   ) => {
     const container = useRef<HTMLDivElement>(null);
     const codeMirror = useRef<EditorView>(null);
-    const { token } = theme.useToken();
 
     const compartment = useMemo(
       () => ({
@@ -108,7 +105,7 @@ export const CodeEditor = React.forwardRef<CodeEditorRef, CodeEditorProps>(
             bracketMatching(),
             compartment.zenExtension.of(zenExtensions({ type, lint })),
             compartment.updateListener.of(updateListener(onChange, onStateChange)),
-            compartment.theme.of(editorTheme(token.mode === 'dark')),
+            compartment.theme.of(zenHighlightLight),
             compartment.placeholder.of(placeholder ? placeholderExt(placeholder) : []),
             compartment.readOnly.of(EditorView.editable.of(!disabled)),
             compartment.userProvided.of(extension?.({ type }) ?? []),
@@ -152,9 +149,9 @@ export const CodeEditor = React.forwardRef<CodeEditorRef, CodeEditorProps>(
       }
 
       codeMirror.current.dispatch({
-        effects: compartment.theme.reconfigure(editorTheme(token.mode === 'dark')),
+        effects: compartment.theme.reconfigure(zenHighlightLight),
       });
-    }, [token.mode]);
+    }, []);
 
     useEffect(() => {
       if (!codeMirror.current) {

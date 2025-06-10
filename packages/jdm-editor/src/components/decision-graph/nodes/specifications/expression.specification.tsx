@@ -1,17 +1,12 @@
-import { ArrowRightOutlined, SyncOutlined } from '@ant-design/icons';
 import { VariableType } from '@gorules/zen-engine-wasm';
-import { Button, Form } from 'antd';
 import equal from 'fast-deep-equal/es6/react';
 import { produce } from 'immer';
 import _ from 'lodash';
 import { HashIcon } from 'lucide-react';
-import React from 'react';
 import type { z } from 'zod';
 
-import { useNodeType } from '../../../../helpers/node-type';
 import type { expressionNodeSchema } from '../../../../helpers/schema';
-import { DiffInput, DiffRadio, DiffSwitch } from '../../../shared';
-import { DiffCodeEditor } from '../../../shared/diff-ce';
+import { DiffCodeEditor, DiffInput, DiffRadio, DiffSwitch } from '../../../shared';
 import { useDecisionGraphActions, useDecisionGraphState, useNodeDiff } from '../../context/dg-store.context';
 import { type Diff, type DiffMetadata } from '../../dg-types';
 import { compareAndUnifyLists, compareStringFields } from '../../diff/comparison';
@@ -20,6 +15,9 @@ import { GraphNode } from '../graph-node';
 import type { NodeDecisionTableData } from './decision-table.specification';
 import type { NodeSpecification } from './specification-types';
 import { NodeKind } from './specification-types';
+import { ArrowRight, Sync } from '@mui/icons-material';
+import { Button, FormLabel } from '@mui/material';
+import { useNodeType } from '../../../../helpers/node-type';
 
 export type Expression = {
   id: string;
@@ -190,18 +188,19 @@ export const expressionSpecification: NodeSpecification<NodeExpressionData> = {
         name={data.name}
         isSelected={selected}
         actions={[
-          <Button key='edit-table' type='text' onClick={() => graphActions.openTab(id)}>
+          <Button key='edit-table' variant='text' onClick={() => graphActions.openTab(id)}>
             Edit Expression
           </Button>,
         ]}
-        helper={[executionMode === 'loop' && <SyncOutlined />, passThrough && <ArrowRightOutlined />]}
+        helper={[executionMode === 'loop' && <Sync />, passThrough && <ArrowRight />]}
       />
     );
   },
   renderSettings: ({ id }) => {
     const graphActions = useDecisionGraphActions();
-    const inputType = useNodeType(id);
     const { contentDiff } = useNodeDiff(id);
+    const inputType = useNodeType(id);
+
     const { fields, disabled } = useDecisionGraphState(({ decisionGraph, disabled }) => {
       const content = (decisionGraph?.nodes ?? []).find((node) => node.id === id)?.content as NodeDecisionTableData;
       return {
@@ -224,61 +223,56 @@ export const expressionSpecification: NodeSpecification<NodeExpressionData> = {
 
     return (
       <div className={'settings-form'}>
-        <Form.Item label='Passthrough'>
-          <DiffSwitch
+        <FormLabel>Passthrough</FormLabel>
+        <DiffSwitch
             disabled={disabled}
             size={'small'}
             displayDiff={contentDiff?.fields?.passThrough?.status === 'modified'}
             checked={fields?.passThrough}
             previousChecked={contentDiff?.fields?.passThrough?.previousValue}
-            onChange={(e) => updateNode({ passThrough: e })}
+            onChange={(_, checked) => updateNode({ passThrough: checked })}
           />
-        </Form.Item>
-        <Form.Item label='Input field'>
-          <DiffCodeEditor
-            variableType={inputType}
-            disabled={disabled}
-            displayDiff={contentDiff?.fields?.inputField?.status === 'modified'}
-            previousValue={contentDiff?.fields?.inputField?.previousValue}
-            style={{ fontSize: 12, lineHeight: '20px', width: '100%' }}
-            expectedVariableType={fields?.executionMode === 'loop' ? { Array: 'Any' } : undefined}
-            maxRows={4}
-            value={fields?.inputField ?? ''}
-            onChange={(val) => {
-              updateNode({ inputField: val?.trim() || null });
-            }}
-          />
-        </Form.Item>
-        <Form.Item label='Output path'>
-          <DiffInput
-            size={'small'}
-            readOnly={disabled}
-            displayDiff={contentDiff?.fields?.outputPath?.status === 'modified'}
-            previousValue={contentDiff?.fields?.outputPath?.previousValue}
-            value={fields?.outputPath ?? ''}
-            onChange={(e) => updateNode({ outputPath: e?.target?.value?.trim() || null })}
-          />
-        </Form.Item>
-        <Form.Item label='Execution mode'>
-          <DiffRadio
-            size={'small'}
-            disabled={disabled}
-            displayDiff={contentDiff?.fields?.executionMode?.status === 'modified'}
-            previousValue={contentDiff?.fields?.executionMode?.previousValue}
-            value={fields?.executionMode}
-            onChange={(e) => updateNode({ executionMode: e?.target?.value })}
-            options={[
-              {
-                value: 'single',
-                label: 'Single',
-              },
-              {
-                value: 'loop',
-                label: 'Loop',
-              },
-            ]}
-          />
-        </Form.Item>
+        <FormLabel>Input field</FormLabel>
+        <DiffCodeEditor
+          variableType={inputType}
+          disabled={disabled}
+          displayDiff={contentDiff?.fields?.inputField?.status === 'modified'}
+          previousValue={contentDiff?.fields?.inputField?.previousValue}
+          style={{ fontSize: 12, lineHeight: '20px', width: '100%' }}
+          expectedVariableType={fields?.executionMode === 'loop' ? { Array: 'Any' } : undefined}
+          maxRows={4}
+          value={fields?.inputField ?? ''}
+          onChange={(val) => updateNode({ inputField: val?.trim() || null })}
+        />
+        
+        <DiffInput
+          label='Output path'
+          sx={{mt: 1}}
+          size={'small'}
+          disabled={disabled}
+          displayDiff={contentDiff?.fields?.outputPath?.status === 'modified'}
+          previousValue={contentDiff?.fields?.outputPath?.previousValue}
+          value={fields?.outputPath ?? ''}
+          onChange={(e) => updateNode({ outputPath: e?.target?.value?.trim() || null })}
+        />     
+        <FormLabel>Execution mode</FormLabel>
+        <DiffRadio
+          radioOptions={{size: 'small', disabled: disabled}}
+          displayDiff={contentDiff?.fields?.executionMode?.status === 'modified'}
+          previousValue={contentDiff?.fields?.executionMode?.previousValue}
+          value={fields?.executionMode}
+          onChange={(e) => updateNode({ executionMode: e?.target?.value as 'single' | 'loop' })}
+          options={[
+            {
+              value: 'single',
+              label: 'Single',
+            },
+            {
+              value: 'loop',
+              label: 'Loop',
+            },
+          ]}
+        />
       </div>
     );
   },

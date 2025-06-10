@@ -1,4 +1,4 @@
-import { Typography } from 'antd';
+import { Typography } from '@mui/material';
 import clsx from 'clsx';
 import React, { useEffect, useRef, useState } from 'react';
 
@@ -23,7 +23,7 @@ export const TextEdit: React.FC<TextEditProps> = ({ className, value, onChange, 
   return (
     <div className={clsx('grl-text-edit', className)} {...props}>
       {!contentEditing && (
-        <Typography.Text
+        <Typography
           className={clsx('grl-text-edit__text')}
           onClick={() => {
             if (!disabled) {
@@ -32,7 +32,7 @@ export const TextEdit: React.FC<TextEditProps> = ({ className, value, onChange, 
           }}
         >
           {value}
-        </Typography.Text>
+        </Typography>
       )}
       {contentEditing && (
         <input

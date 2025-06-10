@@ -1,6 +1,4 @@
-import { DownOutlined } from '@ant-design/icons';
 import { type VariableType } from '@gorules/zen-engine-wasm';
-import { Button, Checkbox, Form, Typography, theme } from 'antd';
 import type { DragDropManager } from 'dnd-core';
 import React, { useState } from 'react';
 import type { XYPosition } from 'reactflow';
@@ -11,6 +9,8 @@ import { useDecisionGraphActions, useDecisionGraphState } from '../../context/dg
 import { type DecisionNode } from '../../dg-types';
 import { GraphNode } from '../graph-node';
 import type { InferTypeData, MinimalNodeProps, MinimalNodeSpecification } from '../specifications/specification-types';
+import { ArrowDownward } from '@mui/icons-material';
+import { Button, Typography, Checkbox, Box, FormLabel } from '@mui/material';
 
 type CustomDecisionNode<T> = {
   id: string;
@@ -128,7 +128,6 @@ export const createJdmNode = <
       ? n.renderNode
       : ({ id, specification, data, selected }) => {
           const [open, setOpen] = useState(false);
-          const { token } = theme.useToken();
           const { updateNode } = useDecisionGraphActions();
           const node = useDecisionGraphState((state) => (state.decisionGraph?.nodes || []).find((n) => n.id === id));
           const nodeData = node?.content?.config;
@@ -146,11 +145,11 @@ export const createJdmNode = <
                   ? [
                       <Button
                         key='edit-table'
-                        type='text'
+                        variant='text'
                         style={{ marginLeft: 'auto', transform: open ? 'rotate(180deg)' : undefined }}
                         onClick={() => setOpen((o) => !o)}
                       >
-                        <DownOutlined />
+                        <ArrowDownward />
                       </Button>,
                     ]
                   : undefined
@@ -173,7 +172,7 @@ export const createJdmNode = <
                       .with({ control: 'text' }, () => <CodeEditor type='template' />)
                       .with({ control: 'bool' }, () => (
                         <Checkbox>
-                          <Typography.Text style={{ fontSize: token.fontSizeSM }}>{label}</Typography.Text>
+                          <Typography >{label}</Typography>
                         </Checkbox>
                       ))
                       .exhaustive();
@@ -181,7 +180,7 @@ export const createJdmNode = <
                     const outerLabel = match({ control })
                       .with({ control: 'bool' }, () => null)
                       .otherwise(() => (
-                        <Typography.Text style={{ fontSize: token.fontSizeSM }}>{label}</Typography.Text>
+                        <Typography>{label}</Typography>
                       ));
 
                     const valuePropName = match({ control })
@@ -189,17 +188,17 @@ export const createJdmNode = <
                       .otherwise(() => undefined);
 
                     return (
-                      <Form.Item
+                      <Box
                         key={name}
                         name={name as string}
-                        label={outerLabel}
                         valuePropName={valuePropName}
                         style={{
                           marginBottom: 4,
                         }}
                       >
+                        <FormLabel>{outerLabel}</FormLabel>
                         {formItem}
-                      </Form.Item>
+                      </Box>
                     );
                   })}
                 </Form>

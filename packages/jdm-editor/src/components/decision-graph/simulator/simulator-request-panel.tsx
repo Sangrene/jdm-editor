@@ -1,6 +1,5 @@
-import { InfoCircleOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { VariableType } from '@gorules/zen-engine-wasm';
-import { Button, Tooltip, Typography, notification } from 'antd';
+import { Tooltip, Typography, notification } from 'antd';
 import json5 from 'json5';
 import React, { useEffect, useState } from 'react';
 
@@ -8,6 +7,9 @@ import { isWasmAvailable } from '../../../helpers/wasm';
 import { NodeTypeKind, useDecisionGraphRaw } from '../context/dg-store.context';
 import type { DecisionGraphType } from '../dg-types';
 import { SimulatorEditor } from './simulator-editor';
+import InfoIcon from '@mui/icons-material/Info';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import { Button } from '@mui/material';
 
 const requestTooltip =
   'Your business context that enters through the Request node, starting the decision process. Supply JSON or JSON5 format.';
@@ -55,7 +57,7 @@ export const SimulatorRequestPanel: React.FC<SimulatorRequestPanelProps> = ({
         <Tooltip title={requestTooltip}>
           <Typography.Text style={{ fontSize: 13, cursor: 'help' }}>
             Request
-            <InfoCircleOutlined style={{ fontSize: 10, marginLeft: 4, opacity: 0.5, verticalAlign: 'text-top' }} />
+            <InfoIcon style={{ fontSize: 10, marginLeft: 4, opacity: 0.5, verticalAlign: 'text-top' }} />
           </Typography.Text>
         </Tooltip>
         <div className={'grl-dg__simulator__section__bar__actions'}>
@@ -69,9 +71,9 @@ export const SimulatorRequestPanel: React.FC<SimulatorRequestPanelProps> = ({
             >
               <Button
                 size={'small'}
-                type={'primary'}
+                variant='contained'
                 loading={loading}
-                icon={<PlayCircleOutlined />}
+                startIcon={<PlayArrowIcon />}
                 disabled={!hasInputNode}
                 onClick={() => {
                   try {

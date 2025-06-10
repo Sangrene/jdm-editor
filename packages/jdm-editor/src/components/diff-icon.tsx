@@ -1,6 +1,8 @@
-import { DragOutlined, MinusSquareOutlined, PlusSquareOutlined } from '@ant-design/icons';
 import React from 'react';
 import { match } from 'ts-pattern';
+import PanToolIcon from '@mui/icons-material/PanTool';
+import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
+import AddBoxIcon from '@mui/icons-material/AddBox';
 
 import type { DiffStatus } from './decision-graph/dg-types';
 
@@ -11,7 +13,7 @@ export const DiffIcon: React.FC<
 > = ({ status, ...rest }) => {
   return match(status)
     .with('removed', () => (
-      <MinusSquareOutlined
+      <IndeterminateCheckBoxIcon
         {...rest}
         style={{
           color: 'var(--grl-color-error)',
@@ -20,7 +22,7 @@ export const DiffIcon: React.FC<
       />
     ))
     .with('added', () => (
-      <PlusSquareOutlined
+      <AddBoxIcon
         {...rest}
         style={{
           color: 'var(--grl-color-success)',
@@ -54,7 +56,7 @@ export const DiffIcon: React.FC<
       </span>
     ))
     .with('moved', () => (
-      <DragOutlined
+      <PanToolIcon
         {...rest}
         style={{
           color: 'var(--grl-color-info)',

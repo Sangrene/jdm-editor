@@ -45,6 +45,8 @@
     "@codemirror/lint": "^6.8.5",
     "@codemirror/state": "^6.5.2",
     "@codemirror/view": "^6.36.5",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@gorules/lezer-zen": "workspace:*",
     "@gorules/lezer-zen-template": "workspace:*",
     "@gorules/zen-engine-wasm": "workspace:*",
@@ -52,9 +54,11 @@
     "@lezer/highlight": "^1.2.1",
     "@lezer/lr": "^1.4.2",
     "@monaco-editor/react": "^4.7.0",
+    "@mui/icons-material": "^7.1.1",
+    "@mui/material": "^7.1.1",
     "@tanstack/react-table": "8.21.3",
     "@tanstack/react-virtual": "3.13.6",
-    "antd": "5.21.2",
+    "antd": "5.25.4",
     "clsx": "2.1.1",
     "dnd-core": "^16.0.1",
     "exceljs": "^4.4.0",
@@ -64,6 +68,7 @@
     "json5": "^2.2.3",
     "lodash": "^4.17.21",
     "lucide-react": "^0.488.0",
+    "material-ui-popup-state": "^5.3.6",
     "monaco-editor": "^0.52.2",
     "re-resizable": "^6.11.2",
     "react-dnd": "^16.0.1",
@@ -96,13 +101,13 @@
     "@trivago/prettier-plugin-sort-imports": "5.2.2",
     "@types/big.js": "^6.2.2",
     "@types/lodash": "^4.17.16",
-    "@types/react": "18.3.11",
-    "@types/react-dom": "19.1.2",
+    "@types/react": "19.1.0",
+    "@types/react-dom": "19.1.0",
     "@types/to-json-schema": "^0.2.4",
     "@vitejs/plugin-react-swc": "^3.8.1",
     "dayjs": "^1.11.13",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
     "sass": "^1.86.3",
     "storybook": "8.6.12",
     "storybook-dark-mode": "^4.0.2",
@@ -123,7 +128,7 @@
     ]
   },
   "peerDependencies": {
-    "react": ">= 18",
-    "react-dom": ">= 18"
+    "react": ">= 19",
+    "react-dom": ">= 19"
   }
 }

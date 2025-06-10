@@ -1,5 +1,4 @@
-import { CloseOutlined, MoreOutlined } from '@ant-design/icons';
-import { Button, Dropdown, type MenuProps, Typography } from 'antd';
+import { Button, ListItemIcon, ListItemText, Menu, MenuItem, Typography } from '@mui/material';
 import clsx from 'clsx';
 import React from 'react';
 import { Transition } from 'transition-hook';
@@ -10,6 +9,10 @@ import { TextEdit } from '../../text-edit';
 import './decision-node.scss';
 import { GraphCard } from './graph-card';
 import { NodeColor } from './specifications/colors';
+import { bindMenu, bindTrigger } from 'material-ui-popup-state';
+import PopupState from 'material-ui-popup-state';
+import { Close } from '@mui/icons-material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 export type DecisionNodeProps = {
   name?: string;
@@ -24,7 +27,7 @@ export type DecisionNodeProps = {
   diffStatus?: 'removed' | 'added' | 'modified' | 'moved';
   noBodyPadding?: boolean;
   color?: 'primary' | 'secondary' | string;
-  menuItems?: MenuProps['items'];
+  menuItems?: Array<{label: React.ReactNode, key: string, onClick?: () => void, disabled?: boolean, icon?: React.ReactNode}>;
   onNameChange?: (name: string) => void;
   compactMode?: boolean;
   listMode?: boolean;
@@ -88,19 +91,40 @@ export const DecisionNode: React.FC<DecisionNodeProps> = ({
               ))}
           {status === 'error' && (
             <div className={clsx('grl-dn__status-icon', `grl-dn__status-icon--${status}`)}>
-              <CloseOutlined />
+              <Close />
             </div>
           )}
           <DiffIcon status={diffStatus} style={{ fontSize: 16 }} />
         </div>
         <div className={clsx('grl-dn__header', compactMode && 'compact')}>
-          <div className={clsx('grl-dn__header__icon', compactMode && 'compact')}>{icon}</div>
+          {!!icon && <div className={clsx('grl-dn__header__icon', compactMode && 'compact')}>{icon}</div>}
           <TextEdit onChange={onNameChange} disabled={disabled} value={name} />
           {menuItems.length > 0 && (
             <div className={clsx('grl-dn__header__actions', 'nodrag')}>
-              <Dropdown trigger={['click']} overlayStyle={{ minWidth: 250 }} menu={{ items: menuItems }}>
-                <Button type='text' size={'small'} icon={<MoreOutlined />} />
-              </Dropdown>
+              <PopupState variant="popover">
+                {(popupState) => (
+                  <React.Fragment>
+                    <Button size='small' variant="text" {...bindTrigger(popupState)}>
+                      <MoreVertIcon fontSize='small' />
+                    </Button>
+                    <Menu {...bindMenu(popupState)}>
+                      {menuItems.filter((item) => !!item).map((item) => (
+                        <MenuItem key={item.key} onClick={() => {
+                          item.onClick?.();
+                          popupState.close();
+                        }}>
+                          {!!item.icon && 
+                            <ListItemIcon>
+                              {item.icon}
+                            </ListItemIcon>
+                          }
+                          <ListItemText>{item.label}</ListItemText>
+                        </MenuItem>
+                      ))}
+                    </Menu>
+                  </React.Fragment>
+                )}
+              </PopupState>
             </div>
           )}
         </div>
@@ -134,12 +158,12 @@ export const DecisionNode: React.FC<DecisionNodeProps> = ({
             >
               <div className='grl-dn__details'>
                 <div className='grl-dn__details__header'>
-                  <Typography.Text className='grl-dn__details__header__text'>{detailsTitle}</Typography.Text>
+                  <Typography className='grl-dn__details__header__text'>{detailsTitle}</Typography>
                   <Button
-                    type={'text'}
-                    size={'small'}
+                    variant='text'
+                    size='small'
                     className='grl-dn__details__header__close'
-                    icon={<CloseOutlined style={{ fontSize: 8 }} />}
+                    startIcon={<Close sx={{ fontSize: 8 }} />}
                     onClick={onDetailsClose}
                   />
                 </div>

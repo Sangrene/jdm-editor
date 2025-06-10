@@ -1,15 +1,13 @@
-import { PlusCircleOutlined } from '@ant-design/icons';
+
 import type { ColumnDef, Table as ReactTable } from '@tanstack/react-table';
 import { getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { Button, Typography, theme } from 'antd';
 import clsx from 'clsx';
 import equal from 'fast-deep-equal/es6/react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { z } from 'zod';
 
 import { useDecisionTableActions, useDecisionTableListeners, useDecisionTableState } from '../context/dt-store.context';
-import { TableContextMenu } from './table-context-menu';
 import { TableDefaultCell } from './table-default-cell';
 import {
   TableHeadCellInput,
@@ -19,6 +17,9 @@ import {
 } from './table-head-cell';
 import { TableHeadRow } from './table-head-row';
 import { TableRow } from './table-row';
+import { Button, Menu, MenuItem, Typography } from '@mui/material';
+import { SpacedText } from '../../spaced-text';
+import { Add } from '@mui/icons-material';
 
 export type TableProps = {
   id?: string;
@@ -44,7 +45,6 @@ const loadColumnSizing = (id?: string) => {
 };
 
 export const Table: React.FC<TableProps> = ({ id, maxHeight }) => {
-  const { token } = theme.useToken();
 
   const tableActions = useDecisionTableActions();
   const { cellRenderer } = useDecisionTableListeners(({ cellRenderer }) => ({ cellRenderer }));
@@ -115,7 +115,7 @@ export const Table: React.FC<TableProps> = ({ id, maxHeight }) => {
         accessorKey: '_description',
         header: () => (
           <div className={'head-cell'}>
-            <Typography.Text className='grl-dt-text-primary'>Description</Typography.Text>
+            <Typography className='grl-dt-text-primary'>Description</Typography>
           </div>
         ),
         minSize: minColWidth,
@@ -188,7 +188,6 @@ export const Table: React.FC<TableProps> = ({ id, maxHeight }) => {
       ref={tableContainerRef}
       className='grl-dt__container'
       style={{ maxHeight, overflowY: 'auto' }}
-      data-theme={token.mode}
     >
       <StyledTable width={table.getCenterTotalSize()}>
         <thead>
@@ -209,18 +208,16 @@ export const Table: React.FC<TableProps> = ({ id, maxHeight }) => {
               <TableHeadRow key={headerGroup.id} headerGroup={headerGroup} />
             ))}
         </thead>
-        <TableContextMenu>
-          <TableBody tableContainerRef={tableContainerRef} table={table} />
-        </TableContextMenu>
+        <TableBody tableContainerRef={tableContainerRef} table={table} />
         <tfoot>
           <tr>
             <td colSpan={inputs.length + outputs.length + 2}>
               <div className='grl-dt__add-row-wrapper'>
                 <Button
-                  className='grl-dt__add-row'
-                  type='link'
                   disabled={disabled}
-                  icon={<PlusCircleOutlined />}
+                  size='small'
+                  variant='text'
+                  startIcon={<Add />}
                   onClick={() => tableActions.addRowBelow()}
                 >
                   Add row
@@ -246,6 +243,7 @@ const TableBody = React.forwardRef<HTMLTableSectionElement, TableBodyProps>(
       disabled,
       cursor,
     }));
+    const [contextMenuOpen, setContextMenuOpen] = useState<HTMLTableCellElement | null>(null);
 
     const { rows } = table.getRowModel();
     const virtualizer = useVirtualizer({
@@ -277,7 +275,32 @@ const TableBody = React.forwardRef<HTMLTableSectionElement, TableBodyProps>(
         if (cursor) tableActions.removeRow(cursor.y);
       }
     }, []);
-
+    const menuItems = [
+      {
+        key: 'addRowAbove',
+        label: <SpacedText left='Add row above' />,
+        onClick: () => {
+          if (cursor) tableActions.addRowAbove(cursor?.y);
+        },
+      },
+      {
+        key: 'addRowBelow',
+        label: <SpacedText left='Add row below' />,
+        onClick: () => {
+          if (cursor) tableActions.addRowBelow(cursor?.y);
+        },
+      },
+      {
+        type: 'divider',
+      },
+      {
+        key: 'remove',
+        label: <SpacedText left='Remove row' />,
+        onClick: () => {
+          if (cursor) tableActions.removeRow(cursor?.y);
+        },
+      },
+    ];
     return (
       <tbody ref={ref} {...props} onKeyDown={onKeyDown}>
         {paddingTop > 0 && (
@@ -295,6 +318,10 @@ const TableBody = React.forwardRef<HTMLTableSectionElement, TableBodyProps>(
               row={row}
               disabled={disabled}
               onResize={virtualizer.measureElement}
+              onContextMenu={(e) => {
+                e.preventDefault();
+                setContextMenuOpen(e.currentTarget);
+              }}
             />
           );
         })}
@@ -303,6 +330,17 @@ const TableBody = React.forwardRef<HTMLTableSectionElement, TableBodyProps>(
             <td style={{ height: `${paddingBottom}px` }} />
           </tr>
         )}
+          <Menu open={!!contextMenuOpen} onClose={() => setContextMenuOpen(null)} anchorEl={contextMenuOpen || undefined}>
+            {menuItems.map((item) => (
+              <MenuItem key={item.key} onClick={() => {
+                item.onClick?.();
+                setContextMenuOpen(null);
+              }}>
+                {item.label}
+              </MenuItem>
+            ))}
+          </Menu>
+        
       </tbody>
     );
   },

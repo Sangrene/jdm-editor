@@ -1,4 +1,3 @@
-import { message } from 'antd';
 import { type RefObject, useCallback, useMemo } from 'react';
 import type { Node, ReactFlowInstance, XYPosition } from 'reactflow';
 
@@ -59,9 +58,9 @@ export const useGraphClipboard = (
         };
 
         await copyToClipboard(JSON.stringify(clipboardData));
-        message.success('Copied to clipboard!');
+        // message.success('Copied to clipboard!');
       } catch (e: any) {
-        message.error(e.message);
+        // message.error(e.message);
       }
     },
     [raw],
@@ -146,7 +145,7 @@ export const useGraphClipboard = (
 
       graphActions.addNodes(nodes);
       graphActions.addEdges(edges);
-      message.success('Pasted from clipboard!');
+      // message.success('Pasted from clipboard!');
 
       if (anchor) {
         try {
@@ -156,7 +155,7 @@ export const useGraphClipboard = (
         }
       }
     } catch {
-      message.error('Failed to paste from clipboard');
+      // message.error('Failed to paste from clipboard');
     }
   }, [reactFlow, wrapper]);
 

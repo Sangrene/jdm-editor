@@ -1,6 +1,4 @@
-import { theme } from 'antd';
-import type { DragDropManager } from 'dnd-core';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
@@ -10,7 +8,7 @@ import { DecisionTableProvider } from './context/dt-store.context';
 import { DecisionTableDialogs } from './dialog/dt-dialogs';
 import { DecisionTableCommandBar } from './dt-command-bar';
 import type { DecisionTableEmptyType } from './dt-empty';
-import { DecisionTableEmpty } from './dt-empty';
+import { DecisionTableEmpty } from './dt-empty';  
 import './dt.scss';
 import { Table } from './table/table';
 
@@ -18,7 +16,6 @@ export type DecisionTableProps = {
   id?: string;
   tableHeight: string | number;
   mountDialogsOnBody?: boolean;
-  manager?: DragDropManager;
 } & DecisionTableContextProps &
   DecisionTableEmptyType;
 
@@ -26,10 +23,8 @@ export const DecisionTable: React.FC<DecisionTableProps> = ({
   id,
   tableHeight,
   mountDialogsOnBody = false,
-  manager,
   ...props
 }) => {
-  const { token } = theme.useToken();
 
   const [_, setMounted] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -40,25 +35,10 @@ export const DecisionTable: React.FC<DecisionTableProps> = ({
 
   const getContainer = () => ref.current as HTMLElement;
 
-  const dndProps = useMemo(() => {
-    if (manager) {
-      return {
-        manager,
-      };
-    }
-
-    return {
-      backend: HTML5Backend,
-      options: {
-        rootElement: ref.current,
-      },
-    };
-  }, [ref.current, manager]);
-
   return (
-    <div ref={ref} className={'grl-dt'} style={{ background: token.colorBgElevated }}>
+    <div ref={ref} className={'grl-dt'}>
       {ref.current && (
-        <DndProvider {...dndProps}>
+        <DndProvider backend={HTML5Backend}>
           <DecisionTableProvider>
             <DecisionTableDialogProvider getContainer={mountDialogsOnBody ? undefined : getContainer}>
               <DecisionTableCommandBar />

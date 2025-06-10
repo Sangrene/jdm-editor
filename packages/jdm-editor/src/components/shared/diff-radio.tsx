@@ -1,28 +1,22 @@
-import type { RadioGroupProps } from 'antd';
-import { Radio } from 'antd';
-import clsx from 'clsx';
+import { FormControlLabel, Radio, RadioGroup, type RadioProps, type RadioGroupProps } from '@mui/material';
 import React from 'react';
 
 export type DiffRadioProps = {
   previousValue?: string;
   displayDiff?: boolean;
+  options?: {label: string, value: string}[];
+  radioOptions?: RadioProps;
 } & RadioGroupProps;
 
-export const DiffRadio: React.FC<DiffRadioProps> = ({ displayDiff, previousValue, options, ...rest }) => {
+export const DiffRadio: React.FC<DiffRadioProps> = ({ options, radioOptions, ...rest }) => {
   return (
-    <Radio.Group {...rest}>
-      {(options || []).map((option: any) => (
-        <Radio
-          value={option.value}
-          key={option.value}
-          className={clsx([
-            displayDiff && option.value === previousValue && 'text-removed',
-            displayDiff && option.value === rest.value && 'text-added',
-          ])}
-        >
-          {option.label}
-        </Radio>
-      ))}
-    </Radio.Group>
+    <RadioGroup
+    {...rest}
+  >
+    {(options || []).map((option) => (
+      <FormControlLabel key={option.value} value={option.value} control={<Radio {...radioOptions} size='small'/>} label={option.label} />
+    ))}
+  </RadioGroup>
+
   );
 };

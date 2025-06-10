@@ -1,8 +1,7 @@
 import type { VariableType } from '@gorules/zen-engine-wasm';
 import type { Row } from '@tanstack/react-table';
-import { Typography } from 'antd';
 import clsx from 'clsx';
-import { GripVerticalIcon } from 'lucide-react';
+import DragHandleIcon from '@mui/icons-material/DragHandle';
 import React, { useRef, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 
@@ -13,6 +12,7 @@ import { DiffAutosizeTextArea } from '../shared';
 import { DiffCodeEditor } from '../shared/diff-ce';
 import type { ExpressionEntry } from './context/expression-store.context';
 import { useExpressionStore } from './context/expression-store.context';
+import { Typography } from '@mui/material';
 
 export type ExpressionItemProps = {
   expression: ExpressionEntry;
@@ -85,7 +85,7 @@ export const ExpressionItem: React.FC<ExpressionItemProps> = ({ expression, inde
               }}
             />
           ) : (
-            <GripVerticalIcon size={10} />
+            <DragHandleIcon fontSize='small' />
           )}
         </div>
       </div>
@@ -171,9 +171,9 @@ const ResultOverlay: React.FC<{ expression: ExpressionEntry }> = ({ expression }
 
   return (
     <div className='expression-list-item__resultOverlay'>
-      <Typography.Text ellipsis={{ tooltip: trace }} style={{ maxWidth: 60, overflow: 'hidden' }}>
+      <Typography  sx={{ maxWidth: 60, overflow: 'hidden', textOverflow: 'ellipsis' }}>
         = {trace as string}
-      </Typography.Text>
+      </Typography>
     </div>
   );
 };

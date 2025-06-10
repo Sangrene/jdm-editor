@@ -40,7 +40,7 @@ export const DecisionGraphWrapper = React.memo(
       <>
         <GraphSideToolbar />
         <div className={'grl-dg__graph'}>
-          <GraphTabs disabled={disableTabs} tabBarExtraContent={tabBarExtraContent} />
+          <GraphTabs />
           <Graph
             ref={ref}
             className={clsx([!hasActiveNode && 'active'])}

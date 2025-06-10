@@ -1,5 +1,4 @@
 import { Variable } from '@gorules/zen-engine-wasm';
-import type { DragDropManager } from 'dnd-core';
 import React, { useMemo } from 'react';
 import { P, match } from 'ts-pattern';
 
@@ -14,10 +13,9 @@ import type { SimulationTrace, SimulationTraceDataTable } from '../simulator/sim
 
 export type TabDecisionTableProps = {
   id: string;
-  manager?: DragDropManager;
 };
 
-export const TabDecisionTable: React.FC<TabDecisionTableProps> = ({ id, manager }) => {
+export const TabDecisionTable: React.FC<TabDecisionTableProps> = ({ id }) => {
   const graphActions = useDecisionGraphActions();
   const nodeType = useNodeType(id, { attachGlobals: false });
   const { nodeName, nodeTrace, inputData, nodeSnapshot } = useDecisionGraphState(({ simulate, decisionGraph }) => ({
@@ -78,7 +76,6 @@ export const TabDecisionTable: React.FC<TabDecisionTableProps> = ({ id, manager 
       name={nodeName}
       tableHeight={'100%'}
       value={content as any}
-      manager={manager}
       disabled={disabled}
       configurable={configurable}
       inputData={computedType}

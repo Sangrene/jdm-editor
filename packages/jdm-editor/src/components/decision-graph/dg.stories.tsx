@@ -1,4 +1,3 @@
-import { ApartmentOutlined, ApiOutlined, LeftOutlined, PlayCircleOutlined, RightOutlined } from '@ant-design/icons';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Select } from 'antd';
 import json5 from 'json5';
@@ -22,6 +21,11 @@ import { GraphNode } from './nodes/graph-node';
 import type { NodeSpecification } from './nodes/specifications/specification-types';
 import { GraphSimulator } from './simulator/dg-simulator';
 import type { Simulation } from './simulator/simulation.types';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import ApartmentIcon from '@mui/icons-material/Apartment';
+import RightIcon from '@mui/icons-material/ArrowRight';
+import LeftIcon from '@mui/icons-material/ArrowLeft';
+import ApiIcon from '@mui/icons-material/Api';
 
 const meta: Meta<typeof DecisionGraph> = {
   /* 👇 The title prop is optional.
@@ -103,7 +107,7 @@ const components: NodeSpecification[] = [
     type: 'decisionNode',
     displayName: 'Decision',
     shortDescription: 'Execute decisions',
-    icon: <ApartmentOutlined />,
+    icon: <ApartmentIcon />,
     generateNode: () => ({ name: 'myDecision' }),
     renderNode: ({ specification, id, selected, data }) => (
       <GraphNode id={id} specification={specification} name={data.name} isSelected={selected}>
@@ -147,14 +151,14 @@ const customNodes = [
     kind: 'rightHandleNode',
     group: 'integrations',
     displayName: 'Right Handle',
-    icon: <RightOutlined />,
+    icon: <RightIcon />,
     handleLeft: false,
   }),
   createJdmNode({
     kind: 'leftHandleNode',
     group: 'integrations',
     displayName: 'Left Handle',
-    icon: <LeftOutlined />,
+    icon: <LeftIcon />,
     handleRight: false,
   }),
   createJdmNode({
@@ -162,7 +166,7 @@ const customNodes = [
     group: 'inputs',
     displayName: 'Inputs Form',
     shortDescription: 'With inputs map form',
-    icon: <ApiOutlined />,
+    icon: <ApiIcon />,
     inputs: [
       {
         control: 'text',
@@ -360,7 +364,7 @@ const DecisionGraphWithSimulator: React.FC = () => {
       {
         id: 'simulator',
         title: 'Simulator',
-        icon: <PlayCircleOutlined />,
+        icon: <PlayArrowIcon />,
         hideHeader: true,
         renderPanel: () => (
           <GraphSimulator
