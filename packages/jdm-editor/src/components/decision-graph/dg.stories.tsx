@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Select } from 'antd';
 import json5 from 'json5';
 import React, { useMemo, useRef, useState } from 'react';
 import { P, match } from 'ts-pattern';
@@ -26,6 +25,7 @@ import ApartmentIcon from '@mui/icons-material/Apartment';
 import RightIcon from '@mui/icons-material/ArrowRight';
 import LeftIcon from '@mui/icons-material/ArrowLeft';
 import ApiIcon from '@mui/icons-material/Api';
+import { Select } from '@mui/material';
 
 const meta: Meta<typeof DecisionGraph> = {
   /* 👇 The title prop is optional.
@@ -111,7 +111,7 @@ const components: NodeSpecification[] = [
     generateNode: () => ({ name: 'myDecision' }),
     renderNode: ({ specification, id, selected, data }) => (
       <GraphNode id={id} specification={specification} name={data.name} isSelected={selected}>
-        <Select placeholder='Select decision from list' />
+        <Select label='Select decision from list' size='small' />
       </GraphNode>
     ),
   },

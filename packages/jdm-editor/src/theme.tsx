@@ -1,107 +1,81 @@
-import type { ThemeConfig as AntThemeConfig } from 'antd';
-import { ConfigProvider, theme as antTheme, theme } from 'antd';
-import React, { useMemo } from 'react';
+import React from 'react';
 
-declare module 'antd/es/theme/interface/alias' {
-  export interface AliasToken {
-    mode: 'dark' | 'light';
-  }
-}
-
-export type ThemeConfig = Omit<AntThemeConfig, 'algorithm'> & {
-  mode?: 'light' | 'dark';
-};
 
 export type JdmConfigProviderProps = {
-  theme?: ThemeConfig;
   prefixCls?: string;
   children?: React.ReactNode;
 };
 
 export const JdmConfigProvider: React.FC<JdmConfigProviderProps> = ({
-  theme: { mode = 'light' as const, token = {}, ...restTheme } = {},
-  prefixCls,
   children,
 }) => {
-  const algorithm = useMemo(() => {
-    switch (mode) {
-      case 'dark':
-        return antTheme.darkAlgorithm;
-      case 'light':
-      default:
-        return antTheme.defaultAlgorithm;
-    }
-  }, [mode]);
+
 
   return (
-    <ConfigProvider prefixCls={prefixCls} theme={{ ...restTheme, algorithm, token: { ...token, mode, motion: false } }}>
-      <GlobalCssVariables mode={mode} />
+    <>
+      <GlobalCssVariables />
       {children}
-    </ConfigProvider>
+    </>
   );
 };
 
-const GlobalCssVariables: React.FC<{ mode: 'light' | 'dark' }> = ({ mode }) => {
-  const { token } = theme.useToken();
+const GlobalCssVariables = () => {
+ 
 
-  const exposedTokens = useMemo(
-    () => ({
-      '--grl-color-border': token.colorBorder,
-      '--grl-color-border-hover': mode === 'light' ? '#c3c3c3' : '#555555',
-      '--grl-color-border-fade': mode === 'light' ? '#eef0f5' : '#333333',
-      '--grl-color-primary': token.colorPrimary,
-      '--grl-color-primary-bg': token.colorPrimaryBg,
-      '--grl-color-primary-bg-fade': mode === 'light' ? '#f8fafc' : '#141414',
-      '--grl-color-primary-bg-hover': token.colorPrimaryBgHover,
-      '--grl-color-primary-border': token.colorPrimaryBorder,
-      '--grl-color-primary-border-hover': token.colorPrimaryBorderHover,
-      '--grl-color-primary-text-hover': token.colorPrimaryTextHover,
-      '--grl-color-success': token.colorSuccess,
-      '--grl-color-success-bg': token.colorSuccessBg,
-      '--grl-color-success-border': token.colorSuccessBorder,
-      '--grl-color-error': token.colorError,
-      '--grl-color-error-bg': token.colorErrorBg,
-      '--grl-color-error-border': token.colorErrorBorder,
-      '--grl-color-warning': token.colorWarning,
-      '--grl-color-warning-bg': token.colorWarningBg,
-      '--grl-color-warning-border': token.colorWarningBorder,
-      '--grl-color-warning-text': token.colorWarningText,
-      '--grl-color-info': token.colorInfo,
-      '--grl-color-info-bg': token.colorInfoBg,
-      '--grl-color-info-border': token.colorInfoBorder,
-      '--grl-color-info-text': token.colorInfoText,
-      '--grl-color-bg-layout': token.colorBgLayout,
-      '--grl-color-bg-mask': token.colorBgMask,
-      '--grl-color-bg-elevated': token.colorBgElevated,
-      '--grl-color-bg-container': token.colorBgContainer,
-      '--grl-color-bg-container-disabled': token.colorBgContainerDisabled,
-      '--grl-color-bg-text-hover': token.colorBgTextHover,
-      '--grl-color-primary-hover': token.colorPrimaryHover,
-      '--grl-color-primary-active': token.colorPrimaryActive,
-      '--grl-color-text': token.colorText,
-      '--grl-color-text-placeholder': token.colorTextPlaceholder,
-      '--grl-color-text-base': token.colorTextBase,
-      '--grl-color-text-disabled': token.colorTextDisabled,
-      '--grl-color-text-secondary': token.colorTextSecondary,
-      '--grl-control-outline': token.controlOutline,
-      '--grl-primary-color': token.colorPrimary,
-      '--grl-primary-color-bg': token.colorPrimaryBg,
-      '--grl-font-family': token.fontFamily,
-      '--grl-line-height': token.lineHeight,
-      '--grl-border-radius': `${token.borderRadius}px`,
-
-      '--grl-decision-table-output': mode === 'light' ? '#eaeaea' : '#091422',
-      '--grl-decision-table-selected-row': mode === 'light' ? '#f4faff' : '#121720',
+  const cssVariables = {
+    '--grl-color-border': "#d9d9d9",
+    '--grl-color-border-hover': '#c3c3c3' ,
+    '--grl-color-border-fade':  '#eef0f5',
+    '--grl-color-primary': "#1677ff",
+    '--grl-color-primary-bg': "#e6f4ff",
+    '--grl-color-primary-bg-fade':'#f8fafc',
+    '--grl-color-primary-bg-hover': "#bae0ff",
+    '--grl-color-primary-border': "#91caff",
+    '--grl-color-primary-border-hover': "#69b1ff",
+    '--grl-color-primary-text-hover': "#4096ff",
+    '--grl-color-success': "#52c41a",
+    '--grl-color-success-bg': "#f6ffed",
+    '--grl-color-success-border': "#b7eb8f",
+    '--grl-color-error': "#ff4d4f",
+    '--grl-color-error-bg': "#fff2f0",
+    '--grl-color-error-border': "#ffccc7",
+    '--grl-color-warning': "#faad14",
+    '--grl-color-warning-bg': "#fffbe6",
+    '--grl-color-warning-border': "#ffe58f",
+    '--grl-color-warning-text': "#faad14",
+    '--grl-color-info': "#1677ff",
+    '--grl-color-info-bg': "#e6f4ff",
+    '--grl-color-info-border': "#91caff",
+    '--grl-color-info-text': "#1677ff",
+    '--grl-color-bg-layout': "#f5f5f5",
+    '--grl-color-bg-mask': "rgba(0,0,0,0.45)",
+    '--grl-color-bg-elevated': "#ffffff",
+    '--grl-color-bg-container': "#ffffff",
+    '--grl-color-bg-container-disabled': "rgba(0,0,0,0.04)",
+    '--grl-color-bg-text-hover': "rgba(0,0,0,0.06)",
+    '--grl-color-primary-hover': "#4096ff",
+    '--grl-color-primary-active': "#0958d9",
+    '--grl-color-text': "rgba(0,0,0,0.88)",
+    '--grl-color-text-placeholder': "rgba(0,0,0,0.25)",
+    '--grl-color-text-base': "#000",
+    '--grl-color-text-disabled': "rgba(0,0,0,0.25)",
+    '--grl-color-text-secondary': "rgba(0,0,0,0.65)",
+    '--grl-control-outline': "rgba(5,145,255,0.1)",
+    '--grl-primary-color': "#1677ff",
+    '--grl-primary-color-bg': "#e6f4ff",
+    '--grl-font-family': "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,\n'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',\n'Noto Color Emoji'",
+    '--grl-line-height': 1.5714285714285714,
+    '--grl-border-radius': "6px",
+      '--grl-decision-table-output': '#eaeaea',
+      '--grl-decision-table-selected-row':'#f4faff' ,
 
       '--node-color-blue': 'var(--grl-color-primary)',
       '--node-color-purple': '#7c4dff',
       '--node-color-orange': '#f76d40',
       '--node-color-green': '#10ac84',
-    }),
-    [token, mode],
-  );
+  }
 
-  const cssBlock = Object.entries(exposedTokens)
+  const cssBlock = Object.entries(cssVariables)
     .map(([key, value]) => `  ${key}: ${value};`)
     .join('\n');
 

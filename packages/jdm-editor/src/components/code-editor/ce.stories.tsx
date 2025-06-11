@@ -3,12 +3,12 @@ import { Variable, generateAst, generateAstUnary } from '@gorules/zen-engine-was
 import type { SyntaxNodeRef } from '@lezer/common';
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
-import { Typography, theme } from 'antd';
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { match } from 'ts-pattern';
 
 import { CodeEditor, type CodeEditorProps } from './ce';
 import { CodeEditorPreview } from './ce-preview';
+import { Typography } from '@mui/material';
 
 const meta: Meta<typeof CodeEditor> = {
   title: 'CodeEditor',
@@ -115,7 +115,6 @@ export const Debug: StoryObj<CodeEditorProps & { showEditorState: boolean; showP
     },
   },
   render: (args) => {
-    const { token } = theme.useToken();
     const [editorState, setEditorState] = useState('');
     const [parserState, setParserState] = useState('');
 
@@ -145,33 +144,33 @@ export const Debug: StoryObj<CodeEditorProps & { showEditorState: boolean; showP
           }}
         />
         {args.showParserState && (
-          <div style={{ marginTop: token.marginMD }}>
-            <Typography.Text>Parser state (ZEN)</Typography.Text>
+          <div style={{ marginTop: 16 }}>
+            <Typography variant='body2'>Parser state (ZEN)</Typography>
             <div
               style={{
-                background: token.colorBgLayout,
-                border: `1px solid ${token.colorBorder}`,
-                borderRadius: token.borderRadiusOuter,
-                padding: token.paddingSM,
+                background: 'var(--grl-color-bg-layout)',
+                border: `1px solid var(--grl-color-border)`,
+                borderRadius: 4,
+                padding: 8,
               }}
             >
-              <Typography.Text style={{ whiteSpace: 'pre', fontFamily: 'monospace' }}>{parserState}</Typography.Text>
+              <Typography variant='body2' style={{ whiteSpace: 'pre', fontFamily: 'monospace' }}>{parserState}</Typography>
             </div>
           </div>
         )}
 
         {args.showEditorState && (
-          <div style={{ marginTop: token.marginMD }}>
-            <Typography.Text>Editor state (CodeMirror)</Typography.Text>
+          <div style={{ marginTop: 16 }}>
+            <Typography variant='body2'>Editor state (CodeMirror)</Typography>
             <div
               style={{
-                background: token.colorBgLayout,
-                border: `1px solid ${token.colorBorder}`,
-                borderRadius: token.borderRadiusOuter,
-                padding: token.paddingSM,
+                background: 'var(--grl-color-bg-layout)',
+                border: `1px solid var(--grl-color-border)`,
+                borderRadius: 4,
+                padding: 8,
               }}
             >
-              <Typography.Text style={{ whiteSpace: 'pre', fontFamily: 'monospace' }}>{editorState}</Typography.Text>
+              <Typography variant='body2' style={{ whiteSpace: 'pre', fontFamily: 'monospace' }}>{editorState}</Typography>
             </div>
           </div>
         )}

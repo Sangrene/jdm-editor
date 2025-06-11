@@ -1,8 +1,7 @@
-import { Dropdown, Tooltip, message, theme } from 'antd';
 import React from 'react';
 import { JSONTree } from 'react-json-tree';
 
-import { copyToClipboard } from '../../helpers/utility';
+import { Tooltip, Typography } from '@mui/material';
 
 export type FunctionDebuggerLogProps = {
   lines: string[];
@@ -18,46 +17,18 @@ type JsonTheme = {
   info: string;
 };
 
-const themes: Record<'dark' | 'light', JsonTheme> = {
-  dark: {
-    string: '#CE9178',
-    number: '#B5CEA8',
-    constants: '#569CD6',
-    type: '#3DC9B0',
-    error: '#E51400',
-    info: 'rgba(0, 0, 0, 0.65)',
-  },
-  light: {
-    string: '#A31515',
-    number: '#098658',
-    constants: '#0000FF',
-    type: '#008080',
-    error: '#E51400',
-    info: 'rgba(0, 0, 0, 0.65)',
-  },
+const theme: JsonTheme = {
+  string: '#A31515',
+  number: '#098658',
+  constants: '#0000FF',
+  type: '#008080',
+  error: '#E51400',
+  info: 'rgba(0, 0, 0, 0.65)',
 };
 
 export const FunctionDebuggerLog: React.FC<FunctionDebuggerLogProps> = ({ lines, msSinceRun }) => {
-  const { token } = theme.useToken();
-  const jsonTheme = themes[token.mode ?? 'light'];
-
   return (
     <div className='grl-function__debugger__log'>
-      <Dropdown
-        trigger={['contextMenu']}
-        menu={{
-          items: [
-            {
-              key: 'copy',
-              label: 'Copy to clipboard',
-              onClick: async () => {
-                await copyToClipboard(lines.length === 1 ? lines[0] : `[${lines.join(', ')}]`);
-                message.success('Copied to clipboard');
-              },
-            },
-          ],
-        }}
-      >
         <div className='grl-function__debugger__log__values'>
           {lines.map((line, i) => {
             const data = safeParseJson(line);
@@ -74,7 +45,7 @@ export const FunctionDebuggerLog: React.FC<FunctionDebuggerLogProps> = ({ lines,
                   if (lastPart !== 'root') {
                     parts.push(
                       <>
-                        <span style={{ color: jsonTheme.constants }}>{lastPart}</span>
+                        <span style={{ color: theme.constants }}>{lastPart}</span>
                         {': '}
                       </>,
                     );
@@ -85,25 +56,24 @@ export const FunctionDebuggerLog: React.FC<FunctionDebuggerLogProps> = ({ lines,
                     paths.pop();
                     paths = paths.reverse();
 
-                    parts.push(objectRenderer(jsonTheme)(lens(data, paths), nodeType));
+                    parts.push(objectRenderer(theme)(lens(data, paths), nodeType));
                   }
 
                   return <>{parts}</>;
                 }}
-                valueRenderer={valueRenderer(jsonTheme)}
+                valueRenderer={valueRenderer(theme)}
                 theme={{
-                  base00: token.colorBgElevated,
-                  base03: token.colorTextBase,
-                  base0B: token.colorTextBase,
-                  base0D: token.colorTextBase,
+                  base00: 'var(--grl-color-bg-elevated)',
+                  base03: 'var(--grl-color-text-base)',
+                  base0B: 'var(--grl-color-text-base)',
+                  base0D: 'var(--grl-color-text-base)',
                 }}
               />
             );
           })}
         </div>
-      </Dropdown>
       <div className='grl-function__debugger__log__time'>
-        {msSinceRun !== null && <Tooltip title='Time since start of execution of script.'>{msSinceRun}ms</Tooltip>}
+        {msSinceRun !== null && <Tooltip title='Time since start of execution of script.'><Typography variant='body2'>{msSinceRun}ms</Typography></Tooltip>}
       </div>
     </div>
   );

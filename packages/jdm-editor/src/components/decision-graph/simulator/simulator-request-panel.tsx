@@ -1,5 +1,4 @@
 import { VariableType } from '@gorules/zen-engine-wasm';
-import { Tooltip, Typography, notification } from 'antd';
 import json5 from 'json5';
 import React, { useEffect, useState } from 'react';
 
@@ -9,7 +8,7 @@ import type { DecisionGraphType } from '../dg-types';
 import { SimulatorEditor } from './simulator-editor';
 import InfoIcon from '@mui/icons-material/Info';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import { Button } from '@mui/material';
+import { Button, Typography, Tooltip } from '@mui/material';
 
 const requestTooltip =
   'Your business context that enters through the Request node, starting the decision process. Supply JSON or JSON5 format.';
@@ -55,10 +54,10 @@ export const SimulatorRequestPanel: React.FC<SimulatorRequestPanelProps> = ({
     <>
       <div className={'grl-dg__simulator__section__bar grl-dg__simulator__section__bar--request'}>
         <Tooltip title={requestTooltip}>
-          <Typography.Text style={{ fontSize: 13, cursor: 'help' }}>
+          <Typography variant='body2' style={{ fontSize: 13, cursor: 'help' }}>
             Request
             <InfoIcon style={{ fontSize: 10, marginLeft: 4, opacity: 0.5, verticalAlign: 'text-top' }} />
-          </Typography.Text>
+          </Typography>
         </Tooltip>
         <div className={'grl-dg__simulator__section__bar__actions'}>
           {onRun && (
@@ -80,11 +79,11 @@ export const SimulatorRequestPanel: React.FC<SimulatorRequestPanelProps> = ({
                     const parsed = (requestValue || '').trim().length === 0 ? null : json5.parse(requestValue || '');
                     onRun?.({ graph: stateStore.getState().decisionGraph, context: parsed });
                   } catch {
-                    notification.error({
-                      message: 'Invalid format',
-                      description: 'Unable to format request, invalid JSON format',
-                      placement: 'top',
-                    });
+                    // notification.error({
+                    //   message: 'Invalid format',
+                    //   description: 'Unable to format request, invalid JSON format',
+                    //   placement: 'top',
+                    // });
                   }
                 }}
               >

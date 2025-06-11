@@ -1,9 +1,9 @@
 import { Editor } from '@monaco-editor/react';
-import { Spin, message, theme } from 'antd';
 import json5 from 'json5';
 import React from 'react';
 
 import { copyToClipboard } from '../../../helpers/utility';
+import { CircularProgress } from '@mui/material';
 
 type SimulatorEditorProps = {
   value?: string;
@@ -12,15 +12,14 @@ type SimulatorEditorProps = {
 };
 
 export const SimulatorEditor: React.FC<SimulatorEditorProps> = ({ value, onChange, readOnly }) => {
-  const { token } = theme.useToken();
 
   return (
     <Editor
-      loading={<Spin size='large' />}
+      loading={<CircularProgress size='large' />}
       language='javascript'
       value={value}
       onChange={onChange}
-      theme={token.mode === 'dark' ? 'vs-dark' : 'light'}
+      theme={'light'}
       height='100%'
       onMount={(editor, monaco) => {
         monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
@@ -39,9 +38,9 @@ export const SimulatorEditor: React.FC<SimulatorEditorProps> = ({ value, onChang
           run: async (editor) => {
             try {
               await copyToClipboard(JSON.stringify(json5.parse(editor.getValue())));
-              message.success('Copied to clipboard!');
+              // message.success('Copied to clipboard!');
             } catch {
-              message.error('Failed to copy to clipboard.');
+              // message.error('Failed to copy to clipboard.');
             }
           },
         });

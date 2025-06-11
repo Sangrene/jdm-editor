@@ -2,7 +2,7 @@ import { VariableType } from '@gorules/zen-engine-wasm';
 import equal from 'fast-deep-equal/es6/react';
 import { produce } from 'immer';
 import _ from 'lodash';
-import { HashIcon } from 'lucide-react';
+import TagIcon from '@mui/icons-material/Tag';
 import type { z } from 'zod';
 
 import type { expressionNodeSchema } from '../../../../helpers/schema';
@@ -34,7 +34,7 @@ export type NodeExpressionData = Omit<InferredContent, 'expressions'> &
 
 export const expressionSpecification: NodeSpecification<NodeExpressionData> = {
   type: NodeKind.Expression,
-  icon: <HashIcon size='1em' />,
+  icon: <TagIcon fontSize='small'/>,
   displayName: 'Expression',
   documentationUrl: 'https://gorules.io/docs/user-manual/decision-modeling/decisions/expression',
   shortDescription: 'Mapping utility',

@@ -15,14 +15,12 @@ import { Table } from './table/table';
 export type DecisionTableProps = {
   id?: string;
   tableHeight: string | number;
-  mountDialogsOnBody?: boolean;
 } & DecisionTableContextProps &
   DecisionTableEmptyType;
 
 export const DecisionTable: React.FC<DecisionTableProps> = ({
   id,
   tableHeight,
-  mountDialogsOnBody = false,
   ...props
 }) => {
 
@@ -33,14 +31,13 @@ export const DecisionTable: React.FC<DecisionTableProps> = ({
     setMounted(true);
   }, []);
 
-  const getContainer = () => ref.current as HTMLElement;
 
   return (
     <div ref={ref} className={'grl-dt'}>
       {ref.current && (
         <DndProvider backend={HTML5Backend}>
           <DecisionTableProvider>
-            <DecisionTableDialogProvider getContainer={mountDialogsOnBody ? undefined : getContainer}>
+            <DecisionTableDialogProvider>
               <DecisionTableCommandBar />
               <Table id={id} maxHeight={tableHeight} />
               <DecisionTableDialogs />

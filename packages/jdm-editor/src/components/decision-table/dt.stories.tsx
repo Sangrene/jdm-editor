@@ -1,12 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
-import { Checkbox } from 'antd';
-import { createDragDropManager } from 'dnd-core';
-import React, { useEffect, useMemo, useState } from 'react';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import React, { useEffect, useState } from 'react';
 
 import type { DecisionTableType } from './context/dt-store.context';
 import { DecisionTable } from './dt';
+import { Checkbox, FormControlLabel } from '@mui/material';
 
 const shippingFeesDefault = {
   hitPolicy: 'first',
@@ -152,9 +150,7 @@ type Story = StoryObj<typeof DecisionTable>;
 export const Controlled: Story = {
   render: (args) => {
     const [value, setValue] = useState<any>(shippingFeesDefault);
-    const manager = useMemo(() => {
-      return createDragDropManager(HTML5Backend);
-    }, []);
+
 
     useEffect(() => {
       if (args.value) {
@@ -171,7 +167,6 @@ export const Controlled: Story = {
         <DecisionTable
           {...args}
           value={value}
-          manager={manager}
           onChange={(val) => {
             console.log(val);
             setValue(val);
@@ -187,9 +182,7 @@ export const Controlled: Story = {
 
 export const Uncontrolled: Story = {
   render: (args) => {
-    const manager = useMemo(() => {
-      return createDragDropManager(HTML5Backend);
-    }, []);
+
     return (
       <div
         style={{
@@ -198,7 +191,6 @@ export const Uncontrolled: Story = {
       >
         <DecisionTable
           {...args}
-          manager={manager}
           defaultValue={shippingFeesDefault}
           onChange={(val) => {
             console.log(val);
@@ -226,15 +218,10 @@ export const CustomRenderer: Story = {
             if (props?.column?.field === 'output') {
               return (
                 <div tabIndex={1} style={{ paddingLeft: '1rem' }}>
-                  <Checkbox
-                    disabled={props.disabled}
-                    checked={props.value === 'true'}
-                    onChange={(e) => {
-                      props.onChange(`${e?.target?.checked}`);
-                    }}
-                  >
-                    Enabled
-                  </Checkbox>
+                  <FormControlLabel control={<Checkbox disabled={props.disabled} checked={props.value === 'true'} onChange={(_, checked) => {
+                    props.onChange(`${checked}`);
+                  }} />} label="Enabled" />
+                  
                 </div>
               );
             }
