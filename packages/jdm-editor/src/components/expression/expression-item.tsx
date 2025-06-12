@@ -23,6 +23,7 @@ export type ExpressionItemProps = {
 export const ExpressionItem: React.FC<ExpressionItemProps> = ({ expression, index, variableType }) => {
   const [isFocused, setIsFocused] = useState(false);
   const expressionRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<HTMLDivElement>(null);
   const { updateRow, removeRow, swapRows, disabled, configurable } = useExpressionStore(
     ({ updateRow, removeRow, swapRows, disabled, configurable }) => ({
       updateRow,
@@ -52,7 +53,7 @@ export const ExpressionItem: React.FC<ExpressionItemProps> = ({ expression, inde
     },
   });
 
-  const [{ isDragging }, dragRef, previewRef] = useDrag({
+  const [{ isDragging }, dragConnector, previewRef] = useDrag({
     canDrag: configurable && !disabled,
     item: () => ({ ...expression, index }),
     type: 'row',
@@ -60,13 +61,13 @@ export const ExpressionItem: React.FC<ExpressionItemProps> = ({ expression, inde
       isDragging: monitor.isDragging(),
     }),
   });
-
+  dragConnector(dragRef);
   previewRef(dropRef(expressionRef));
 
   return (
     <div
       ref={expressionRef}
-      className={clsx(
+      className={clsx( 
         'expression-list-item',
         'expression-list__item',
         isDropping && direction === 'down' && 'dropping-down',

@@ -19,6 +19,7 @@ export const TableRow: React.FC<{
   onResize?: (node: HTMLElement) => void;
 }> = ({ ref, row, disabled, virtualItem, onResize, onContextMenu }) => {
   const trRef = useRef<HTMLTableRowElement>(null);
+  const tdRef = useRef<HTMLTableCellElement>(null);
   const tableActions = useDecisionTableActions();
   const { cursor, isActive } = useDecisionTableState(({ cursor, debug }) => ({
     cursor,
@@ -34,7 +35,7 @@ export const TableRow: React.FC<{
     drop: (draggedRow: Row<Record<string, string>>) => tableActions.swapRows(draggedRow.index, row.index),
   });
 
-  const [{ isDragging }, dragRef, previewRef] = useDrag({
+  const [{ isDragging }, dragConnector, previewRef] = useDrag({
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -43,7 +44,9 @@ export const TableRow: React.FC<{
   });
 
   previewRef(dropRef(trRef));
-
+  if(!disabled){
+    dragConnector(tdRef);
+  }
   useEffect(() => {
     if (!trRef.current) {
       return;
@@ -94,7 +97,7 @@ export const TableRow: React.FC<{
     >
       <td
         className={clsx('sort-handler', !disabled && 'draggable', diffStatus && 'diff')}
-        ref={disabled ? undefined : dragRef}
+        ref={tdRef}
         onContextMenuCapture={() => tableActions.setCursor({ x: 'id', y: virtualItem.index })}
       >
         <div className={'text'}>

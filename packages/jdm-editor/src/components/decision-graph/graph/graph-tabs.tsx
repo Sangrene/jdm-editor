@@ -3,7 +3,7 @@ import HubIcon from '@mui/icons-material/Hub';
 import { useDecisionGraphActions, useDecisionGraphState } from '../context/dg-store.context';
 import type { NodeKind } from '../nodes/specifications/specification-types';
 import { nodeSpecification } from '../nodes/specifications/specifications';
-import { Box, Tab, Tabs, Button } from '@mui/material';
+import { Box, Tab, Tabs, Button, type SvgIconProps } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
 
@@ -38,7 +38,7 @@ export const GraphTabs = () => {
           <Close fontSize="small" />
         </Button>
           </>} 
-          iconPosition="start" icon={specification?.icon} />
+          iconPosition="start" icon={specification?.icon as React.ReactElement<SvgIconProps>} />
       })}
     </Tabs>
   </Box>)

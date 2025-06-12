@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import equal from 'fast-deep-equal';
 import React, { type MutableRefObject, forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react';
-import type { Connection, Edge, Node, ProOptions, ReactFlowInstance, XYPosition } from '@xyflow/react';
+import type { Connection, Edge, EdgeTypes, Node, NodeTypes, ProOptions, ReactFlowInstance, XYPosition } from '@xyflow/react';
 import {
   ReactFlow,
   Background,
@@ -440,8 +440,8 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
               snapGrid={[5, 5]}
               minZoom={0.25}
               selectionMode={SelectionMode.Partial}
-              nodeTypes={nodeTypes}
-              edgeTypes={edgeTypes}
+              nodeTypes={nodeTypes as NodeTypes}
+              edgeTypes={edgeTypes as EdgeTypes}
               onDrop={onDrop}
               onDragOver={onDragOver}
               onConnect={onConnect}
@@ -449,7 +449,7 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
               proOptions={reactFlowProOptions}
               nodesConnectable={!disabled}
               nodesDraggable={!disabled}
-              edgesUpdatable={!disabled}
+              edgesReconnectable={!disabled}
               onNodesChange={graphActions.handleNodesChange}
               onEdgesChange={graphActions.handleEdgesChange}
               onNodesDelete={(e) => {

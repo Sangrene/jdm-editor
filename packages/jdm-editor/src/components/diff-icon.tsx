@@ -5,28 +5,29 @@ import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox
 import AddBoxIcon from '@mui/icons-material/AddBox';
 
 import type { DiffStatus } from './decision-graph/dg-types';
+import type { SvgIconProps } from '@mui/material';
 
 export const DiffIcon: React.FC<
   {
     status?: DiffStatus;
-  } & React.HTMLAttributes<HTMLSpanElement>
+  } & SvgIconProps
 > = ({ status, ...rest }) => {
   return match(status)
     .with('removed', () => (
       <IndeterminateCheckBoxIcon
         {...rest}
-        style={{
+        sx={{
           color: 'var(--grl-color-error)',
-          ...(rest?.style || {}),
+          ...(rest?.sx || {}),
         }}
       />
     ))
     .with('added', () => (
       <AddBoxIcon
         {...rest}
-        style={{
+        sx={{
           color: 'var(--grl-color-success)',
-          ...(rest?.style || {}),
+          ...(rest?.sx || {}),
         }}
       />
     ))
@@ -58,7 +59,7 @@ export const DiffIcon: React.FC<
     .with('moved', () => (
       <PanToolIcon
         {...rest}
-        style={{
+        sx={{
           color: 'var(--grl-color-info)',
           ...(rest?.style || {}),
         }}

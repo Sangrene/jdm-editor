@@ -33,7 +33,7 @@ export const outputSpecification: NodeSpecification<NodeOutputData> = {
       <GraphNode
         id={id}
         specification={specification}
-        name={data.name}
+        name={data.name as string}
         isSelected={selected}
         handleRight={false}
         actions={[

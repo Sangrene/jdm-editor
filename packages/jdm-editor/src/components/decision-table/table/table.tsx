@@ -145,7 +145,7 @@ export const Table: React.FC<TableProps> = ({ id, maxHeight }) => {
         }),
   });
 
-  const tableContainerRef = useRef<HTMLDivElement>(null);
+  const tableContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!tableContainerRef.current) {

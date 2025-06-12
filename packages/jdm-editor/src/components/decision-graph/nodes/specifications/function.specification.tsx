@@ -89,7 +89,7 @@ export const functionSpecification: NodeSpecification<NodeFunctionData> = {
               </span>
             ),
         }}
-        name={data.name}
+        name={data.name as string}
         isSelected={selected}
         helper={[kind === FunctionKind.Deprecated && <DeprecatedFunctionWarning size={16} />]}
         actions={[

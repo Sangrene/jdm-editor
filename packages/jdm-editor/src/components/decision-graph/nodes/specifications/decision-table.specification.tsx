@@ -337,7 +337,7 @@ export const decisionTableSpecification: NodeSpecification<NodeDecisionTableData
       <GraphNode
         id={id}
         specification={specification}
-        name={data.name}
+        name={data.name as string}
         isSelected={selected}
         helper={[executionMode === 'loop' && <SyncIcon />, passThrough && <ArrowRightIcon />]}
         actions={[

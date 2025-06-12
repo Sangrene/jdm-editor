@@ -110,7 +110,7 @@ const components: NodeSpecification[] = [
     icon: <ApartmentIcon />,
     generateNode: () => ({ name: 'myDecision' }),
     renderNode: ({ specification, id, selected, data }) => (
-      <GraphNode id={id} specification={specification} name={data.name} isSelected={selected}>
+      <GraphNode id={id} specification={specification} name={data.name as string} isSelected={selected}>
         <Select label='Select decision from list' size='small' />
       </GraphNode>
     ),

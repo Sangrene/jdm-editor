@@ -185,7 +185,7 @@ export const expressionSpecification: NodeSpecification<NodeExpressionData> = {
       <GraphNode
         id={id}
         specification={specification}
-        name={data.name}
+        name={data.name as string}
         isSelected={selected}
         actions={[
           <Button key='edit-table' variant='text' onClick={() => graphActions.openTab(id)}>
