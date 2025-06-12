@@ -1,3 +1,7 @@
+import AddIcon from '@mui/icons-material/Add';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import { Button, Tooltip } from '@mui/material';
+import { Typography } from '@mui/material';
 import clsx from 'clsx';
 import React from 'react';
 
@@ -9,10 +13,7 @@ import { OutputFieldEdit } from '../components/output-field-edit';
 import { useDecisionTableDialog } from '../context/dt-dialog.context';
 import { type TableSchemaItem, useDecisionTableActions, useDecisionTableState } from '../context/dt-store.context';
 import { getReferenceMap } from '../util';
-import { Button, Tooltip } from '@mui/material';
-import { Typography } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+
 export type TableHeadCellProps = {
   configurable?: boolean;
   disabled?: boolean;

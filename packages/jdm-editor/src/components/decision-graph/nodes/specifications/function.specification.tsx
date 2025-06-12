@@ -1,3 +1,5 @@
+import { Warning } from '@mui/icons-material';
+import { Button, Tooltip, Typography } from '@mui/material';
 import _ from 'lodash';
 import React from 'react';
 import { P, match } from 'ts-pattern';
@@ -10,8 +12,6 @@ import { GraphNode } from '../graph-node';
 import { NodeColor } from './colors';
 import type { NodeSpecification } from './specification-types';
 import { NodeKind } from './specification-types';
-import { Button, Tooltip, Typography } from '@mui/material';
-import { Warning } from '@mui/icons-material';
 
 export type NodeFunctionData =
   | string

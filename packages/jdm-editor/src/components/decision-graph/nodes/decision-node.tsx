@@ -1,5 +1,9 @@
+import { Close } from '@mui/icons-material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Button, ListItemIcon, ListItemText, Menu, MenuItem, Typography } from '@mui/material';
 import clsx from 'clsx';
+import { bindMenu, bindTrigger } from 'material-ui-popup-state';
+import PopupState from 'material-ui-popup-state';
 import React from 'react';
 import { Transition } from 'transition-hook';
 import { match } from 'ts-pattern';
@@ -9,10 +13,6 @@ import { TextEdit } from '../../text-edit';
 import './decision-node.scss';
 import { GraphCard } from './graph-card';
 import { NodeColor } from './specifications/colors';
-import { bindMenu, bindTrigger } from 'material-ui-popup-state';
-import PopupState from 'material-ui-popup-state';
-import { Close } from '@mui/icons-material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 export type DecisionNodeProps = {
   name?: string;
@@ -27,7 +27,13 @@ export type DecisionNodeProps = {
   diffStatus?: 'removed' | 'added' | 'modified' | 'moved';
   noBodyPadding?: boolean;
   color?: 'primary' | 'secondary' | string;
-  menuItems?: Array<{label: React.ReactNode, key: string, onClick?: () => void, disabled?: boolean, icon?: React.ReactNode}>;
+  menuItems?: Array<{
+    label: React.ReactNode;
+    key: string;
+    onClick?: () => void;
+    disabled?: boolean;
+    icon?: React.ReactNode;
+  }>;
   onNameChange?: (name: string) => void;
   compactMode?: boolean;
   listMode?: boolean;
@@ -101,26 +107,27 @@ export const DecisionNode: React.FC<DecisionNodeProps> = ({
           <TextEdit onChange={onNameChange} disabled={disabled} value={name} />
           {menuItems.length > 0 && (
             <div className={clsx('grl-dn__header__actions', 'nodrag')}>
-              <PopupState variant="popover">
+              <PopupState variant='popover'>
                 {(popupState) => (
                   <React.Fragment>
-                    <Button size='small' variant="text" {...bindTrigger(popupState)}>
+                    <Button size='small' variant='text' {...bindTrigger(popupState)}>
                       <MoreVertIcon fontSize='small' />
                     </Button>
                     <Menu {...bindMenu(popupState)}>
-                      {menuItems.filter((item) => !!item).map((item) => (
-                        <MenuItem key={item.key} onClick={() => {
-                          item.onClick?.();
-                          popupState.close();
-                        }}>
-                          {!!item.icon && 
-                            <ListItemIcon>
-                              {item.icon}
-                            </ListItemIcon>
-                          }
-                          <ListItemText>{item.label}</ListItemText>
-                        </MenuItem>
-                      ))}
+                      {menuItems
+                        .filter((item) => !!item)
+                        .map((item) => (
+                          <MenuItem
+                            key={item.key}
+                            onClick={() => {
+                              item.onClick?.();
+                              popupState.close();
+                            }}
+                          >
+                            {!!item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
+                            <ListItemText>{item.label}</ListItemText>
+                          </MenuItem>
+                        ))}
                     </Menu>
                   </React.Fragment>
                 )}

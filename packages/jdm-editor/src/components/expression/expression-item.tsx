@@ -1,7 +1,8 @@
 import type { VariableType } from '@gorules/zen-engine-wasm';
+import DragHandleIcon from '@mui/icons-material/DragHandle';
+import { Typography } from '@mui/material';
 import type { Row } from '@tanstack/react-table';
 import clsx from 'clsx';
-import DragHandleIcon from '@mui/icons-material/DragHandle';
 import React, { useRef, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 
@@ -12,7 +13,6 @@ import { DiffAutosizeTextArea } from '../shared';
 import { DiffCodeEditor } from '../shared/diff-ce';
 import type { ExpressionEntry } from './context/expression-store.context';
 import { useExpressionStore } from './context/expression-store.context';
-import { Typography } from '@mui/material';
 
 export type ExpressionItemProps = {
   expression: ExpressionEntry;
@@ -67,7 +67,7 @@ export const ExpressionItem: React.FC<ExpressionItemProps> = ({ expression, inde
   return (
     <div
       ref={expressionRef}
-      className={clsx( 
+      className={clsx(
         'expression-list-item',
         'expression-list__item',
         isDropping && direction === 'down' && 'dropping-down',
@@ -172,9 +172,7 @@ const ResultOverlay: React.FC<{ expression: ExpressionEntry }> = ({ expression }
 
   return (
     <div className='expression-list-item__resultOverlay'>
-      <Typography  sx={{ maxWidth: 60, overflow: 'hidden', textOverflow: 'ellipsis' }}>
-        = {trace as string}
-      </Typography>
+      <Typography sx={{ maxWidth: 60, overflow: 'hidden', textOverflow: 'ellipsis' }}>= {trace as string}</Typography>
     </div>
   );
 };

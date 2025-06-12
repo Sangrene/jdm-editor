@@ -1,10 +1,14 @@
 import type { VariableType } from '@gorules/zen-engine-wasm';
+import { ArrowDownward, ArrowRight, Delete } from '@mui/icons-material';
+import CallSplitIcon from '@mui/icons-material/CallSplit';
+import { Button, Menu, MenuItem, Typography } from '@mui/material';
+import { Handle, Position } from '@xyflow/react';
 import clsx from 'clsx';
 import { produce } from 'immer';
 import _ from 'lodash';
+import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
 import React, { useLayoutEffect, useMemo, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { Handle, Position } from '@xyflow/react'; 
 import { P, match } from 'ts-pattern';
 
 import { useNodeType } from '../../../../helpers/node-type';
@@ -17,10 +21,6 @@ import { GraphNode } from '../graph-node';
 import { NodeColor } from './colors';
 import type { MinimalNodeProps, NodeSpecification } from './specification-types';
 import { NodeKind } from './specification-types';
-import CallSplitIcon from '@mui/icons-material/CallSplit';
-import { Button, MenuItem, Menu, Typography } from '@mui/material';
-import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import { ArrowDownward, ArrowRight, Delete } from '@mui/icons-material';
 
 export type SwitchStatement = {
   id: string;
@@ -35,7 +35,7 @@ export type NodeSwitchData = {
 
 export const switchSpecification: NodeSpecification<NodeSwitchData> = {
   type: NodeKind.Switch,
-  icon: <CallSplitIcon sx={{fontSize: '1em'}} />,
+  icon: <CallSplitIcon sx={{ fontSize: '1em' }} />,
   displayName: 'Switch',
   documentationUrl: 'https://gorules.io/docs/user-manual/decision-modeling/decisions/switch',
   shortDescription: 'Conditional branching',
@@ -188,33 +188,39 @@ const SwitchNode: React.FC<
         >
           Add Condition
         </Button>,
-         <PopupState variant="popover" key={'hit-policy'}>
-         {(popupState) => (
-           <React.Fragment>
-             <Button size='small' variant="text" {...bindTrigger(popupState)}>
-               {hitPolicy} <ArrowDownward />
-             </Button>
-             <Menu {...bindMenu(popupState)}>
-               <MenuItem key={'first'} onClick={() => changeHitPolicy('first')}>First</MenuItem>
-               <MenuItem key={'collect'} onClick={() => {
-                graphActions.updateNode(id, (draft) => {
-                  draft.content.statements = ((draft.content.statements || []) as SwitchStatement[]).map(
-                    (statement) => {
-                      if (statement.isDefault) {
-                        statement.isDefault = false;
-                      }
-                      return statement;
-                    },
-                  );
-                  return draft;
-                });
-                changeHitPolicy('collect');
-               }}>Collect</MenuItem>
-             </Menu>
-           </React.Fragment>
-         )}
-       </PopupState>,
-        
+        <PopupState variant='popover' key={'hit-policy'}>
+          {(popupState) => (
+            <React.Fragment>
+              <Button size='small' variant='text' {...bindTrigger(popupState)}>
+                {hitPolicy} <ArrowDownward />
+              </Button>
+              <Menu {...bindMenu(popupState)}>
+                <MenuItem key={'first'} onClick={() => changeHitPolicy('first')}>
+                  First
+                </MenuItem>
+                <MenuItem
+                  key={'collect'}
+                  onClick={() => {
+                    graphActions.updateNode(id, (draft) => {
+                      draft.content.statements = ((draft.content.statements || []) as SwitchStatement[]).map(
+                        (statement) => {
+                          if (statement.isDefault) {
+                            statement.isDefault = false;
+                          }
+                          return statement;
+                        },
+                      );
+                      return draft;
+                    });
+                    changeHitPolicy('collect');
+                  }}
+                >
+                  Collect
+                </MenuItem>
+              </Menu>
+            </React.Fragment>
+          )}
+        </PopupState>,
       ]}
     >
       <div className='switchNode'>

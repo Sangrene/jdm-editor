@@ -1,9 +1,9 @@
 import { Editor } from '@monaco-editor/react';
+import { CircularProgress } from '@mui/material';
 import json5 from 'json5';
 import React from 'react';
 
 import { copyToClipboard } from '../../../helpers/utility';
-import { CircularProgress } from '@mui/material';
 
 type SimulatorEditorProps = {
   value?: string;
@@ -12,7 +12,6 @@ type SimulatorEditorProps = {
 };
 
 export const SimulatorEditor: React.FC<SimulatorEditorProps> = ({ value, onChange, readOnly }) => {
-
   return (
     <Editor
       loading={<CircularProgress size='large' />}

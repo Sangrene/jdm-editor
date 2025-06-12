@@ -1,4 +1,5 @@
-
+import { Add } from '@mui/icons-material';
+import { Button, Menu, MenuItem, Typography } from '@mui/material';
 import type { ColumnDef, Table as ReactTable } from '@tanstack/react-table';
 import { getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
@@ -7,6 +8,7 @@ import equal from 'fast-deep-equal/es6/react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { z } from 'zod';
 
+import { SpacedText } from '../../spaced-text';
 import { useDecisionTableActions, useDecisionTableListeners, useDecisionTableState } from '../context/dt-store.context';
 import { TableDefaultCell } from './table-default-cell';
 import {
@@ -17,9 +19,6 @@ import {
 } from './table-head-cell';
 import { TableHeadRow } from './table-head-row';
 import { TableRow } from './table-row';
-import { Button, Menu, MenuItem, Typography } from '@mui/material';
-import { SpacedText } from '../../spaced-text';
-import { Add } from '@mui/icons-material';
 
 export type TableProps = {
   id?: string;
@@ -45,7 +44,6 @@ const loadColumnSizing = (id?: string) => {
 };
 
 export const Table: React.FC<TableProps> = ({ id, maxHeight }) => {
-
   const tableActions = useDecisionTableActions();
   const { cellRenderer } = useDecisionTableListeners(({ cellRenderer }) => ({ cellRenderer }));
   const [columnSizing, setColumnSizing] = useState<ColumnSizing>(() => loadColumnSizing(id));
@@ -184,11 +182,7 @@ export const Table: React.FC<TableProps> = ({ id, maxHeight }) => {
   }, [columnSizing]);
 
   return (
-    <div
-      ref={tableContainerRef}
-      className='grl-dt__container'
-      style={{ maxHeight, overflowY: 'auto' }}
-    >
+    <div ref={tableContainerRef} className='grl-dt__container' style={{ maxHeight, overflowY: 'auto' }}>
       <StyledTable width={table.getCenterTotalSize()}>
         <thead>
           {table
@@ -330,17 +324,19 @@ const TableBody = React.forwardRef<HTMLTableSectionElement, TableBodyProps>(
             <td style={{ height: `${paddingBottom}px` }} />
           </tr>
         )}
-          <Menu open={!!contextMenuOpen} onClose={() => setContextMenuOpen(null)} anchorEl={contextMenuOpen || undefined}>
-            {menuItems.map((item) => (
-              <MenuItem key={item.key} onClick={() => {
+        <Menu open={!!contextMenuOpen} onClose={() => setContextMenuOpen(null)} anchorEl={contextMenuOpen || undefined}>
+          {menuItems.map((item) => (
+            <MenuItem
+              key={item.key}
+              onClick={() => {
                 item.onClick?.();
                 setContextMenuOpen(null);
-              }}>
-                {item.label}
-              </MenuItem>
-            ))}
-          </Menu>
-        
+              }}
+            >
+              {item.label}
+            </MenuItem>
+          ))}
+        </Menu>
       </tbody>
     );
   },

@@ -2,7 +2,6 @@ import { TextField, type TextFieldProps } from '@mui/material';
 import clsx from 'clsx';
 import React from 'react';
 
-
 export type DiffInputProps = TextFieldProps & {
   previousValue?: string;
   displayDiff?: boolean;

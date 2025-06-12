@@ -1,7 +1,7 @@
+import { Switch, type SwitchProps } from '@mui/material';
 import React from 'react';
 
 import { ArrowDiffIcon } from '../arrow-diff-icon';
-import { Switch, type SwitchProps } from '@mui/material';
 
 export type DiffSwitchProps = {
   previousChecked?: boolean;

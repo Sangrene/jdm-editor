@@ -1,11 +1,15 @@
 import { VariableType } from '@gorules/zen-engine-wasm';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import GridOnIcon from '@mui/icons-material/GridOn';
+import SyncIcon from '@mui/icons-material/Sync';
+import { Button, FormLabel } from '@mui/material';
 import equal from 'fast-deep-equal/es6/react';
 import { produce } from 'immer';
 import _ from 'lodash';
 import React from 'react';
 import type { z } from 'zod';
-import GridOnIcon from '@mui/icons-material/GridOn';
 
+import { useNodeType } from '../../../../helpers/node-type';
 import type { decisionTableSchema } from '../../../../helpers/schema';
 import { DiffCodeEditor, DiffInput, DiffRadio, DiffSwitch } from '../../../shared';
 import { useDecisionGraphActions, useDecisionGraphState, useNodeDiff } from '../../context/dg-store.context';
@@ -15,10 +19,6 @@ import { TabDecisionTable } from '../../graph/tab-decision-table';
 import { GraphNode } from '../graph-node';
 import { NodeKind } from './specification-types';
 import type { NodeSpecification } from './specification-types';
-import { Button, FormLabel } from '@mui/material';
-import { useNodeType } from '../../../../helpers/node-type';
-import SyncIcon from '@mui/icons-material/Sync';
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 
 type InferredContent = z.infer<typeof decisionTableSchema>['content'];
 
@@ -31,7 +31,7 @@ export type NodeDecisionTableData = Omit<InferredContent, 'inputs' | 'outputs' |
 
 export const decisionTableSpecification: NodeSpecification<NodeDecisionTableData> = {
   type: NodeKind.DecisionTable,
-  icon: <GridOnIcon sx={{fontSize: '1em'}} />,
+  icon: <GridOnIcon sx={{ fontSize: '1em' }} />,
   displayName: 'Decision table',
   documentationUrl: 'https://gorules.io/docs/user-manual/decision-modeling/decisions/decision-tables',
   shortDescription: 'Rules spreadsheet',
@@ -378,7 +378,7 @@ export const decisionTableSpecification: NodeSpecification<NodeDecisionTableData
       <div className={'settings-form'}>
         <FormLabel>Execution mode</FormLabel>
         <DiffRadio
-          radioOptions={{size: 'small', disabled: disabled}}
+          radioOptions={{ size: 'small', disabled: disabled }}
           previousValue={contentDiff?.fields?.hitPolicy?.previousValue}
           displayDiff={contentDiff?.fields?.hitPolicy?.status === 'modified'}
           value={fields?.hitPolicy}
@@ -415,10 +415,10 @@ export const decisionTableSpecification: NodeSpecification<NodeDecisionTableData
           value={fields?.inputField ?? ''}
           onChange={(val) => updateNode({ inputField: val?.trim() || null })}
         />
-        
+
         <DiffInput
           label='Output path'
-          sx={{mt: 1}}
+          sx={{ mt: 1 }}
           size={'small'}
           disabled={disabled}
           displayDiff={contentDiff?.fields?.outputPath?.status === 'modified'}
@@ -428,7 +428,7 @@ export const decisionTableSpecification: NodeSpecification<NodeDecisionTableData
         />
         <FormLabel>Execution mode</FormLabel>
         <DiffRadio
-          radioOptions={{size: 'small', disabled: disabled}}
+          radioOptions={{ size: 'small', disabled: disabled }}
           displayDiff={contentDiff?.fields?.executionMode?.status === 'modified'}
           previousValue={contentDiff?.fields?.executionMode?.previousValue}
           value={fields?.executionMode}

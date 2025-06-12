@@ -1,13 +1,13 @@
+import { TextField } from '@mui/material';
+import type { XYPosition } from '@xyflow/react';
 import clsx from 'clsx';
 import React, { useCallback, useMemo, useState } from 'react';
-import type { XYPosition } from '@xyflow/react';
 import { match } from 'ts-pattern';
 
 import { useDecisionGraphState } from '../context/dg-store.context';
 import { DecisionNode } from '../nodes/decision-node';
 import { NodeKind, type NodeSpecification } from '../nodes/specifications/specification-types';
 import { nodeSpecification } from '../nodes/specifications/specifications';
-import { TextField } from '@mui/material';
 
 export type GraphComponentsProps = {
   inputDisabled?: boolean;
@@ -96,7 +96,13 @@ export const GraphComponents: React.FC<GraphComponentsProps> = React.memo(({ inp
   return (
     <div>
       {customCount > 5 && (
-        <TextField sx={{m: 1}} size='small' label={'Search'} value={search} onChange={(e) => setSearch(e.target.value || '')} />
+        <TextField
+          sx={{ m: 1 }}
+          size='small'
+          label={'Search'}
+          value={search}
+          onChange={(e) => setSearch(e.target.value || '')}
+        />
       )}
       <div className={'grl-dg__aside__menu__components'}>
         {Object.keys(groups).map((group) => {

@@ -1,9 +1,9 @@
+import CloseIcon from '@mui/icons-material/Close';
+import { Button, Tooltip, Typography } from '@mui/material';
 import { Resizable } from 're-resizable';
 import React, { useMemo } from 'react';
 
 import { useDecisionGraphActions, useDecisionGraphState } from './context/dg-store.context';
-import CloseIcon from '@mui/icons-material/Close';
-import { Button, Tooltip, Typography } from '@mui/material';
 
 const heightKey = 'jdmEditor:graphPanel:height';
 

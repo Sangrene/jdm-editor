@@ -1,4 +1,5 @@
 import type { Monaco } from '@monaco-editor/react';
+import { CircularProgress } from '@mui/material';
 import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import { P, match } from 'ts-pattern';
 
@@ -11,7 +12,6 @@ import {
 } from '../context/dg-store.context';
 import { FunctionKind, useFunctionKind } from '../nodes/specifications/function.specification';
 import type { SimulationTrace, SimulationTraceDataFunction } from '../simulator/simulation.types';
-import { CircularProgress } from '@mui/material';
 
 const Function = React.lazy(async () => {
   const functionImport = await import('../../function');

@@ -1,3 +1,9 @@
+import ApartmentIcon from '@mui/icons-material/Apartment';
+import ApiIcon from '@mui/icons-material/Api';
+import LeftIcon from '@mui/icons-material/ArrowLeft';
+import RightIcon from '@mui/icons-material/ArrowRight';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import { Select } from '@mui/material';
 import type { Meta, StoryObj } from '@storybook/react';
 import json5 from 'json5';
 import React, { useMemo, useRef, useState } from 'react';
@@ -20,12 +26,6 @@ import { GraphNode } from './nodes/graph-node';
 import type { NodeSpecification } from './nodes/specifications/specification-types';
 import { GraphSimulator } from './simulator/dg-simulator';
 import type { Simulation } from './simulator/simulation.types';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import ApartmentIcon from '@mui/icons-material/Apartment';
-import RightIcon from '@mui/icons-material/ArrowRight';
-import LeftIcon from '@mui/icons-material/ArrowLeft';
-import ApiIcon from '@mui/icons-material/Api';
-import { Select } from '@mui/material';
 
 const meta: Meta<typeof DecisionGraph> = {
   /* 👇 The title prop is optional.

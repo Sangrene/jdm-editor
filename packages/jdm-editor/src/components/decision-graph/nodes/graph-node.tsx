@@ -1,7 +1,9 @@
-import clsx from 'clsx';
-import React from 'react';
+import { Book } from '@mui/icons-material';
+import { Button } from '@mui/material';
 import type { HandleProps } from '@xyflow/react';
 import { Handle, Position } from '@xyflow/react';
+import clsx from 'clsx';
+import React from 'react';
 import { P, match } from 'ts-pattern';
 
 import { platform } from '../../../helpers/platform';
@@ -11,8 +13,6 @@ import { useDecisionGraphActions, useDecisionGraphState, useNodeDiff } from '../
 import type { DecisionNodeProps } from './decision-node';
 import { DecisionNode } from './decision-node';
 import type { MinimalNodeSpecification } from './specifications/specification-types';
-import { Button } from '@mui/material';
-import { Book } from '@mui/icons-material';
 
 enum Details {
   Settings,
@@ -67,7 +67,7 @@ export const GraphNode = React.forwardRef<HTMLDivElement, GraphNodeProps>(
       specification.documentationUrl
         ? {
             key: 'documentation',
-            label: <SpacedText left='Documentation' right={<Book fontSize="small" />} />,
+            label: <SpacedText left='Documentation' right={<Book fontSize='small' />} />,
             onClick: () => window.open(specification.documentationUrl, '_href'),
           }
         : null,

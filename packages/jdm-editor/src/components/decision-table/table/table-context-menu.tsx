@@ -1,10 +1,10 @@
+import { Box, Menu, MenuItem } from '@mui/material';
+import PopupState from 'material-ui-popup-state';
+import { bindMenu } from 'material-ui-popup-state/hooks';
 import React from 'react';
 
 import { SpacedText } from '../../spaced-text';
 import { useDecisionTableActions, useDecisionTableState } from '../context/dt-store.context';
-import PopupState from 'material-ui-popup-state';
-import { Box, Menu, MenuItem } from '@mui/material';
-import { bindMenu } from 'material-ui-popup-state/hooks';
 
 const ContextMenu: React.FC<React.PropsWithChildren> = (props) => {
   const { children } = props;
@@ -41,30 +41,38 @@ const ContextMenu: React.FC<React.PropsWithChildren> = (props) => {
     },
   ];
 
-  return( <PopupState variant="popover">
-    {(popupState) => (
-      <>
-        <Box sx={{position: "relative"}} onContextMenu={(e) => {
-          if (!disabled) {
-            e.preventDefault();
-            popupState.open();
-          }
-        }}>
-          {children}
-        </Box>
-        <Menu {...bindMenu(popupState)}>
-          {menuItems.map((item) => (
-            <MenuItem key={item.key} onClick={() => {
-              item.onClick?.();
-              popupState.close();
-            }}>
-              {item.label}
-            </MenuItem>
-          ))}
-        </Menu>
-      </>
-    )}
-  </PopupState>)
+  return (
+    <PopupState variant='popover'>
+      {(popupState) => (
+        <>
+          <Box
+            sx={{ position: 'relative' }}
+            onContextMenu={(e) => {
+              if (!disabled) {
+                e.preventDefault();
+                popupState.open();
+              }
+            }}
+          >
+            {children}
+          </Box>
+          <Menu {...bindMenu(popupState)}>
+            {menuItems.map((item) => (
+              <MenuItem
+                key={item.key}
+                onClick={() => {
+                  item.onClick?.();
+                  popupState.close();
+                }}
+              >
+                {item.label}
+              </MenuItem>
+            ))}
+          </Menu>
+        </>
+      )}
+    </PopupState>
+  );
 };
 
 export const TableContextMenu = React.memo(ContextMenu);

@@ -1,9 +1,12 @@
-
-import React, { useRef } from 'react';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import CloseIcon from '@mui/icons-material/Close';
+import DeleteIcon from '@mui/icons-material/Delete';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import { Button, Divider, Tooltip } from '@mui/material';
+import React, { useRef } from 'react';
+
 import type { DecisionNode } from '../decision-graph';
 import { DiffSelect } from '../shared';
 import { Stack } from '../stack';
@@ -14,9 +17,6 @@ import {
   useDecisionTableState,
 } from './context/dt-store.context';
 import { exportDecisionTable, readDecisionTableFile } from './excel';
-import DeleteIcon from '@mui/icons-material/Delete';
-import CloseIcon from '@mui/icons-material/Close';
-import { Button, Divider, Tooltip } from '@mui/material';
 
 export const DecisionTableCommandBar: React.FC = () => {
   const tableActions = useDecisionTableActions();
@@ -115,8 +115,19 @@ export const DecisionTableCommandBar: React.FC = () => {
                   onClick={() => tableActions.addRowAbove(cursor?.y)}
                 />
               </Tooltip>
-                  <Button variant='text' color='error' size={'small'} startIcon={<DeleteIcon />} onClick={() => tableActions.removeRow(cursor?.y)}/>
-              <Button variant='text' size={'small'} startIcon={<CloseIcon />} onClick={() => tableActions.setCursor(null)}>
+              <Button
+                variant='text'
+                color='error'
+                size={'small'}
+                startIcon={<DeleteIcon />}
+                onClick={() => tableActions.removeRow(cursor?.y)}
+              />
+              <Button
+                variant='text'
+                size={'small'}
+                startIcon={<CloseIcon />}
+                onClick={() => tableActions.setCursor(null)}
+              >
                 Deselect
               </Button>
             </>

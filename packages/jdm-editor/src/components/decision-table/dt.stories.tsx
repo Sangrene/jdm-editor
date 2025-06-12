@@ -1,10 +1,10 @@
+import { Checkbox, FormControlLabel } from '@mui/material';
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 import React, { useEffect, useState } from 'react';
 
 import type { DecisionTableType } from './context/dt-store.context';
 import { DecisionTable } from './dt';
-import { Checkbox, FormControlLabel } from '@mui/material';
 
 const shippingFeesDefault = {
   hitPolicy: 'first',
@@ -151,7 +151,6 @@ export const Controlled: Story = {
   render: (args) => {
     const [value, setValue] = useState<any>(shippingFeesDefault);
 
-
     useEffect(() => {
       if (args.value) {
         setValue(args.value);
@@ -182,7 +181,6 @@ export const Controlled: Story = {
 
 export const Uncontrolled: Story = {
   render: (args) => {
-
     return (
       <div
         style={{
@@ -218,10 +216,18 @@ export const CustomRenderer: Story = {
             if (props?.column?.field === 'output') {
               return (
                 <div tabIndex={1} style={{ paddingLeft: '1rem' }}>
-                  <FormControlLabel control={<Checkbox disabled={props.disabled} checked={props.value === 'true'} onChange={(_, checked) => {
-                    props.onChange(`${checked}`);
-                  }} />} label="Enabled" />
-                  
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        disabled={props.disabled}
+                        checked={props.value === 'true'}
+                        onChange={(_, checked) => {
+                          props.onChange(`${checked}`);
+                        }}
+                      />
+                    }
+                    label='Enabled'
+                  />
                 </div>
               );
             }

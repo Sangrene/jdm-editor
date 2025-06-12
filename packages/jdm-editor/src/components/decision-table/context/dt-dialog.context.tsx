@@ -17,10 +17,7 @@ export type TableDialogContextState = {
 
 export const TableDialogContext = React.createContext<TableDialogContextState>({} as any);
 
-export const DecisionTableDialogProvider: React.FC<
-  React.PropsWithChildren<{
-  }>
-> = ({ children }) => {
+export const DecisionTableDialogProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const [dialog, setDialog] = useState<TableDialogState | undefined>(undefined);
   const isDialogActive = (type: TableDialogType) => {
     return dialog?.type === type;

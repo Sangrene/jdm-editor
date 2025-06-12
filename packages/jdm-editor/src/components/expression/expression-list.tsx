@@ -1,5 +1,7 @@
-import AddIcon from '@mui/icons-material/Add';
 import type { VariableType } from '@gorules/zen-engine-wasm';
+import AddIcon from '@mui/icons-material/Add';
+import { Typography } from '@mui/material';
+import { Button } from '@mui/material';
 import clsx from 'clsx';
 import equal from 'fast-deep-equal/es6/react';
 import React, { useEffect, useState } from 'react';
@@ -7,8 +9,6 @@ import React, { useEffect, useState } from 'react';
 import { isWasmAvailable } from '../../helpers/wasm';
 import { useExpressionStore } from './context/expression-store.context';
 import { ExpressionItem } from './expression-item';
-import { Typography } from '@mui/material';
-import { Button } from '@mui/material';
 
 export type ExpressionListProps = {
   //
@@ -49,12 +49,8 @@ export const ExpressionList: React.FC<ExpressionListProps> = ({}) => {
       <div className={'expression-list'}>
         <div className={clsx('expression-list__item', 'expression-list__item--heading')}>
           <div className={'expression-list__item__th expression-list__item__th--order'} />
-          <Typography className={'expression-list__item__th expression-list__item__th--key'}>
-            Key
-          </Typography>
-          <Typography className={'expression-list__item__th'}>
-            Expression
-          </Typography>
+          <Typography className={'expression-list__item__th expression-list__item__th--key'}>Key</Typography>
+          <Typography className={'expression-list__item__th'}>Expression</Typography>
           <div />
         </div>
         {(expressions || []).map((expression, index) => (

@@ -27,7 +27,6 @@ const updateListener = (onChange?: (data: string) => void, onStateChange?: (stat
     onChange?.(update.state.doc.toString());
   });
 
-
 type ExtensionParams = {
   type?: 'standard' | 'unary' | 'template';
 };

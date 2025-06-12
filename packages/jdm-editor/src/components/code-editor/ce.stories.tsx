@@ -1,6 +1,7 @@
 import { syntaxTree } from '@codemirror/language';
 import { Variable, generateAst, generateAstUnary } from '@gorules/zen-engine-wasm';
 import type { SyntaxNodeRef } from '@lezer/common';
+import { Typography } from '@mui/material';
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 import { useMemo, useState } from 'react';
@@ -8,7 +9,6 @@ import { match } from 'ts-pattern';
 
 import { CodeEditor, type CodeEditorProps } from './ce';
 import { CodeEditorPreview } from './ce-preview';
-import { Typography } from '@mui/material';
 
 const meta: Meta<typeof CodeEditor> = {
   title: 'CodeEditor',
@@ -154,7 +154,9 @@ export const Debug: StoryObj<CodeEditorProps & { showEditorState: boolean; showP
                 padding: 8,
               }}
             >
-              <Typography variant='body2' style={{ whiteSpace: 'pre', fontFamily: 'monospace' }}>{parserState}</Typography>
+              <Typography variant='body2' style={{ whiteSpace: 'pre', fontFamily: 'monospace' }}>
+                {parserState}
+              </Typography>
             </div>
           </div>
         )}
@@ -170,7 +172,9 @@ export const Debug: StoryObj<CodeEditorProps & { showEditorState: boolean; showP
                 padding: 8,
               }}
             >
-              <Typography variant='body2' style={{ whiteSpace: 'pre', fontFamily: 'monospace' }}>{editorState}</Typography>
+              <Typography variant='body2' style={{ whiteSpace: 'pre', fontFamily: 'monospace' }}>
+                {editorState}
+              </Typography>
             </div>
           </div>
         )}

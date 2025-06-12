@@ -1,11 +1,11 @@
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
+import PanToolIcon from '@mui/icons-material/PanTool';
+import type { SvgIconProps } from '@mui/material';
 import React from 'react';
 import { match } from 'ts-pattern';
-import PanToolIcon from '@mui/icons-material/PanTool';
-import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
-import AddBoxIcon from '@mui/icons-material/AddBox';
 
 import type { DiffStatus } from './decision-graph/dg-types';
-import type { SvgIconProps } from '@mui/material';
 
 export const DiffIcon: React.FC<
   {

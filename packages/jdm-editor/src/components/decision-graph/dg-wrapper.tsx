@@ -1,9 +1,9 @@
+import type { ProOptions } from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
 import clsx from 'clsx';
 import { createDragDropManager } from 'dnd-core';
 import React, { forwardRef, useMemo, useRef, useState } from 'react';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import type { ProOptions } from '@xyflow/react';
-import '@xyflow/react/dist/style.css';
 import { match } from 'ts-pattern';
 
 import { useDecisionGraphState } from './context/dg-store.context';
@@ -25,11 +25,8 @@ export type DecisionGraphWrapperProps = {
 };
 
 export const DecisionGraphWrapper = React.memo(
-  forwardRef<GraphRef, DecisionGraphWrapperProps>(function DecisionGraphWrapperInner(
-    { reactFlowProOptions },
-    ref,
-  ) {
-    const [disableTabs, setDisableTabs] = useState(false);
+  forwardRef<GraphRef, DecisionGraphWrapperProps>(function DecisionGraphWrapperInner({ reactFlowProOptions }, ref) {
+    const [, setDisableTabs] = useState(false);
     const hasActiveNode = useDecisionGraphState(({ decisionGraph, activeTab }) => {
       return (decisionGraph?.nodes ?? []).some((node) => node.id === activeTab);
     });

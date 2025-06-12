@@ -1,6 +1,8 @@
+import { Book, Delete } from '@mui/icons-material';
+import InputIcon from '@mui/icons-material/Input';
+import { Button } from '@mui/material';
 import { produce } from 'immer';
 import _ from 'lodash';
-import InputIcon from '@mui/icons-material/Input';
 import React from 'react';
 import type { z } from 'zod';
 
@@ -14,8 +16,6 @@ import { GraphNode } from '../graph-node';
 import { NodeColor } from './colors';
 import type { NodeSpecification } from './specification-types';
 import { NodeKind } from './specification-types';
-import { Book, Delete } from '@mui/icons-material';
-import { Button } from '@mui/material';
 
 type InferredContent = z.infer<typeof inputNodeSchema>['content'];
 
@@ -23,7 +23,7 @@ export type NodeInputData = InferredContent & Diff;
 
 export const inputSpecification: NodeSpecification<NodeInputData> = {
   type: NodeKind.Input,
-  icon: <InputIcon sx={{fontSize: '1em'}} />,
+  icon: <InputIcon sx={{ fontSize: '1em' }} />,
   displayName: 'Request',
   color: NodeColor.Green,
   documentationUrl: 'https://gorules.io/docs/user-manual/decision-modeling/decisions',
@@ -62,10 +62,10 @@ export const inputSpecification: NodeSpecification<NodeInputData> = {
           },
           {
             key: 'delete',
-            icon: <Delete color='error'/>,
+            icon: <Delete color='error' />,
             label: <SpacedText left='Delete' right={platform.shortcut('Backspace')} />,
             disabled,
-            onClick: () => graphActions.removeNodes([id])
+            onClick: () => graphActions.removeNodes([id]),
           },
         ]}
       />

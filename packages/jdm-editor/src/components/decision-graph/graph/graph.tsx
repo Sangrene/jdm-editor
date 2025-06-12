@@ -1,18 +1,32 @@
-import clsx from 'clsx';
-import equal from 'fast-deep-equal';
-import React, { type MutableRefObject, forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react';
-import type { Connection, Edge, EdgeTypes, Node, NodeTypes, ProOptions, ReactFlowInstance, XYPosition } from '@xyflow/react';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import CloseIcon from '@mui/icons-material/Close';
+import CompressIcon from '@mui/icons-material/Compress';
+import WarningIcon from '@mui/icons-material/Warning';
+import { Button, Tooltip, Typography } from '@mui/material';
+import type {
+  Connection,
+  Edge,
+  EdgeTypes,
+  Node,
+  NodeTypes,
+  ProOptions,
+  ReactFlowInstance,
+  XYPosition,
+} from '@xyflow/react';
 import {
-  ReactFlow,
   Background,
   ControlButton,
   Controls,
+  ReactFlow,
   SelectionMode,
   getOutgoers,
   useEdgesState,
   useNodesState,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+import clsx from 'clsx';
+import equal from 'fast-deep-equal';
+import React, { type MutableRefObject, forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { P, match } from 'ts-pattern';
 
 import { nodeSchema } from '../../../helpers/schema';
@@ -36,11 +50,6 @@ import type { MinimalNodeProps } from '../nodes/specifications/specification-typ
 import { NodeKind } from '../nodes/specifications/specification-types';
 import { nodeSpecification } from '../nodes/specifications/specifications';
 import { GraphComponents } from './graph-components';
-import WarningIcon from '@mui/icons-material/Warning';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import CloseIcon from '@mui/icons-material/Close';
-import CompressIcon from '@mui/icons-material/Compress';
-import { Button, Tooltip, Typography } from '@mui/material';
 
 export type GraphProps = {
   className?: string;
@@ -375,7 +384,10 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
             }}
           >
             <Tooltip placement='right' title='Components'>
-              <Button startIcon={<ArrowBackIcon style={{ fontSize: 12 }} />} onClick={() => setComponentsOpened(true)} />
+              <Button
+                startIcon={<ArrowBackIcon style={{ fontSize: 12 }} />}
+                onClick={() => setComponentsOpened(true)}
+              />
             </Tooltip>
           </div>
         )}
@@ -409,7 +421,7 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
                 const selectedNodes = nodes.filter((n) => n.selected);
                 const selectedEdges = edges.filter((e) => e.selected);
 
-                if (selectedNodes.length > 0) {                  
+                if (selectedNodes.length > 0) {
                   if (selectedEdges.length > 0) {
                     graphActions.removeEdges(selectedEdges.map((e) => e.id));
                   }
@@ -483,7 +495,7 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
               <Button
                 variant='text'
                 size='small'
-                sx={{p: 0, minWidth: 0}}
+                sx={{ p: 0, minWidth: 0 }}
                 disableRipple
                 startIcon={<CloseIcon fontSize='small' />}
                 onClick={() => setComponentsOpened(false)}

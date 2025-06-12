@@ -1,7 +1,7 @@
-
-import React, { useState } from 'react';
-import { Button, DialogActions, Popover, TextField } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Button, DialogActions, Popover, TextField } from '@mui/material';
+import React, { useState } from 'react';
+
 import { ConfirmAction } from '../../confirm-action';
 import { Stack } from '../../stack';
 
@@ -12,34 +12,23 @@ type OutputFieldEditProps = {
   onRemove?: () => void;
 };
 
-export const OutputFieldEdit: React.FC<OutputFieldEditProps> = ({
-  disabled,
-  value,
-  onChange,
-  onRemove,
-}) => {
+export const OutputFieldEdit: React.FC<OutputFieldEditProps> = ({ disabled, value, onChange, onRemove }) => {
   const [innerValue, setInnerValue] = useState(value);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
-
-
   return (
     <>
-    <Button
-      size='small'
-      color={!value ? "success" : "inherit"}
-      sx={{textTransform: 'none'}}
-      onClick={(e) => setAnchorEl(e.currentTarget)}
-      endIcon={<ExpandMoreIcon fontSize={"small"} />}
+      <Button
+        size='small'
+        color={!value ? 'success' : 'inherit'}
+        sx={{ textTransform: 'none' }}
+        onClick={(e) => setAnchorEl(e.currentTarget)}
+        endIcon={<ExpandMoreIcon fontSize={'small'} />}
       >
         {value}
       </Button>
-    <Popover
-      open={!!anchorEl} 
-      onClose={() => setAnchorEl(null)}
-      anchorEl={anchorEl}
-    >
-      <div
+      <Popover open={!!anchorEl} onClose={() => setAnchorEl(null)} anchorEl={anchorEl}>
+        <div
           style={{ width: 300, padding: 16 }}
           data-simulation='propagateWithTimeout'
           onKeyDownCapture={(e) => {
@@ -57,7 +46,13 @@ export const OutputFieldEdit: React.FC<OutputFieldEditProps> = ({
             }
           }}
         >
-          <TextField label='Output Field' size='small' value={innerValue} onChange={(e) => setInnerValue(e.target.value)} disabled={disabled} />
+          <TextField
+            label='Output Field'
+            size='small'
+            value={innerValue}
+            onChange={(e) => setInnerValue(e.target.value)}
+            disabled={disabled}
+          />
           <DialogActions>
             <ConfirmAction iconOnly onConfirm={onRemove} disabled={disabled} />
             <Stack horizontal width='auto' verticalAlign='end'>
@@ -78,9 +73,7 @@ export const OutputFieldEdit: React.FC<OutputFieldEditProps> = ({
             </Stack>
           </DialogActions>
         </div>
-      
-    </Popover>
+      </Popover>
     </>
-    
   );
 };

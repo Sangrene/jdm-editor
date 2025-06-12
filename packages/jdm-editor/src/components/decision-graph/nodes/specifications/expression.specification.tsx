@@ -1,10 +1,13 @@
 import { VariableType } from '@gorules/zen-engine-wasm';
+import { ArrowRight, Sync } from '@mui/icons-material';
+import TagIcon from '@mui/icons-material/Tag';
+import { Button, FormLabel } from '@mui/material';
 import equal from 'fast-deep-equal/es6/react';
 import { produce } from 'immer';
 import _ from 'lodash';
-import TagIcon from '@mui/icons-material/Tag';
 import type { z } from 'zod';
 
+import { useNodeType } from '../../../../helpers/node-type';
 import type { expressionNodeSchema } from '../../../../helpers/schema';
 import { DiffCodeEditor, DiffInput, DiffRadio, DiffSwitch } from '../../../shared';
 import { useDecisionGraphActions, useDecisionGraphState, useNodeDiff } from '../../context/dg-store.context';
@@ -15,9 +18,6 @@ import { GraphNode } from '../graph-node';
 import type { NodeDecisionTableData } from './decision-table.specification';
 import type { NodeSpecification } from './specification-types';
 import { NodeKind } from './specification-types';
-import { ArrowRight, Sync } from '@mui/icons-material';
-import { Button, FormLabel } from '@mui/material';
-import { useNodeType } from '../../../../helpers/node-type';
 
 export type Expression = {
   id: string;
@@ -34,7 +34,7 @@ export type NodeExpressionData = Omit<InferredContent, 'expressions'> &
 
 export const expressionSpecification: NodeSpecification<NodeExpressionData> = {
   type: NodeKind.Expression,
-  icon: <TagIcon fontSize='small'/>,
+  icon: <TagIcon fontSize='small' />,
   displayName: 'Expression',
   documentationUrl: 'https://gorules.io/docs/user-manual/decision-modeling/decisions/expression',
   shortDescription: 'Mapping utility',
@@ -225,13 +225,13 @@ export const expressionSpecification: NodeSpecification<NodeExpressionData> = {
       <div className={'settings-form'}>
         <FormLabel>Passthrough</FormLabel>
         <DiffSwitch
-            disabled={disabled}
-            size={'small'}
-            displayDiff={contentDiff?.fields?.passThrough?.status === 'modified'}
-            checked={fields?.passThrough}
-            previousChecked={contentDiff?.fields?.passThrough?.previousValue}
-            onChange={(_, checked) => updateNode({ passThrough: checked })}
-          />
+          disabled={disabled}
+          size={'small'}
+          displayDiff={contentDiff?.fields?.passThrough?.status === 'modified'}
+          checked={fields?.passThrough}
+          previousChecked={contentDiff?.fields?.passThrough?.previousValue}
+          onChange={(_, checked) => updateNode({ passThrough: checked })}
+        />
         <FormLabel>Input field</FormLabel>
         <DiffCodeEditor
           variableType={inputType}
@@ -244,20 +244,20 @@ export const expressionSpecification: NodeSpecification<NodeExpressionData> = {
           value={fields?.inputField ?? ''}
           onChange={(val) => updateNode({ inputField: val?.trim() || null })}
         />
-        
+
         <DiffInput
           label='Output path'
-          sx={{mt: 1}}
+          sx={{ mt: 1 }}
           size={'small'}
           disabled={disabled}
           displayDiff={contentDiff?.fields?.outputPath?.status === 'modified'}
           previousValue={contentDiff?.fields?.outputPath?.previousValue}
           value={fields?.outputPath ?? ''}
           onChange={(e) => updateNode({ outputPath: e?.target?.value?.trim() || null })}
-        />     
+        />
         <FormLabel>Execution mode</FormLabel>
         <DiffRadio
-          radioOptions={{size: 'small', disabled: disabled}}
+          radioOptions={{ size: 'small', disabled: disabled }}
           displayDiff={contentDiff?.fields?.executionMode?.status === 'modified'}
           previousValue={contentDiff?.fields?.executionMode?.previousValue}
           value={fields?.executionMode}

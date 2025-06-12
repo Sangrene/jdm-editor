@@ -1,3 +1,7 @@
+import AddIcon from '@mui/icons-material/Add';
+import FormatPaintIcon from '@mui/icons-material/FormatPaint';
+import LaunchIcon from '@mui/icons-material/Launch';
+import { Button, Tab, Tabs, Tooltip, Typography } from '@mui/material';
 import type { editor } from 'monaco-editor';
 import React, { useMemo, useState } from 'react';
 import { match } from 'ts-pattern';
@@ -6,10 +10,7 @@ import typeScriptIcon from '../../assets/typescript.svg?inline';
 import type { SimulationTrace, SimulationTraceDataFunction } from '../decision-graph/simulator/simulation.types';
 import { FunctionDebuggerLog } from './function-debugger-log';
 import { type FunctionLibrary } from './helpers/libs';
-import { Button, Tab, Tabs, Tooltip, Typography } from '@mui/material';
-import FormatPaintIcon from '@mui/icons-material/FormatPaint';
-import AddIcon from '@mui/icons-material/Add';
-import LaunchIcon from '@mui/icons-material/Launch';
+
 enum TabKey {
   Console = 'Console',
   Libraries = 'Libraries',
@@ -30,14 +31,11 @@ export const FunctionDebugger: React.FC<FunctionDebuggerProps> = ({ trace, edito
     <div className='grl-function__debugger'>
       <div className='grl-function__debugger__panel'>
         <div className='grl-function__debugger__header'>
-          <Tabs
-            value={activeTab}
-            onChange={(_, t) => setActiveTab(t as TabKey)}
-          >
+          <Tabs value={activeTab} onChange={(_, t) => setActiveTab(t as TabKey)}>
             <Tab value={TabKey.Console} label='Console' />
             <Tab value={TabKey.Libraries} label='Libraries' />
           </Tabs>
-          <Tooltip title='Format code' >
+          <Tooltip title='Format code'>
             <Button
               size='small'
               variant='text'

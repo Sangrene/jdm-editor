@@ -1,11 +1,11 @@
+import { Button, Dialog, DialogActions, DialogTitle, List, ListItem, Typography } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import type { XYCoord } from 'react-dnd';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import { Stack } from '../../stack';
 import type { TableSchemaItem } from '../context/dt-store.context';
-import { Button, Dialog, DialogActions, DialogTitle, List, ListItem, Typography } from '@mui/material';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 
 export type FieldsReorderProps = {
   fields?: TableSchemaItem[];
@@ -76,15 +76,13 @@ const FieldCard: React.FC<{
   drag(drop(ref));
   return (
     <ListItem ref={ref} sx={{ opacity: isDragging ? 0 : 1, padding: '0.5rem', cursor: 'move' }}>
-        <Stack horizontal verticalAlign='center'>
-          <div className='grl-dt__fields-reorder__handle'>=</div>
-          <Stack grow gap={0}>
-            <Typography>{col.name}</Typography>
-            <Typography sx={{ fontSize: 12 }}>
-              {col.field}
-            </Typography>
-          </Stack>
+      <Stack horizontal verticalAlign='center'>
+        <div className='grl-dt__fields-reorder__handle'>=</div>
+        <Stack grow gap={0}>
+          <Typography>{col.name}</Typography>
+          <Typography sx={{ fontSize: 12 }}>{col.field}</Typography>
         </Stack>
+      </Stack>
     </ListItem>
   );
 };
@@ -112,23 +110,22 @@ export const FieldsReorder: React.FC<FieldsReorderProps> = (props) => {
   };
 
   return (
-    <Dialog
-      open={!!isOpen}
-      onClose={onDismiss}
-      maxWidth='xs'
-      fullWidth
-    >
+    <Dialog open={!!isOpen} onClose={onDismiss} maxWidth='xs' fullWidth>
       <DialogTitle>Reorder fields</DialogTitle>
       <DndProvider backend={HTML5Backend}>
         <form action={() => onSuccess?.(columns)}>
-          <List sx={{ p: 1}}>
+          <List sx={{ p: 1 }}>
             {columns.map((column, index) => (
               <FieldCard key={column.id} col={column} index={index} moveCard={moveCard} />
             ))}
           </List>
           <DialogActions>
-            <Button size='small' type='submit' variant='contained'>Update</Button>
-            <Button size='small' variant='outlined' onClick={onDismiss}>Cancel</Button>
+            <Button size='small' type='submit' variant='contained'>
+              Update
+            </Button>
+            <Button size='small' variant='outlined' onClick={onDismiss}>
+              Cancel
+            </Button>
           </DialogActions>
         </form>
       </DndProvider>

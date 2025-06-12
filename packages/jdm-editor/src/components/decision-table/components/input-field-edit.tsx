@@ -1,4 +1,5 @@
 import { type Variable } from '@gorules/zen-engine-wasm';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Button, DialogActions, Popover, Typography } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 
@@ -7,7 +8,6 @@ import { CodeEditor } from '../../code-editor';
 import { CodeEditorPreview } from '../../code-editor/ce-preview';
 import { ConfirmAction } from '../../confirm-action';
 import { Stack } from '../../stack';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 type InputFieldEditProps = {
   disabled?: boolean;
@@ -52,21 +52,17 @@ export const InputFieldEdit: React.FC<InputFieldEditProps> = ({
 
   return (
     <>
-    <Button
-      size='small'
-      color={!value ? "success" : "inherit"}
-      sx={{textTransform: 'none'}}
-      onClick={(e) => setAnchorEl(e.currentTarget)}
-      endIcon={<ExpandMoreIcon fontSize={"small"} />}
+      <Button
+        size='small'
+        color={!value ? 'success' : 'inherit'}
+        sx={{ textTransform: 'none' }}
+        onClick={(e) => setAnchorEl(e.currentTarget)}
+        endIcon={<ExpandMoreIcon fontSize={'small'} />}
       >
         {value}
       </Button>
-    <Popover
-      open={!!anchorEl} 
-      onClose={() => setAnchorEl(null)}
-      anchorEl={anchorEl}
-    >
-      <div
+      <Popover open={!!anchorEl} onClose={() => setAnchorEl(null)} anchorEl={anchorEl}>
+        <div
           style={{ width: 300, padding: 16 }}
           data-simulation='propagateWithTimeout'
           onKeyDownCapture={(e) => {
@@ -93,10 +89,10 @@ export const InputFieldEdit: React.FC<InputFieldEditProps> = ({
             disabled={disabled}
           />
           <CodeEditorPreview
-              expression={innerValue ?? ''}
-              inputData={inputData}
-              initial={referenceData ? { expression: referenceData.field, result: referenceData.value } : undefined}
-            />
+            expression={innerValue ?? ''}
+            inputData={inputData}
+            initial={referenceData ? { expression: referenceData.field, result: referenceData.value } : undefined}
+          />
           <DialogActions>
             <ConfirmAction iconOnly onConfirm={onRemove} disabled={disabled} />
             <Stack horizontal width='auto' verticalAlign='end'>
@@ -117,9 +113,7 @@ export const InputFieldEdit: React.FC<InputFieldEditProps> = ({
             </Stack>
           </DialogActions>
         </div>
-      
-    </Popover>
+      </Popover>
     </>
-   
   );
 };

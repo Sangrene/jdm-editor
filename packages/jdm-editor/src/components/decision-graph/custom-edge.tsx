@@ -1,11 +1,11 @@
-import React from 'react';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { IconButton } from '@mui/material';
 import type { EdgeProps } from '@xyflow/react';
 import { BaseEdge, EdgeLabelRenderer, getBezierPath } from '@xyflow/react';
+import React from 'react';
 import { match } from 'ts-pattern';
 
 import { useDecisionGraphActions, useDecisionGraphState, useEdgeDiff } from './context/dg-store.context';
-import { IconButton } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
 
 export const CustomEdge: React.FC<EdgeProps> = (props) => {
   const graphActions = useDecisionGraphActions();
@@ -47,11 +47,7 @@ export const CustomEdge: React.FC<EdgeProps> = (props) => {
           }}
         >
           {!disabled && isHovered && (
-            <IconButton
-              color='error'
-              size='small'
-              onClick={() => graphActions.removeEdges([id])}
-            >
+            <IconButton color='error' size='small' onClick={() => graphActions.removeEdges([id])}>
               <DeleteIcon />
             </IconButton>
           )}

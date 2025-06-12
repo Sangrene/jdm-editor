@@ -8,7 +8,7 @@ import { DecisionTableProvider } from './context/dt-store.context';
 import { DecisionTableDialogs } from './dialog/dt-dialogs';
 import { DecisionTableCommandBar } from './dt-command-bar';
 import type { DecisionTableEmptyType } from './dt-empty';
-import { DecisionTableEmpty } from './dt-empty';  
+import { DecisionTableEmpty } from './dt-empty';
 import './dt.scss';
 import { Table } from './table/table';
 
@@ -18,19 +18,13 @@ export type DecisionTableProps = {
 } & DecisionTableContextProps &
   DecisionTableEmptyType;
 
-export const DecisionTable: React.FC<DecisionTableProps> = ({
-  id,
-  tableHeight,
-  ...props
-}) => {
-
+export const DecisionTable: React.FC<DecisionTableProps> = ({ id, tableHeight, ...props }) => {
   const [_, setMounted] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
-
 
   return (
     <div ref={ref} className={'grl-dt'}>

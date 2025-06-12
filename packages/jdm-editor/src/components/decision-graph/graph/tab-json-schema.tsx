@@ -1,4 +1,7 @@
 import { DiffEditor, Editor } from '@monaco-editor/react';
+import FormatPaintIcon from '@mui/icons-material/FormatPaint';
+import InputIcon from '@mui/icons-material/Input';
+import { Button, CircularProgress, Tab, Tabs, Tooltip } from '@mui/material';
 import type { DragDropManager } from 'dnd-core';
 import { type editor } from 'monaco-editor';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -8,9 +11,6 @@ import { useThrottledCallback } from 'use-debounce';
 
 import { useDecisionGraphActions, useDecisionGraphState, useNodeDiff } from '../context/dg-store.context';
 import { JsonToJsonSchemaDialog } from './json-to-json-schema-dialog';
-import { Button, CircularProgress, Tab, Tabs, Tooltip } from '@mui/material';
-import FormatPaintIcon from '@mui/icons-material/FormatPaint';
-import InputIcon from '@mui/icons-material/Input';
 
 const schemaTooltip = 'Provide JSON Schema format. If no JSON Schema is provided, validation will be skipped.';
 
@@ -30,7 +30,6 @@ const monacoOptions: editor.IStandaloneEditorConstructionOptions = {
   },
 };
 
-
 export type TabJsonSchemaProps = {
   id: string;
   manager?: DragDropManager;
@@ -44,7 +43,7 @@ export const TabJsonSchema: React.FC<TabJsonSchemaProps> = ({ id, type = 'input'
 
   const [jsonToJsonSchemaOpen, setJsonToJsonSchemaOpen] = useState(false);
 
-  const [activeTab, setActiveTab] = useState("Schema");
+  const [activeTab, setActiveTab] = useState('Schema');
 
   const [editor, setEditor] = useState<editor.IStandaloneCodeEditor>();
   const [diffEditor, setDiffEditor] = useState<editor.IStandaloneDiffEditor>();
@@ -79,10 +78,10 @@ export const TabJsonSchema: React.FC<TabJsonSchemaProps> = ({ id, type = 'input'
   return (
     <div
       className='grl-node-content'
-      data-theme={"light"}
+      data-theme={'light'}
       style={
         {
-          'height': '100%',
+          height: '100%',
         } as any
       }
     >
@@ -94,12 +93,9 @@ export const TabJsonSchema: React.FC<TabJsonSchemaProps> = ({ id, type = 'input'
         <div className='grl-node-content-side'>
           <div className='grl-node-content-side__panel'>
             <div className='grl-node-content-side__header'>
-              <Tabs
-                value={activeTab}
-                onChange={(_, t) => setActiveTab(t)}
-              >
+              <Tabs value={activeTab} onChange={(_, t) => setActiveTab(t)}>
                 <Tooltip title={schemaTooltip} placement='bottom-start'>
-                  <Tab label='Schema' value={"Schema"}/>
+                  <Tab label='Schema' value={'Schema'} />
                 </Tooltip>
                 <Tooltip title='Format code' placement='bottom-start'>
                   <Button
@@ -122,44 +118,42 @@ export const TabJsonSchema: React.FC<TabJsonSchemaProps> = ({ id, type = 'input'
                   />
                 </Tooltip>
               </Tabs>
-             
             </div>
             <div className='grl-node-content-side__body'>
               {previousValue !== undefined ? (
-                    <DiffEditor
-                      loading={<CircularProgress size='large' />}
-                      language={language}
-                      original={previousValue}
-                      modified={content?.schema}
-                      onMount={(editor) => setDiffEditor(editor)}
-                      theme={'light'}
-                      height='100%'
-                      options={{
-                        ...monacoOptions,
-                        readOnly: true,
-                      }}
-                    />
-                  ) : (
-                    <Editor
-                      loading={<CircularProgress size='large' />}
-                      language={language}
-                      value={content?.schema || ''}
-                      onMount={(editor) => setEditor(editor)}
-                      onChange={(value) => {
-                        graphActions.updateNode(id, (draft) => {
-                          draft.content = { schema: value };
-                          return draft;
-                        });
-                      }}
-                      theme={'light'}
-                      height='100%'
-                      options={{
-                        ...monacoOptions,
-                        readOnly: disabled,
-                      }}
-                    />
-                )
-              }
+                <DiffEditor
+                  loading={<CircularProgress size='large' />}
+                  language={language}
+                  original={previousValue}
+                  modified={content?.schema}
+                  onMount={(editor) => setDiffEditor(editor)}
+                  theme={'light'}
+                  height='100%'
+                  options={{
+                    ...monacoOptions,
+                    readOnly: true,
+                  }}
+                />
+              ) : (
+                <Editor
+                  loading={<CircularProgress size='large' />}
+                  language={language}
+                  value={content?.schema || ''}
+                  onMount={(editor) => setEditor(editor)}
+                  onChange={(value) => {
+                    graphActions.updateNode(id, (draft) => {
+                      draft.content = { schema: value };
+                      return draft;
+                    });
+                  }}
+                  theme={'light'}
+                  height='100%'
+                  options={{
+                    ...monacoOptions,
+                    readOnly: disabled,
+                  }}
+                />
+              )}
             </div>
             <JsonToJsonSchemaDialog
               isOpen={jsonToJsonSchemaOpen}

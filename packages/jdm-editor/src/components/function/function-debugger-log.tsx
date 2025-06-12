@@ -1,7 +1,6 @@
+import { Tooltip, Typography } from '@mui/material';
 import React from 'react';
 import { JSONTree } from 'react-json-tree';
-
-import { Tooltip, Typography } from '@mui/material';
 
 export type FunctionDebuggerLogProps = {
   lines: string[];
@@ -29,51 +28,55 @@ const theme: JsonTheme = {
 export const FunctionDebuggerLog: React.FC<FunctionDebuggerLogProps> = ({ lines, msSinceRun }) => {
   return (
     <div className='grl-function__debugger__log'>
-        <div className='grl-function__debugger__log__values'>
-          {lines.map((line, i) => {
-            const data = safeParseJson(line);
+      <div className='grl-function__debugger__log__values'>
+        {lines.map((line, i) => {
+          const data = safeParseJson(line);
 
-            return (
-              <JSONTree
-                key={i}
-                data={data}
-                shouldExpandNodeInitially={() => false}
-                labelRenderer={(keyPath: readonly (string | number)[], nodeType) => {
-                  const parts: React.ReactNode[] = [];
+          return (
+            <JSONTree
+              key={i}
+              data={data}
+              shouldExpandNodeInitially={() => false}
+              labelRenderer={(keyPath: readonly (string | number)[], nodeType) => {
+                const parts: React.ReactNode[] = [];
 
-                  const lastPart = keyPath?.[0];
-                  if (lastPart !== 'root') {
-                    parts.push(
-                      <>
-                        <span style={{ color: theme.constants }}>{lastPart}</span>
-                        {': '}
-                      </>,
-                    );
-                  }
+                const lastPart = keyPath?.[0];
+                if (lastPart !== 'root') {
+                  parts.push(
+                    <>
+                      <span style={{ color: theme.constants }}>{lastPart}</span>
+                      {': '}
+                    </>,
+                  );
+                }
 
-                  if (keyPath.length >= 1) {
-                    let paths = [...keyPath];
-                    paths.pop();
-                    paths = paths.reverse();
+                if (keyPath.length >= 1) {
+                  let paths = [...keyPath];
+                  paths.pop();
+                  paths = paths.reverse();
 
-                    parts.push(objectRenderer(theme)(lens(data, paths), nodeType));
-                  }
+                  parts.push(objectRenderer(theme)(lens(data, paths), nodeType));
+                }
 
-                  return <>{parts}</>;
-                }}
-                valueRenderer={valueRenderer(theme)}
-                theme={{
-                  base00: 'var(--grl-color-bg-elevated)',
-                  base03: 'var(--grl-color-text-base)',
-                  base0B: 'var(--grl-color-text-base)',
-                  base0D: 'var(--grl-color-text-base)',
-                }}
-              />
-            );
-          })}
-        </div>
+                return <>{parts}</>;
+              }}
+              valueRenderer={valueRenderer(theme)}
+              theme={{
+                base00: 'var(--grl-color-bg-elevated)',
+                base03: 'var(--grl-color-text-base)',
+                base0B: 'var(--grl-color-text-base)',
+                base0D: 'var(--grl-color-text-base)',
+              }}
+            />
+          );
+        })}
+      </div>
       <div className='grl-function__debugger__log__time'>
-        {msSinceRun !== null && <Tooltip title='Time since start of execution of script.'><Typography variant='body2'>{msSinceRun}ms</Typography></Tooltip>}
+        {msSinceRun !== null && (
+          <Tooltip title='Time since start of execution of script.'>
+            <Typography variant='body2'>{msSinceRun}ms</Typography>
+          </Tooltip>
+        )}
       </div>
     </div>
   );

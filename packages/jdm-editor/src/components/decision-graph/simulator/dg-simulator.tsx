@@ -1,3 +1,8 @@
+import BackspaceIcon from '@mui/icons-material/Backspace';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CloseIcon from '@mui/icons-material/Close';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import { Button, CircularProgress, Tab, Tabs, Tooltip, Typography } from '@mui/material';
 import clsx from 'clsx';
 import json5 from 'json5';
 import React, { useMemo, useState } from 'react';
@@ -11,11 +16,6 @@ import { NodeKind } from '../nodes/specifications/specification-types';
 import type { SimulationTrace } from './simulation.types';
 import { SimulatorEditor } from './simulator-editor';
 import { SimulatorRequestPanel, type SimulatorRequestPanelProps } from './simulator-request-panel';
-import { Typography, Tooltip, Button, Tabs, CircularProgress, Tab } from '@mui/material';
-import BackspaceIcon from '@mui/icons-material/Backspace';
-import CloseIcon from '@mui/icons-material/Close';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 enum SimulationSegment {
   Output = 'Output',
@@ -114,60 +114,74 @@ export const GraphSimulator: React.FC<GraphSimulatorProps> = ({
         </div>
         <div className={'grl-dg__simulator__section__content'}>
           {loading && <CircularProgress />}
-            <div className={'grl-dg__simulator__nodes-list'}>
-              {!simulate && (
-                <Typography variant='body2' color='text.secondary' style={{ textAlign: 'center', marginTop: 60, fontSize: 13 }}>
-                  Ready to simulate!
-                  <br />
-                  Run a request to see the node trace in action.
-                  <br />
-                  <Typography variant='body2' component='a'
-                    href='https://docs.gorules.io/docs/simulator'
-                    target='_blank'
-                    style={{ fontSize: 13, marginTop: 4, display: 'inline-block' }}
-                  >
-                    Learn more
-                  </Typography>
+          <div className={'grl-dg__simulator__nodes-list'}>
+            {!simulate && (
+              <Typography
+                variant='body2'
+                color='text.secondary'
+                style={{ textAlign: 'center', marginTop: 60, fontSize: 13 }}
+              >
+                Ready to simulate!
+                <br />
+                Run a request to see the node trace in action.
+                <br />
+                <Typography
+                  variant='body2'
+                  component='a'
+                  href='https://docs.gorules.io/docs/simulator'
+                  target='_blank'
+                  style={{ fontSize: 13, marginTop: 4, display: 'inline-block' }}
+                >
+                  Learn more
                 </Typography>
-              )}
-              {'graph'.includes(search?.toLowerCase() ?? '') && simulate && (
-                <div
-                  className={clsx('grl-dg__simulator__nodes-list__node', selectedNode === 'graph' && 'active')}
-                  onClick={() => setSelectedNode('graph')}
+              </Typography>
+            )}
+            {'graph'.includes(search?.toLowerCase() ?? '') && simulate && (
+              <div
+                className={clsx('grl-dg__simulator__nodes-list__node', selectedNode === 'graph' && 'active')}
+                onClick={() => setSelectedNode('graph')}
+              >
+                <Typography
+                  variant='body2'
+                  data-role='name'
+                  sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
                 >
-                  <Typography variant='body2' data-role='name' sx={{overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}>
-                    <StatusIcon
-                      status={match(simulate)
-                        .with({ error: P.nonNullable }, () => 'error' as const)
-                        .with({ result: P.nonNullable }, () => 'success' as const)
-                        .otherwise(() => 'not-run' as const)}
-                    />
-                    Graph
-                  </Typography>
-                  <Typography variant='body2' color='text.secondary' data-role='performance'>
-                    {match(simulate)
-                      .with({ result: P._ }, ({ result }) => result?.performance)
-                      .otherwise(() => undefined)}
-                  </Typography>
-                </div>
-              )}
-              {traces.map((trace) => (
-                <div
-                  key={trace.nodeId}
-                  className={clsx('grl-dg__simulator__nodes-list__node', trace.nodeId === selectedNode && 'active')}
-                  onClick={() => setSelectedNode(trace.nodeId)}
-                  onDoubleClick={() => actions.goToNode(trace.nodeId)}
+                  <StatusIcon
+                    status={match(simulate)
+                      .with({ error: P.nonNullable }, () => 'error' as const)
+                      .with({ result: P.nonNullable }, () => 'success' as const)
+                      .otherwise(() => 'not-run' as const)}
+                  />
+                  Graph
+                </Typography>
+                <Typography variant='body2' color='text.secondary' data-role='performance'>
+                  {match(simulate)
+                    .with({ result: P._ }, ({ result }) => result?.performance)
+                    .otherwise(() => undefined)}
+                </Typography>
+              </div>
+            )}
+            {traces.map((trace) => (
+              <div
+                key={trace.nodeId}
+                className={clsx('grl-dg__simulator__nodes-list__node', trace.nodeId === selectedNode && 'active')}
+                onClick={() => setSelectedNode(trace.nodeId)}
+                onDoubleClick={() => actions.goToNode(trace.nodeId)}
+              >
+                <Typography
+                  variant='body2'
+                  data-role='name'
+                  sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
                 >
-                  <Typography variant='body2' data-role='name' sx={{overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}>
-                    <StatusIcon status={trace.nodeId === simulate?.error?.data?.nodeId ? 'error' : 'success'} />
-                    {trace.name}
-                  </Typography>
-                  <Typography variant='body2' color='text.secondary' data-role='performance'>
-                    {trace.performance}
-                  </Typography>
-                </div>
-              ))}
-            </div>
+                  <StatusIcon status={trace.nodeId === simulate?.error?.data?.nodeId ? 'error' : 'success'} />
+                  {trace.name}
+                </Typography>
+                <Typography variant='body2' color='text.secondary' data-role='performance'>
+                  {trace.performance}
+                </Typography>
+              </div>
+            ))}
+          </div>
         </div>
       </Panel>
       <PanelResizeHandle />
@@ -182,7 +196,7 @@ export const GraphSimulator: React.FC<GraphSimulatorProps> = ({
             {Object.values(SimulationSegment).map((s) => (
               <Tab key={s} label={s} value={s} />
             ))}
-             
+
             <Tooltip title='Close panel'>
               <Button
                 variant='text'
@@ -235,16 +249,8 @@ const StatusIcon: React.FC<{ status: 'success' | 'error' | 'not-run' }> = ({ sta
   }
 
   if (status === 'success') {
-    return (
-      <CheckCircleIcon
-        sx={{ marginRight: 6, fontSize: 12, opacity: 0.5 }}
-      />
-    );
+    return <CheckCircleIcon sx={{ marginRight: 6, fontSize: 12, opacity: 0.5 }} />;
   }
 
-  return (
-    <HighlightOffIcon
-      sx={{ marginRight: 5, fontSize: 12 }}
-    />
-  );
+  return <HighlightOffIcon sx={{ marginRight: 5, fontSize: 12 }} />;
 };

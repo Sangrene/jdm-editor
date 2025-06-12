@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material';
 import type { Row } from '@tanstack/react-table';
 import { flexRender } from '@tanstack/react-table';
 import type { VirtualItem } from '@tanstack/react-virtual';
@@ -8,7 +9,6 @@ import { useDrag, useDrop } from 'react-dnd';
 import { composeRefs } from '../../../helpers/compose-refs';
 import type { DiffMetadata } from '../../decision-graph';
 import { useDecisionTableActions, useDecisionTableState } from '../context/dt-store.context';
-import { Typography } from '@mui/material';
 
 export const TableRow: React.FC<{
   onContextMenu?: (e: React.MouseEvent<HTMLTableCellElement>) => void;
@@ -44,7 +44,7 @@ export const TableRow: React.FC<{
   });
 
   previewRef(dropRef(trRef));
-  if(!disabled){
+  if (!disabled) {
     dragConnector(tdRef);
   }
   useEffect(() => {

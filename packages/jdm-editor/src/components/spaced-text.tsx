@@ -1,7 +1,7 @@
+import { Typography } from '@mui/material';
 import React from 'react';
 
 import { Stack } from './stack';
-import { Typography } from '@mui/material';
 
 export type SpacedTextProps = {
   left: React.ReactNode;

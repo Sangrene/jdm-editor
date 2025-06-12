@@ -1,7 +1,11 @@
 import { type VariableType } from '@gorules/zen-engine-wasm';
+import { ArrowDownward } from '@mui/icons-material';
+// import { Button, Typography, Checkbox, Box, FormLabel, FormControlLabel, IconButton } from '@mui/material';
+import { IconButton } from '@mui/material';
+import type { XYPosition } from '@xyflow/react';
 import type { DragDropManager } from 'dnd-core';
 import React, { useState } from 'react';
-import type { XYPosition } from '@xyflow/react';
+
 // import { match } from 'ts-pattern';
 
 // import { CodeEditor } from '../../../code-editor';
@@ -9,9 +13,6 @@ import type { XYPosition } from '@xyflow/react';
 import { type DecisionNode } from '../../dg-types';
 import { GraphNode } from '../graph-node';
 import type { InferTypeData, MinimalNodeProps, MinimalNodeSpecification } from '../specifications/specification-types';
-import { ArrowDownward } from '@mui/icons-material';
-// import { Button, Typography, Checkbox, Box, FormLabel, FormControlLabel, IconButton } from '@mui/material';
-import { IconButton } from '@mui/material';
 
 type CustomDecisionNode<T> = {
   id: string;

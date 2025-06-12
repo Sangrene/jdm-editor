@@ -1,5 +1,5 @@
-import { type RefObject, useCallback, useMemo } from 'react';
 import type { Node, ReactFlowInstance, XYPosition } from '@xyflow/react';
+import { type RefObject, useCallback, useMemo } from 'react';
 
 import { copyToClipboard, pasteFromClipboard } from '../../../helpers/utility';
 import { useDecisionGraphActions, useDecisionGraphRaw } from '../context/dg-store.context';
@@ -59,7 +59,7 @@ export const useGraphClipboard = (
 
         await copyToClipboard(JSON.stringify(clipboardData));
         // message.success('Copied to clipboard!');
-      } catch (e: any) {
+      } catch {
         // message.error(e.message);
       }
     },

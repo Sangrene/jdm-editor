@@ -1,5 +1,9 @@
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { Button, Menu, MenuItem, Tooltip } from '@mui/material';
+import { bindMenu } from 'material-ui-popup-state';
+import { bindTrigger } from 'material-ui-popup-state';
+import PopupState from 'material-ui-popup-state';
 import React, { useRef } from 'react';
 
 import { decisionModelSchema } from '../../../helpers/schema';
@@ -7,10 +11,6 @@ import { exportDecisionTable, readDecisionTableFile } from '../../decision-table
 import { useDecisionGraphActions, useDecisionGraphRaw, useDecisionGraphState } from '../context/dg-store.context';
 import { type DecisionEdge, type DecisionNode } from '../dg-types';
 import { NodeKind } from '../nodes/specifications/specification-types';
-import { Menu, MenuItem, Tooltip, Button } from '@mui/material';
-import { bindMenu } from 'material-ui-popup-state';
-import { bindTrigger } from 'material-ui-popup-state';
-import PopupState from 'material-ui-popup-state';
 
 const DecisionContentType = 'application/vnd.gorules.decision';
 
@@ -60,7 +60,7 @@ export const GraphSideToolbar: React.FC<GraphSideToolbarProps> = () => {
         }
 
         setDecisionGraph(modelParsed.data);
-      } catch (e: any) {
+      } catch {
         // message.error(e.message);
       }
     };
@@ -143,7 +143,7 @@ export const GraphSideToolbar: React.FC<GraphSideToolbarProps> = () => {
       // clean up "a" element & remove ObjectURL
       window.document.body.removeChild(link);
       URL.revokeObjectURL(href);
-    } catch (e: any) {
+    } catch {
       // message.error(e.message);
     }
   };
@@ -219,18 +219,21 @@ export const GraphSideToolbar: React.FC<GraphSideToolbarProps> = () => {
       <div className={'grl-dg__aside__side-bar'}>
         <div className={'grl-dg__aside__side-bar__top'}>
           {!disabled && (
-             <PopupState variant="popover">
+            <PopupState variant='popover'>
               {(popupState) => (
                 <React.Fragment>
-                  <Button size='small' variant="text" {...bindTrigger(popupState)}>
-                    <CloudUploadIcon fontSize='small'/>
+                  <Button size='small' variant='text' {...bindTrigger(popupState)}>
+                    <CloudUploadIcon fontSize='small' />
                   </Button>
                   <Menu {...bindMenu(popupState)}>
                     {uploadItems.map((item) => (
-                      <MenuItem key={item.key} onClick={() => {
-                        item.onClick?.();
-                        popupState.close();
-                      }}>
+                      <MenuItem
+                        key={item.key}
+                        onClick={() => {
+                          item.onClick?.();
+                          popupState.close();
+                        }}
+                      >
                         {item.label}
                       </MenuItem>
                     ))}
@@ -239,26 +242,28 @@ export const GraphSideToolbar: React.FC<GraphSideToolbarProps> = () => {
               )}
             </PopupState>
           )}
-          <PopupState variant="popover">
-              {(popupState) => (
-                <React.Fragment>
-                  <Button  size='small' variant="text" {...bindTrigger(popupState)}>
-                    <CloudDownloadIcon fontSize='small'/>
-                  </Button>
-                  <Menu {...bindMenu(popupState)}>
-                    {downloadItems.map((item) => (
-                      <MenuItem key={item.key} onClick={() => {
+          <PopupState variant='popover'>
+            {(popupState) => (
+              <React.Fragment>
+                <Button size='small' variant='text' {...bindTrigger(popupState)}>
+                  <CloudDownloadIcon fontSize='small' />
+                </Button>
+                <Menu {...bindMenu(popupState)}>
+                  {downloadItems.map((item) => (
+                    <MenuItem
+                      key={item.key}
+                      onClick={() => {
                         item.onClick?.();
                         popupState.close();
-                      }}>
-                        {item.label}
-                      </MenuItem>
-                    ))}
-                  </Menu>
-                </React.Fragment>
-              )}
-            </PopupState>
-          
+                      }}
+                    >
+                      {item.label}
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </React.Fragment>
+            )}
+          </PopupState>
         </div>
         <div className={'grl-dg__aside__side-bar__bottom'}>
           {(panels || []).map((panel) => {

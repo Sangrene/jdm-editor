@@ -1,4 +1,7 @@
 import { VariableType } from '@gorules/zen-engine-wasm';
+import InfoIcon from '@mui/icons-material/Info';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import { Button, Tooltip, Typography } from '@mui/material';
 import json5 from 'json5';
 import React, { useEffect, useState } from 'react';
 
@@ -6,9 +9,6 @@ import { isWasmAvailable } from '../../../helpers/wasm';
 import { NodeTypeKind, useDecisionGraphRaw } from '../context/dg-store.context';
 import type { DecisionGraphType } from '../dg-types';
 import { SimulatorEditor } from './simulator-editor';
-import InfoIcon from '@mui/icons-material/Info';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import { Button, Typography, Tooltip } from '@mui/material';
 
 const requestTooltip =
   'Your business context that enters through the Request node, starting the decision process. Supply JSON or JSON5 format.';
