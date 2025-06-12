@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import React, { useCallback, useMemo, useState } from 'react';
-import type { XYPosition } from 'reactflow';
+import type { XYPosition } from '@xyflow/react';
 import { match } from 'ts-pattern';
 
 import { useDecisionGraphState } from '../context/dg-store.context';

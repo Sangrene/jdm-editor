@@ -1,7 +1,7 @@
 import { type VariableType } from '@gorules/zen-engine-wasm';
 import type { DragDropManager } from 'dnd-core';
 import React, { useState } from 'react';
-import type { XYPosition } from 'reactflow';
+import type { XYPosition } from '@xyflow/react';
 import { match } from 'ts-pattern';
 
 import { CodeEditor } from '../../../code-editor';
@@ -10,7 +10,7 @@ import { type DecisionNode } from '../../dg-types';
 import { GraphNode } from '../graph-node';
 import type { InferTypeData, MinimalNodeProps, MinimalNodeSpecification } from '../specifications/specification-types';
 import { ArrowDownward } from '@mui/icons-material';
-import { Button, Typography, Checkbox, Box, FormLabel } from '@mui/material';
+import { Button, Typography, Checkbox, Box, FormLabel, FormControlLabel, IconButton } from '@mui/material';
 
 type CustomDecisionNode<T> = {
   id: string;
@@ -143,24 +143,26 @@ export const createJdmNode = <
               actions={
                 n?.inputs
                   ? [
-                      <Button
+                      <IconButton
                         key='edit-table'
-                        variant='text'
-                        style={{ marginLeft: 'auto', transform: open ? 'rotate(180deg)' : undefined }}
+                        size='small'
+                        sx={{ marginLeft: 'auto', transform: open ? 'rotate(180deg)' : undefined }}
                         onClick={() => setOpen((o) => !o)}
                       >
-                        <ArrowDownward />
-                      </Button>,
+                        <ArrowDownward fontSize='small' />
+                      </IconButton>,
                     ]
                   : undefined
               }
             >
               {open && n?.inputs && (
-                <Form
+                <form
                   className='grl-dn__cn__form'
-                  layout='vertical'
-                  initialValues={nodeData}
-                  onValuesChange={(_, values) => {
+                  value={nodeData}
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const formData = new FormData(e.target as HTMLFormElement);
+                    const values = Object.fromEntries(formData.entries());
                     updateNode(id, (draft) => {
                       draft.content.config = values;
                       return draft;
@@ -171,9 +173,7 @@ export const createJdmNode = <
                     const formItem = match({ control })
                       .with({ control: 'text' }, () => <CodeEditor type='template' />)
                       .with({ control: 'bool' }, () => (
-                        <Checkbox>
-                          <Typography >{label}</Typography>
-                        </Checkbox>
+                        <FormControlLabel control={<Checkbox name={name} />} label={label} />
                       ))
                       .exhaustive();
 
@@ -192,7 +192,7 @@ export const createJdmNode = <
                         key={name}
                         name={name as string}
                         valuePropName={valuePropName}
-                        style={{
+                        sx={{
                           marginBottom: 4,
                         }}
                       >
@@ -201,7 +201,7 @@ export const createJdmNode = <
                       </Box>
                     );
                   })}
-                </Form>
+                </form>
               )}
             </GraphNode>
           );

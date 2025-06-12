@@ -1,5 +1,4 @@
 import HubIcon from '@mui/icons-material/Hub';
-import React from 'react';
 
 import { useDecisionGraphActions, useDecisionGraphState } from '../context/dg-store.context';
 import type { NodeKind } from '../nodes/specifications/specification-types';
@@ -29,7 +28,7 @@ export const GraphTabs = () => {
   return(<Box >
     <Tabs sx={{maxHeight: "2em"}} value={activeNodeId || 'graph'} onChange={(e, val) => graphActions.openTab(val)}>
       <Tab sx={{minHeight: "1em"}} value='graph' label='Graph' iconPosition="start" icon={<HubIcon fontSize="small" />} />
-      {openNodes.map((node, index) => {
+      {openNodes.map((node,) => {
         const specification = nodeSpecification[node.type as NodeKind];
         return <Tab sx={{minHeight: "1em"}} key={node.id} value={node.id} label={<>{node.name}
         <Button size='small' variant='text' onClick={(e) => {
@@ -39,7 +38,7 @@ export const GraphTabs = () => {
           <Close fontSize="small" />
         </Button>
           </>} 
-          iconPosition="start" startIcon={specification?.icon} />
+          iconPosition="start" icon={specification?.icon} />
       })}
     </Tabs>
   </Box>)

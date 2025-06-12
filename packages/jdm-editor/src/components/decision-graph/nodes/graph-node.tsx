@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import React from 'react';
-import type { HandleProps } from 'reactflow';
-import { Handle, Position } from 'reactflow';
+import type { HandleProps } from '@xyflow/react';
+import { Handle, Position } from '@xyflow/react';
 import { P, match } from 'ts-pattern';
 
 import { platform } from '../../../helpers/platform';

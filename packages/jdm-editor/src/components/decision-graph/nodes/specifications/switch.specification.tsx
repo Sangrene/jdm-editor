@@ -4,7 +4,7 @@ import { produce } from 'immer';
 import _ from 'lodash';
 import React, { useLayoutEffect, useMemo, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { Handle, Position } from 'reactflow';
+import { Handle, Position } from '@xyflow/react'; 
 import { P, match } from 'ts-pattern';
 
 import { useNodeType } from '../../../../helpers/node-type';
@@ -150,7 +150,7 @@ const SwitchNode: React.FC<
       ref={inViewRef}
       className={clsx(['switch'])}
       specification={specification}
-      name={data.name}
+      name={data.name as string}
       handleRight={false}
       helper={[<ArrowRight key='arrow-right' />]}
       noBodyPadding

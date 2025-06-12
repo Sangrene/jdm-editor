@@ -1,8 +1,9 @@
 import clsx from 'clsx';
 import equal from 'fast-deep-equal';
 import React, { type MutableRefObject, forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react';
-import type { Connection, Node, ProOptions, ReactFlowInstance, XYPosition } from 'reactflow';
-import ReactFlow, {
+import type { Connection, Edge, Node, ProOptions, ReactFlowInstance, XYPosition } from '@xyflow/react';
+import {
+  ReactFlow,
   Background,
   ControlButton,
   Controls,
@@ -10,8 +11,8 @@ import ReactFlow, {
   getOutgoers,
   useEdgesState,
   useNodesState,
-} from 'reactflow';
-import 'reactflow/dist/style.css';
+} from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
 import { P, match } from 'ts-pattern';
 
 import { nodeSchema } from '../../../helpers/schema';
@@ -76,8 +77,8 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const reactFlowInstance = useRef<ReactFlowInstance>(null);
 
-  const nodesState = useNodesState([]);
-  const edgesState = useEdgesState([]);
+  const nodesState = useNodesState<Node>([]);
+  const edgesState = useEdgesState<Edge>([]);
 
   const [componentsOpened, setComponentsOpened] = useState(true);
 
@@ -117,7 +118,7 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
                 color: 'var(--grl-color-error)',
                 icon: <WarningIcon />,
               }}
-              name={props?.data?.name}
+              name={props?.data?.name as string}
               isSelected={props.selected}
               displayError
               noBodyPadding
@@ -173,7 +174,7 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
         y: rect.height / 2,
       };
 
-      position = reactFlowInstance.current.project(rectCenter);
+      position = reactFlowInstance.current.screenToFlowPosition(rectCenter);
     }
 
     const customSpecification = match(type)
@@ -237,7 +238,7 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
     // message.error(parsed.error?.message);
   };
 
-  const isValidConnection = (connection: Connection): boolean => {
+  const isValidConnection = (connection: Edge | Connection): boolean => {
     // Disallow self-reference
     if (connection.source === connection.target) {
       return false;
@@ -295,7 +296,7 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
       return;
     }
 
-    const position = reactFlowInstance.current.project({
+    const position = reactFlowInstance.current.screenToFlowPosition({
       x: event.clientX - reactFlowBounds.left,
       y: event.clientY - reactFlowBounds.top,
     }) as XYPosition;

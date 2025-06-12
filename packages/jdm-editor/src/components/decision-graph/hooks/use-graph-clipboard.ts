@@ -1,5 +1,5 @@
 import { type RefObject, useCallback, useMemo } from 'react';
-import type { Node, ReactFlowInstance, XYPosition } from 'reactflow';
+import type { Node, ReactFlowInstance, XYPosition } from '@xyflow/react';
 
 import { copyToClipboard, pasteFromClipboard } from '../../../helpers/utility';
 import { useDecisionGraphActions, useDecisionGraphRaw } from '../context/dg-store.context';
@@ -121,7 +121,7 @@ export const useGraphClipboard = (
             y: rect.height / 2,
           };
 
-          const projection = reactFlow.current!.project(rectCenter);
+          const projection = reactFlow.current!.screenToFlowPosition(rectCenter);
 
           position.x = n.position.x + projection.x - gravityCenter.x / 2;
           position.y = n.position.y + projection.y - gravityCenter.y / 2;

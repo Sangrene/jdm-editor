@@ -1,6 +1,6 @@
 import React from 'react';
-import type { EdgeProps } from 'reactflow';
-import { BaseEdge, EdgeLabelRenderer, getBezierPath } from 'reactflow';
+import type { EdgeProps } from '@xyflow/react';
+import { BaseEdge, EdgeLabelRenderer, getBezierPath } from '@xyflow/react';
 import { match } from 'ts-pattern';
 
 import { useDecisionGraphActions, useDecisionGraphState, useEdgeDiff } from './context/dg-store.context';
