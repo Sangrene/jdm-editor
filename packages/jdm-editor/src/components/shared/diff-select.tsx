@@ -1,40 +1,61 @@
-import { Select, type SelectProps, Space, type SpaceProps } from 'antd';
-import clsx from 'clsx';
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { Box, type BoxProps, type SelectProps } from '@mui/material';
 import React from 'react';
-
-import { ArrowDiffIcon } from '../arrow-diff-icon';
 
 export type DiffSelectProps = Omit<SelectProps, 'direction'> & {
   previousValue?: string;
   displayDiff?: boolean;
-  direction?: SpaceProps['direction'];
+  direction?: BoxProps['flexDirection'];
+  gap?: BoxProps['gap'];
+  options?: Array<{
+    key: string;
+    label: string;
+    value: string;
+  }>;
 };
 
 export const DiffSelect: React.FC<DiffSelectProps> = ({
-  direction = 'horizontal',
+  direction = 'column',
   previousValue,
   displayDiff,
+  gap = 1,
+  options,
   ...rest
 }) => {
   return (
-    <Space size={'small'} direction={direction}>
+    <Box sx={{ display: 'flex' }} gap={gap} flexDirection={direction}>
       {displayDiff && (
         <>
-          <Select
-            {...rest}
-            disabled
-            value={previousValue}
-            className={clsx(rest.className, 'text-removed')}
-            onChange={undefined}
-          />
-          <ArrowDiffIcon />
+          <FormControl>
+            <InputLabel id='select-label-previous-'>Previous value</InputLabel>
+            <Select
+              labelId='select-label-previous'
+              id='select-previous'
+              value={previousValue}
+              label='Previous value'
+              onChange={undefined}
+              disabled
+            >
+              {options?.map((option) => (
+                <MenuItem key={option.key} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </>
       )}
-      <Select
-        {...rest}
-        disabled={rest.disabled || displayDiff}
-        className={clsx(rest.className, displayDiff && 'text-added')}
-      />
-    </Space>
+
+      <FormControl>
+        <InputLabel id='select-label'>{rest.label}</InputLabel>
+        <Select {...rest} disabled={rest.disabled || displayDiff} labelId='select-label' id='select'>
+          {options?.map((option) => (
+            <MenuItem key={option.key} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </Box>
   );
 };

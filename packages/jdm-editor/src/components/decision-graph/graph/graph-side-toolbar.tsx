@@ -1,6 +1,9 @@
-import { CloudDownloadOutlined, CloudUploadOutlined } from '@ant-design/icons';
-import type { MenuProps } from 'antd';
-import { Button, Dropdown, Tooltip, message } from 'antd';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { Button, Menu, MenuItem, Tooltip } from '@mui/material';
+import { bindMenu } from 'material-ui-popup-state';
+import { bindTrigger } from 'material-ui-popup-state';
+import PopupState from 'material-ui-popup-state';
 import React, { useRef } from 'react';
 
 import { decisionModelSchema } from '../../../helpers/schema';
@@ -52,13 +55,13 @@ export const GraphSideToolbar: React.FC<GraphSideToolbarProps> = () => {
 
         if (!modelParsed.success) {
           console.log(modelParsed.error?.message);
-          message.error(modelParsed.error?.message);
+          // message.success(modelParsed.error?.message);
           return;
         }
 
         setDecisionGraph(modelParsed.data);
-      } catch (e: any) {
-        message.error(e.message);
+      } catch {
+        // message.error(e.message);
       }
     };
 
@@ -101,15 +104,15 @@ export const GraphSideToolbar: React.FC<GraphSideToolbarProps> = () => {
 
         if (!modelParsed.success) {
           console.log(modelParsed.error?.message);
-          message.error(modelParsed.error?.message);
+          // message.error(modelParsed.error?.message);
           return;
         }
 
         setDecisionGraph(modelParsed.data);
-        message.success('Excel file has been uploaded successfully!');
+        // message.success('Excel file has been uploaded successfully!');
       };
     } catch {
-      message.error('Failed to upload Excel!');
+      // message.error('Failed to upload Excel!');
     }
   };
 
@@ -140,8 +143,8 @@ export const GraphSideToolbar: React.FC<GraphSideToolbarProps> = () => {
       // clean up "a" element & remove ObjectURL
       window.document.body.removeChild(link);
       URL.revokeObjectURL(href);
-    } catch (e: any) {
-      message.error(e.message);
+    } catch {
+      // message.error(e.message);
     }
   };
 
@@ -159,13 +162,13 @@ export const GraphSideToolbar: React.FC<GraphSideToolbarProps> = () => {
         }));
 
       await exportDecisionTable(fileName, decisionTableNodes);
-      message.success('Excel file has been downloaded successfully!');
+      // message.success('Excel file has been downloaded successfully!');
     } catch {
-      message.error('Failed to download Excel file!');
+      // message.error('Failed to download Excel file!');
     }
   };
 
-  const uploadItems: MenuProps['items'] = [
+  const uploadItems = [
     {
       key: 'upload-json',
       label: 'Upload JSON',
@@ -178,7 +181,7 @@ export const GraphSideToolbar: React.FC<GraphSideToolbarProps> = () => {
     },
   ];
 
-  const downloadItems: MenuProps['items'] = [
+  const downloadItems = [
     {
       key: 'download-json',
       label: 'Download JSON',
@@ -216,13 +219,51 @@ export const GraphSideToolbar: React.FC<GraphSideToolbarProps> = () => {
       <div className={'grl-dg__aside__side-bar'}>
         <div className={'grl-dg__aside__side-bar__top'}>
           {!disabled && (
-            <Dropdown menu={{ items: uploadItems }} placement='bottomRight' trigger={['click']} arrow>
-              <Button type={'text'} disabled={disabled} icon={<CloudUploadOutlined />} />
-            </Dropdown>
+            <PopupState variant='popover'>
+              {(popupState) => (
+                <React.Fragment>
+                  <Button size='small' variant='text' {...bindTrigger(popupState)}>
+                    <CloudUploadIcon fontSize='small' />
+                  </Button>
+                  <Menu {...bindMenu(popupState)}>
+                    {uploadItems.map((item) => (
+                      <MenuItem
+                        key={item.key}
+                        onClick={() => {
+                          item.onClick?.();
+                          popupState.close();
+                        }}
+                      >
+                        {item.label}
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                </React.Fragment>
+              )}
+            </PopupState>
           )}
-          <Dropdown menu={{ items: downloadItems }} placement='bottomRight' trigger={['click']} arrow>
-            <Button type={'text'} icon={<CloudDownloadOutlined />} />
-          </Dropdown>
+          <PopupState variant='popover'>
+            {(popupState) => (
+              <React.Fragment>
+                <Button size='small' variant='text' {...bindTrigger(popupState)}>
+                  <CloudDownloadIcon fontSize='small' />
+                </Button>
+                <Menu {...bindMenu(popupState)}>
+                  {downloadItems.map((item) => (
+                    <MenuItem
+                      key={item.key}
+                      onClick={() => {
+                        item.onClick?.();
+                        popupState.close();
+                      }}
+                    >
+                      {item.label}
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </React.Fragment>
+            )}
+          </PopupState>
         </div>
         <div className={'grl-dg__aside__side-bar__bottom'}>
           {(panels || []).map((panel) => {
@@ -235,14 +276,15 @@ export const GraphSideToolbar: React.FC<GraphSideToolbarProps> = () => {
               >
                 <Button
                   key={panel.id}
-                  type='text'
-                  icon={panel.icon}
+                  variant='text'
                   style={{ background: isActive ? 'rgba(0, 0, 0, 0.1)' : undefined }}
                   onClick={() => {
                     if (panel?.onClick) return panel.onClick();
                     if (panel?.renderPanel) setActivePanel(isActive ? undefined : panel.id);
                   }}
-                />
+                >
+                  {panel.icon}
+                </Button>
               </Tooltip>
             );
           })}

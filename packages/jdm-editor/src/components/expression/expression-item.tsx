@@ -1,8 +1,8 @@
 import type { VariableType } from '@gorules/zen-engine-wasm';
+import DragHandleIcon from '@mui/icons-material/DragHandle';
+import { Typography } from '@mui/material';
 import type { Row } from '@tanstack/react-table';
-import { Typography } from 'antd';
 import clsx from 'clsx';
-import { GripVerticalIcon } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 
@@ -23,6 +23,7 @@ export type ExpressionItemProps = {
 export const ExpressionItem: React.FC<ExpressionItemProps> = ({ expression, index, variableType }) => {
   const [isFocused, setIsFocused] = useState(false);
   const expressionRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<HTMLDivElement>(null);
   const { updateRow, removeRow, swapRows, disabled, configurable } = useExpressionStore(
     ({ updateRow, removeRow, swapRows, disabled, configurable }) => ({
       updateRow,
@@ -52,7 +53,7 @@ export const ExpressionItem: React.FC<ExpressionItemProps> = ({ expression, inde
     },
   });
 
-  const [{ isDragging }, dragRef, previewRef] = useDrag({
+  const [{ isDragging }, dragConnector, previewRef] = useDrag({
     canDrag: configurable && !disabled,
     item: () => ({ ...expression, index }),
     type: 'row',
@@ -60,7 +61,7 @@ export const ExpressionItem: React.FC<ExpressionItemProps> = ({ expression, inde
       isDragging: monitor.isDragging(),
     }),
   });
-
+  dragConnector(dragRef);
   previewRef(dropRef(expressionRef));
 
   return (
@@ -85,7 +86,7 @@ export const ExpressionItem: React.FC<ExpressionItemProps> = ({ expression, inde
               }}
             />
           ) : (
-            <GripVerticalIcon size={10} />
+            <DragHandleIcon fontSize='small' />
           )}
         </div>
       </div>
@@ -171,9 +172,7 @@ const ResultOverlay: React.FC<{ expression: ExpressionEntry }> = ({ expression }
 
   return (
     <div className='expression-list-item__resultOverlay'>
-      <Typography.Text ellipsis={{ tooltip: trace }} style={{ maxWidth: 60, overflow: 'hidden' }}>
-        = {trace as string}
-      </Typography.Text>
+      <Typography sx={{ maxWidth: 60, overflow: 'hidden', textOverflow: 'ellipsis' }}>= {trace as string}</Typography>
     </div>
   );
 };

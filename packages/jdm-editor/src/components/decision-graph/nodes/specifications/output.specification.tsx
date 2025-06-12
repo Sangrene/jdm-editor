@@ -1,7 +1,7 @@
-import { Button } from 'antd';
+import OutputIcon from '@mui/icons-material/Output';
+import { Button } from '@mui/material';
 import { produce } from 'immer';
 import _ from 'lodash';
-import { ArrowRightFromLineIcon } from 'lucide-react';
 import React from 'react';
 import type { z } from 'zod';
 
@@ -20,7 +20,7 @@ export type NodeOutputData = InferredContent & Diff;
 
 export const outputSpecification: NodeSpecification<NodeOutputData> = {
   type: NodeKind.Output,
-  icon: <ArrowRightFromLineIcon size='1em' />,
+  icon: <OutputIcon sx={{ fontSize: '1em' }} />,
   color: NodeColor.Green,
   displayName: 'Response',
   documentationUrl: 'https://gorules.io/docs/user-manual/decision-modeling/decisions',
@@ -33,11 +33,11 @@ export const outputSpecification: NodeSpecification<NodeOutputData> = {
       <GraphNode
         id={id}
         specification={specification}
-        name={data.name}
+        name={data.name as string}
         isSelected={selected}
         handleRight={false}
         actions={[
-          <Button key='edit-table' type='text' onClick={() => graphActions.openTab(id)}>
+          <Button key='edit-table' variant='text' onClick={() => graphActions.openTab(id)}>
             Configure
           </Button>,
         ]}

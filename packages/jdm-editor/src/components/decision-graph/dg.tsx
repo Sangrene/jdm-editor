@@ -1,6 +1,6 @@
+import { ReactFlowProvider } from '@xyflow/react';
 import type { DragDropManager } from 'dnd-core';
 import React, { forwardRef } from 'react';
-import { ReactFlowProvider } from 'reactflow';
 
 import type { DecisionGraphContextProps } from './context/dg-store.context';
 import { DecisionGraphProvider } from './context/dg-store.context';
@@ -21,16 +21,12 @@ export type DecisionGraphProps = {
 export type DecisionGraphRef = GraphRef;
 
 export const DecisionGraph = forwardRef<DecisionGraphRef, DecisionGraphProps>(
-  ({ manager: _, reactFlowProOptions, tabBarExtraContent, ...props }, ref) => {
+  ({ manager: _, reactFlowProOptions, ...props }, ref) => {
     return (
       <div className={'grl-dg'}>
         <ReactFlowProvider>
           <DecisionGraphProvider>
-            <DecisionGraphWrapper
-              ref={ref}
-              reactFlowProOptions={reactFlowProOptions}
-              tabBarExtraContent={tabBarExtraContent}
-            />
+            <DecisionGraphWrapper ref={ref} reactFlowProOptions={reactFlowProOptions} />
             <DecisionGraphInferTypes />
             <DecisionGraphEmpty {...props} />
           </DecisionGraphProvider>

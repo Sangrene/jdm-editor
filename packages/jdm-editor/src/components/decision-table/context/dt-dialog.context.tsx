@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import type { ColumnType, TableSchemaItem } from './dt-store.context';
 
-export type TableDialogType = 'add' | 'reorder' | 'edit';
+export type TableDialogType = 'reorder';
 export type TableDialogState = {
   type: TableDialogType;
   item: TableSchemaItem | null;
@@ -13,16 +13,11 @@ export type TableDialogContextState = {
   setDialog: React.Dispatch<React.SetStateAction<TableDialogState | undefined>>;
   dialog: TableDialogState | undefined;
   isDialogActive: (type: TableDialogType) => boolean;
-  getContainer?: () => HTMLElement;
 };
 
 export const TableDialogContext = React.createContext<TableDialogContextState>({} as any);
 
-export const DecisionTableDialogProvider: React.FC<
-  React.PropsWithChildren<{
-    getContainer?: () => HTMLElement;
-  }>
-> = ({ children, getContainer }) => {
+export const DecisionTableDialogProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const [dialog, setDialog] = useState<TableDialogState | undefined>(undefined);
   const isDialogActive = (type: TableDialogType) => {
     return dialog?.type === type;
@@ -34,7 +29,6 @@ export const DecisionTableDialogProvider: React.FC<
         dialog,
         setDialog,
         isDialogActive,
-        getContainer,
       }}
     >
       {children}

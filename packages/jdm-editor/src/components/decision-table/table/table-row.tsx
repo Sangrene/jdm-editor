@@ -1,7 +1,7 @@
+import { Typography } from '@mui/material';
 import type { Row } from '@tanstack/react-table';
 import { flexRender } from '@tanstack/react-table';
 import type { VirtualItem } from '@tanstack/react-virtual';
-import { Typography } from 'antd';
 import clsx from 'clsx';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
@@ -11,13 +11,15 @@ import type { DiffMetadata } from '../../decision-graph';
 import { useDecisionTableActions, useDecisionTableState } from '../context/dt-store.context';
 
 export const TableRow: React.FC<{
+  onContextMenu?: (e: React.MouseEvent<HTMLTableCellElement>) => void;
   ref?: React.Ref<HTMLTableRowElement>;
   row: Row<Record<string, string>>;
   disabled?: boolean;
   virtualItem: VirtualItem;
   onResize?: (node: HTMLElement) => void;
-}> = ({ ref, row, disabled, virtualItem, onResize }) => {
+}> = ({ ref, row, disabled, virtualItem, onResize, onContextMenu }) => {
   const trRef = useRef<HTMLTableRowElement>(null);
+  const tdRef = useRef<HTMLTableCellElement>(null);
   const tableActions = useDecisionTableActions();
   const { cursor, isActive } = useDecisionTableState(({ cursor, debug }) => ({
     cursor,
@@ -33,7 +35,7 @@ export const TableRow: React.FC<{
     drop: (draggedRow: Row<Record<string, string>>) => tableActions.swapRows(draggedRow.index, row.index),
   });
 
-  const [{ isDragging }, dragRef, previewRef] = useDrag({
+  const [{ isDragging }, dragConnector, previewRef] = useDrag({
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -42,7 +44,9 @@ export const TableRow: React.FC<{
   });
 
   previewRef(dropRef(trRef));
-
+  if (!disabled) {
+    dragConnector(tdRef);
+  }
   useEffect(() => {
     if (!trRef.current) {
       return;
@@ -93,11 +97,11 @@ export const TableRow: React.FC<{
     >
       <td
         className={clsx('sort-handler', !disabled && 'draggable', diffStatus && 'diff')}
-        ref={disabled ? undefined : dragRef}
+        ref={tdRef}
         onContextMenuCapture={() => tableActions.setCursor({ x: 'id', y: virtualItem.index })}
       >
         <div className={'text'}>
-          <Typography>{virtualItem.index + 1}</Typography>
+          <Typography variant='body2'>{virtualItem.index + 1}</Typography>
         </div>
       </td>
       {row.getVisibleCells().map((cell) => (
@@ -108,6 +112,7 @@ export const TableRow: React.FC<{
             diff?.fields?.[cell?.column?.id]?.status && `diff-${diff?.fields?.[cell?.column?.id]?.status}`,
           )}
           style={{ width: cell.column.getSize() }}
+          onContextMenu={onContextMenu}
         >
           {flexRender(cell.column.columnDef.cell, cell.getContext())}
         </td>

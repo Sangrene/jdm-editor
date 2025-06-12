@@ -1,13 +1,14 @@
-import { ArrowRightOutlined, DeleteOutlined, DownOutlined } from '@ant-design/icons';
 import type { VariableType } from '@gorules/zen-engine-wasm';
-import { Button, Dropdown, Popconfirm, Typography } from 'antd';
+import { ArrowDownward, ArrowRight, Delete } from '@mui/icons-material';
+import CallSplitIcon from '@mui/icons-material/CallSplit';
+import { Button, Menu, MenuItem, Typography } from '@mui/material';
+import { Handle, Position } from '@xyflow/react';
 import clsx from 'clsx';
 import { produce } from 'immer';
 import _ from 'lodash';
-import { SplitIcon } from 'lucide-react';
+import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
 import React, { useLayoutEffect, useMemo, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { Handle, Position } from 'reactflow';
 import { P, match } from 'ts-pattern';
 
 import { useNodeType } from '../../../../helpers/node-type';
@@ -34,7 +35,7 @@ export type NodeSwitchData = {
 
 export const switchSpecification: NodeSpecification<NodeSwitchData> = {
   type: NodeKind.Switch,
-  icon: <SplitIcon size='1em' />,
+  icon: <CallSplitIcon sx={{ fontSize: '1em' }} />,
   displayName: 'Switch',
   documentationUrl: 'https://gorules.io/docs/user-manual/decision-modeling/decisions/switch',
   shortDescription: 'Conditional branching',
@@ -149,15 +150,15 @@ const SwitchNode: React.FC<
       ref={inViewRef}
       className={clsx(['switch'])}
       specification={specification}
-      name={data.name}
+      name={data.name as string}
       handleRight={false}
-      helper={[<ArrowRightOutlined key='arrow-right' />]}
+      helper={[<ArrowRight key='arrow-right' />]}
       noBodyPadding
       isSelected={selected}
       actions={[
         <Button
           key='add condition'
-          type='text'
+          variant='text'
           disabled={disabled}
           onClick={() => {
             if (hitPolicy === 'first' && statements?.length > 0) {
@@ -187,52 +188,47 @@ const SwitchNode: React.FC<
         >
           Add Condition
         </Button>,
-        <Dropdown
-          key='hitPolicy'
-          trigger={['click']}
-          placement='bottomRight'
-          menu={{
-            items: [
-              {
-                key: 'first',
-                label: 'First',
-                onClick: () => changeHitPolicy('first'),
-                disabled,
-              },
-              {
-                key: 'collect',
-                label: 'Collect',
-                disabled,
-                onClick: () => {
-                  graphActions.updateNode(id, (draft) => {
-                    draft.content.statements = ((draft.content.statements || []) as SwitchStatement[]).map(
-                      (statement) => {
-                        if (statement.isDefault) {
-                          statement.isDefault = false;
-                        }
-                        return statement;
-                      },
-                    );
-                    return draft;
-                  });
-                  changeHitPolicy('collect');
-                },
-              },
-            ],
-          }}
-        >
-          <Button type='text' style={{ textTransform: 'capitalize', marginLeft: 'auto' }}>
-            {hitPolicy} <DownOutlined />
-          </Button>
-        </Dropdown>,
+        <PopupState variant='popover' key={'hit-policy'}>
+          {(popupState) => (
+            <React.Fragment>
+              <Button size='small' variant='text' {...bindTrigger(popupState)}>
+                {hitPolicy} <ArrowDownward />
+              </Button>
+              <Menu {...bindMenu(popupState)}>
+                <MenuItem key={'first'} onClick={() => changeHitPolicy('first')}>
+                  First
+                </MenuItem>
+                <MenuItem
+                  key={'collect'}
+                  onClick={() => {
+                    graphActions.updateNode(id, (draft) => {
+                      draft.content.statements = ((draft.content.statements || []) as SwitchStatement[]).map(
+                        (statement) => {
+                          if (statement.isDefault) {
+                            statement.isDefault = false;
+                          }
+                          return statement;
+                        },
+                      );
+                      return draft;
+                    });
+                    changeHitPolicy('collect');
+                  }}
+                >
+                  Collect
+                </MenuItem>
+              </Menu>
+            </React.Fragment>
+          )}
+        </PopupState>,
       ]}
     >
       <div className='switchNode'>
         <div className='switchNode__body edit nodrag'>
           {!(statements?.length > 0) && (
-            <Typography.Text type={'secondary'} className={'no-conditions'}>
+            <Typography variant={'body2'} className={'no-conditions'}>
               No conditions
-            </Typography.Text>
+            </Typography>
           )}
           {statements.map((statement, index) => (
             <Handle
@@ -360,7 +356,7 @@ const SwitchHandle: React.FC<{
             disabled={disabled}
             className={clsx('switchNode__statement__heading__action')}
             size={'small'}
-            type={'text'}
+            variant={'text'}
           >
             If
           </Button>
@@ -369,7 +365,7 @@ const SwitchHandle: React.FC<{
           <Button
             className={clsx('switchNode__statement__heading__action', isElse && 'inactive')}
             size={'small'}
-            type={'text'}
+            variant={'text'}
             disabled={disabled}
             onClick={() => {
               if (isLastIndex && hitPolicy === 'first') {
@@ -384,7 +380,7 @@ const SwitchHandle: React.FC<{
           <Button
             className={clsx('switchNode__statement__heading__action', !isElse && 'inactive')}
             size={'small'}
-            type={'text'}
+            variant={'text'}
             disabled={disabled}
             onClick={() => {
               if (isLastIndex && hitPolicy === 'first') {
@@ -401,9 +397,9 @@ const SwitchHandle: React.FC<{
           }}
         />
         {!disabled && configurable && (
-          <Popconfirm title='Remove condition?' okText='Remove' onConfirm={() => onDelete?.()}>
-            <Button className='switchNode__statement__delete' size='small' type='text' icon={<DeleteOutlined />} />
-          </Popconfirm>
+          <Button className='switchNode__statement__delete' size='small' variant='text' onClick={() => onDelete?.()}>
+            <Delete />
+          </Button>
         )}
         <Handle
           id={id}
@@ -484,9 +480,9 @@ const SwitchHandleCompact: React.FC<{
       </div>
       {!disabled && configurable && (
         <div className='switchNode__statement__button'>
-          <Popconfirm title='Remove condition?' okText='Remove' onConfirm={() => onDelete?.()}>
-            <Button className='switchNode__statement__delete' size='small' type='text' icon={<DeleteOutlined />} />
-          </Popconfirm>
+          <Button className='switchNode__statement__delete' size='small' variant='text' onClick={() => onDelete?.()}>
+            <Delete />
+          </Button>
         </div>
       )}
       <Handle

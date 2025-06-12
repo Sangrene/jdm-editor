@@ -1,8 +1,8 @@
-import { BookOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Button, Modal, Typography } from 'antd';
+import { Book, Delete } from '@mui/icons-material';
+import InputIcon from '@mui/icons-material/Input';
+import { Button } from '@mui/material';
 import { produce } from 'immer';
 import _ from 'lodash';
-import { ArrowRightToLineIcon } from 'lucide-react';
 import React from 'react';
 import type { z } from 'zod';
 
@@ -23,7 +23,7 @@ export type NodeInputData = InferredContent & Diff;
 
 export const inputSpecification: NodeSpecification<NodeInputData> = {
   type: NodeKind.Input,
-  icon: <ArrowRightToLineIcon size='1em' />,
+  icon: <InputIcon sx={{ fontSize: '1em' }} />,
   displayName: 'Request',
   color: NodeColor.Green,
   documentationUrl: 'https://gorules.io/docs/user-manual/decision-modeling/decisions',
@@ -45,39 +45,27 @@ export const inputSpecification: NodeSpecification<NodeInputData> = {
       <GraphNode
         id={id}
         specification={specification}
-        name={data.name}
+        name={data.name as string}
         isSelected={selected}
         handleLeft={false}
         actions={[
-          <Button key='edit-table' type='text' onClick={() => graphActions.openTab(id)}>
+          <Button key='edit-table' variant='text' onClick={() => graphActions.openTab(id)}>
             Configure
           </Button>,
         ]}
         menuItems={[
           {
             key: 'documentation',
-            icon: <BookOutlined />,
+            icon: <Book />,
             label: 'Documentation',
             onClick: () => window.open(specification.documentationUrl, '_href'),
           },
           {
             key: 'delete',
-            icon: <DeleteOutlined />,
-            danger: true,
+            icon: <Delete color='error' />,
             label: <SpacedText left='Delete' right={platform.shortcut('Backspace')} />,
             disabled,
-            onClick: () =>
-              Modal.confirm({
-                icon: null,
-                title: 'Delete node',
-                content: (
-                  <Typography.Text>
-                    Are you sure you want to delete <Typography.Text strong>{data.name}</Typography.Text> node.
-                  </Typography.Text>
-                ),
-                okButtonProps: { danger: true },
-                onOk: () => graphActions.removeNodes([id]),
-              }),
+            onClick: () => graphActions.removeNodes([id]),
           },
         ]}
       />

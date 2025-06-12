@@ -1,4 +1,7 @@
-import { DragOutlined, MinusSquareOutlined, PlusSquareOutlined } from '@ant-design/icons';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
+import PanToolIcon from '@mui/icons-material/PanTool';
+import type { SvgIconProps } from '@mui/material';
 import React from 'react';
 import { match } from 'ts-pattern';
 
@@ -7,24 +10,24 @@ import type { DiffStatus } from './decision-graph/dg-types';
 export const DiffIcon: React.FC<
   {
     status?: DiffStatus;
-  } & React.HTMLAttributes<HTMLSpanElement>
+  } & SvgIconProps
 > = ({ status, ...rest }) => {
   return match(status)
     .with('removed', () => (
-      <MinusSquareOutlined
+      <IndeterminateCheckBoxIcon
         {...rest}
-        style={{
+        sx={{
           color: 'var(--grl-color-error)',
-          ...(rest?.style || {}),
+          ...(rest?.sx || {}),
         }}
       />
     ))
     .with('added', () => (
-      <PlusSquareOutlined
+      <AddBoxIcon
         {...rest}
-        style={{
+        sx={{
           color: 'var(--grl-color-success)',
-          ...(rest?.style || {}),
+          ...(rest?.sx || {}),
         }}
       />
     ))
@@ -54,9 +57,9 @@ export const DiffIcon: React.FC<
       </span>
     ))
     .with('moved', () => (
-      <DragOutlined
+      <PanToolIcon
         {...rest}
-        style={{
+        sx={{
           color: 'var(--grl-color-info)',
           ...(rest?.style || {}),
         }}

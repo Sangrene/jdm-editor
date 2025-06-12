@@ -1,6 +1,7 @@
-import { FormatPainterOutlined, ImportOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { DiffEditor, Editor } from '@monaco-editor/react';
-import { Button, Space, Spin, Tabs, Tooltip, theme } from 'antd';
+import FormatPaintIcon from '@mui/icons-material/FormatPaint';
+import InputIcon from '@mui/icons-material/Input';
+import { Button, CircularProgress, Tab, Tabs, Tooltip } from '@mui/material';
 import type { DragDropManager } from 'dnd-core';
 import { type editor } from 'monaco-editor';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -29,10 +30,6 @@ const monacoOptions: editor.IStandaloneEditorConstructionOptions = {
   },
 };
 
-enum TabKey {
-  Schema = 'Schema',
-}
-
 export type TabJsonSchemaProps = {
   id: string;
   manager?: DragDropManager;
@@ -44,11 +41,9 @@ export const TabJsonSchema: React.FC<TabJsonSchemaProps> = ({ id, type = 'input'
 
   const language = 'json';
 
-  const { token } = theme.useToken();
-
   const [jsonToJsonSchemaOpen, setJsonToJsonSchemaOpen] = useState(false);
 
-  const [activeTab, setActiveTab] = useState(TabKey.Schema);
+  const [activeTab, setActiveTab] = useState('Schema');
 
   const [editor, setEditor] = useState<editor.IStandaloneCodeEditor>();
   const [diffEditor, setDiffEditor] = useState<editor.IStandaloneDiffEditor>();
@@ -83,14 +78,10 @@ export const TabJsonSchema: React.FC<TabJsonSchemaProps> = ({ id, type = 'input'
   return (
     <div
       className='grl-node-content'
-      data-theme={token.mode}
+      data-theme={'light'}
       style={
         {
-          'height': '100%',
-          '--color-text': token.colorTextBase,
-          '--color-background-elevated': token.colorBgElevated,
-          '--color-border': token.colorBorder,
-          '--line-height': token.lineHeight,
+          height: '100%',
         } as any
       }
     >
@@ -102,90 +93,67 @@ export const TabJsonSchema: React.FC<TabJsonSchemaProps> = ({ id, type = 'input'
         <div className='grl-node-content-side'>
           <div className='grl-node-content-side__panel'>
             <div className='grl-node-content-side__header'>
-              <Tabs
-                rootClassName='grl-inline-tabs'
-                size='small'
-                style={{ width: '100%' }}
-                items={Object.values(TabKey).map((t) => ({
-                  key: t,
-                  label: (
-                    <span>
-                      {t}{' '}
-                      <Tooltip title={schemaTooltip}>
-                        <InfoCircleOutlined
-                          style={{ fontSize: 10, marginLeft: 4, opacity: 0.5, verticalAlign: 'text-top' }}
-                        />
-                      </Tooltip>
-                    </span>
-                  ),
-                }))}
-                activeKey={activeTab}
-                onChange={(t) => setActiveTab(t as TabKey)}
-                tabBarExtraContent={
-                  <Space style={{ marginRight: 8 }} size={'small'}>
-                    <Tooltip title='Format code' placement='bottomRight'>
-                      <Button
-                        size='small'
-                        type='text'
-                        disabled={disabled}
-                        icon={<FormatPainterOutlined />}
-                        onClick={() => editor?.getAction?.('editor.action.formatDocument')?.run?.()}
-                      />
-                    </Tooltip>
-                    <Tooltip title='Import from JSON' placement='bottomRight'>
-                      <Button
-                        type='text'
-                        size={'small'}
-                        disabled={disabled}
-                        icon={<ImportOutlined />}
-                        onClick={() => {
-                          setJsonToJsonSchemaOpen(true);
-                        }}
-                      />
-                    </Tooltip>
-                  </Space>
-                }
-              />
+              <Tabs value={activeTab} onChange={(_, t) => setActiveTab(t)}>
+                <Tooltip title={schemaTooltip} placement='bottom-start'>
+                  <Tab label='Schema' value={'Schema'} />
+                </Tooltip>
+                <Tooltip title='Format code' placement='bottom-start'>
+                  <Button
+                    size='small'
+                    variant='text'
+                    disabled={disabled}
+                    startIcon={<FormatPaintIcon />}
+                    onClick={() => editor?.getAction?.('editor.action.formatDocument')?.run?.()}
+                  />
+                </Tooltip>
+                <Tooltip title='Import from JSON' placement='bottom-start'>
+                  <Button
+                    variant='text'
+                    size={'small'}
+                    disabled={disabled}
+                    startIcon={<InputIcon />}
+                    onClick={() => {
+                      setJsonToJsonSchemaOpen(true);
+                    }}
+                  />
+                </Tooltip>
+              </Tabs>
             </div>
             <div className='grl-node-content-side__body'>
-              {match(activeTab)
-                .with(TabKey.Schema, () =>
-                  previousValue !== undefined ? (
-                    <DiffEditor
-                      loading={<Spin size='large' />}
-                      language={language}
-                      original={previousValue}
-                      modified={content?.schema}
-                      onMount={(editor) => setDiffEditor(editor)}
-                      theme={token.mode === 'dark' ? 'vs-dark' : 'light'}
-                      height='100%'
-                      options={{
-                        ...monacoOptions,
-                        readOnly: true,
-                      }}
-                    />
-                  ) : (
-                    <Editor
-                      loading={<Spin size='large' />}
-                      language={language}
-                      value={content?.schema || ''}
-                      onMount={(editor) => setEditor(editor)}
-                      onChange={(value) => {
-                        graphActions.updateNode(id, (draft) => {
-                          draft.content = { schema: value };
-                          return draft;
-                        });
-                      }}
-                      theme={token.mode === 'dark' ? 'vs-dark' : 'light'}
-                      height='100%'
-                      options={{
-                        ...monacoOptions,
-                        readOnly: disabled,
-                      }}
-                    />
-                  ),
-                )
-                .exhaustive()}
+              {previousValue !== undefined ? (
+                <DiffEditor
+                  loading={<CircularProgress size='large' />}
+                  language={language}
+                  original={previousValue}
+                  modified={content?.schema}
+                  onMount={(editor) => setDiffEditor(editor)}
+                  theme={'light'}
+                  height='100%'
+                  options={{
+                    ...monacoOptions,
+                    readOnly: true,
+                  }}
+                />
+              ) : (
+                <Editor
+                  loading={<CircularProgress size='large' />}
+                  language={language}
+                  value={content?.schema || ''}
+                  onMount={(editor) => setEditor(editor)}
+                  onChange={(value) => {
+                    graphActions.updateNode(id, (draft) => {
+                      draft.content = { schema: value };
+                      return draft;
+                    });
+                  }}
+                  theme={'light'}
+                  height='100%'
+                  options={{
+                    ...monacoOptions,
+                    readOnly: disabled,
+                  }}
+                />
+              )}
             </div>
             <JsonToJsonSchemaDialog
               isOpen={jsonToJsonSchemaOpen}

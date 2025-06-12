@@ -1,6 +1,5 @@
-import { message } from 'antd';
+import type { Node, ReactFlowInstance, XYPosition } from '@xyflow/react';
 import { type RefObject, useCallback, useMemo } from 'react';
-import type { Node, ReactFlowInstance, XYPosition } from 'reactflow';
 
 import { copyToClipboard, pasteFromClipboard } from '../../../helpers/utility';
 import { useDecisionGraphActions, useDecisionGraphRaw } from '../context/dg-store.context';
@@ -59,9 +58,9 @@ export const useGraphClipboard = (
         };
 
         await copyToClipboard(JSON.stringify(clipboardData));
-        message.success('Copied to clipboard!');
-      } catch (e: any) {
-        message.error(e.message);
+        // message.success('Copied to clipboard!');
+      } catch {
+        // message.error(e.message);
       }
     },
     [raw],
@@ -122,7 +121,7 @@ export const useGraphClipboard = (
             y: rect.height / 2,
           };
 
-          const projection = reactFlow.current!.project(rectCenter);
+          const projection = reactFlow.current!.screenToFlowPosition(rectCenter);
 
           position.x = n.position.x + projection.x - gravityCenter.x / 2;
           position.y = n.position.y + projection.y - gravityCenter.y / 2;
@@ -146,7 +145,7 @@ export const useGraphClipboard = (
 
       graphActions.addNodes(nodes);
       graphActions.addEdges(edges);
-      message.success('Pasted from clipboard!');
+      // message.success('Pasted from clipboard!');
 
       if (anchor) {
         try {
@@ -156,7 +155,7 @@ export const useGraphClipboard = (
         }
       }
     } catch {
-      message.error('Failed to paste from clipboard');
+      // message.error('Failed to paste from clipboard');
     }
   }, [reactFlow, wrapper]);
 

@@ -1,7 +1,8 @@
-import { Card, Form, Modal, Typography } from 'antd';
+import { Button, Dialog, DialogActions, DialogTitle, List, ListItem, Typography } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import type { XYCoord } from 'react-dnd';
-import { useDrag, useDrop } from 'react-dnd';
+import { DndProvider, useDrag, useDrop } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import { Stack } from '../../stack';
 import type { TableSchemaItem } from '../context/dt-store.context';
@@ -25,7 +26,7 @@ const FieldCard: React.FC<{
   index: number;
   moveCard: (dragIndex: number, hoverIndex: number) => void;
 }> = ({ col, index, moveCard }) => {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLLIElement>(null);
   const [, drop] = useDrop<DragItem, void>({
     accept: 'col',
     collect(monitor) {
@@ -74,24 +75,20 @@ const FieldCard: React.FC<{
 
   drag(drop(ref));
   return (
-    <Card ref={ref} style={{ opacity: isDragging ? 0 : 1 }} bodyStyle={{ padding: '0.5rem' }}>
-      <div className='grl-dt__fields-reorder__item'>
-        <Stack horizontal verticalAlign='center'>
-          <div className='grl-dt__fields-reorder__handle'>=</div>
-          <Stack grow gap={0}>
-            <Typography.Text>{col.name}</Typography.Text>
-            <Typography.Text type='secondary' style={{ fontSize: 12 }}>
-              {col.field}
-            </Typography.Text>
-          </Stack>
+    <ListItem ref={ref} sx={{ opacity: isDragging ? 0 : 1, padding: '0.5rem', cursor: 'move' }}>
+      <Stack horizontal verticalAlign='center'>
+        <div className='grl-dt__fields-reorder__handle'>=</div>
+        <Stack grow gap={0}>
+          <Typography>{col.name}</Typography>
+          <Typography sx={{ fontSize: 12 }}>{col.field}</Typography>
         </Stack>
-      </div>
-    </Card>
+      </Stack>
+    </ListItem>
   );
 };
 
 export const FieldsReorder: React.FC<FieldsReorderProps> = (props) => {
-  const { isOpen, onDismiss, onSuccess, fields, getContainer } = props;
+  const { isOpen, onDismiss, onSuccess, fields } = props;
 
   const [columns, setColumns] = useState<TableSchemaItem[]>([]);
 
@@ -113,27 +110,25 @@ export const FieldsReorder: React.FC<FieldsReorderProps> = (props) => {
   };
 
   return (
-    <Modal
-      title='Reorder fields'
-      open={isOpen}
-      onCancel={onDismiss}
-      width={360}
-      destroyOnClose
-      bodyStyle={{ paddingTop: 17 }}
-      okText='Update'
-      okButtonProps={{
-        htmlType: 'submit',
-        form: 'fields-reorder-dialog',
-      }}
-      getContainer={getContainer}
-    >
-      <Form id='fields-reorder-dialog' onFinish={() => onSuccess?.(columns)}>
-        <Stack gap={8} horizontalAlign='stretch'>
-          {columns.map((column, index) => (
-            <FieldCard key={column.id} col={column} index={index} moveCard={moveCard} />
-          ))}
-        </Stack>
-      </Form>
-    </Modal>
+    <Dialog open={!!isOpen} onClose={onDismiss} maxWidth='xs' fullWidth>
+      <DialogTitle>Reorder fields</DialogTitle>
+      <DndProvider backend={HTML5Backend}>
+        <form action={() => onSuccess?.(columns)}>
+          <List sx={{ p: 1 }}>
+            {columns.map((column, index) => (
+              <FieldCard key={column.id} col={column} index={index} moveCard={moveCard} />
+            ))}
+          </List>
+          <DialogActions>
+            <Button size='small' type='submit' variant='contained'>
+              Update
+            </Button>
+            <Button size='small' variant='outlined' onClick={onDismiss}>
+              Cancel
+            </Button>
+          </DialogActions>
+        </form>
+      </DndProvider>
+    </Dialog>
   );
 };

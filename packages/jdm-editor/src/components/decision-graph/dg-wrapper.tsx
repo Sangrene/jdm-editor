@@ -1,9 +1,9 @@
+import type { ProOptions } from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
 import clsx from 'clsx';
 import { createDragDropManager } from 'dnd-core';
 import React, { forwardRef, useMemo, useRef, useState } from 'react';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import type { ProOptions } from 'reactflow';
-import 'reactflow/dist/style.css';
 import { match } from 'ts-pattern';
 
 import { useDecisionGraphState } from './context/dg-store.context';
@@ -12,7 +12,6 @@ import './dg.scss';
 import type { GraphRef } from './graph/graph';
 import { Graph } from './graph/graph';
 import { GraphSideToolbar } from './graph/graph-side-toolbar';
-import type { GraphTabsProps } from './graph/graph-tabs';
 import { GraphTabs } from './graph/graph-tabs';
 import { decisionTableSpecification } from './nodes/specifications/decision-table.specification';
 import { expressionSpecification } from './nodes/specifications/expression.specification';
@@ -23,15 +22,11 @@ import { NodeKind } from './nodes/specifications/specification-types';
 
 export type DecisionGraphWrapperProps = {
   reactFlowProOptions?: ProOptions;
-  tabBarExtraContent?: GraphTabsProps['tabBarExtraContent'];
 };
 
 export const DecisionGraphWrapper = React.memo(
-  forwardRef<GraphRef, DecisionGraphWrapperProps>(function DecisionGraphWrapperInner(
-    { reactFlowProOptions, tabBarExtraContent },
-    ref,
-  ) {
-    const [disableTabs, setDisableTabs] = useState(false);
+  forwardRef<GraphRef, DecisionGraphWrapperProps>(function DecisionGraphWrapperInner({ reactFlowProOptions }, ref) {
+    const [, setDisableTabs] = useState(false);
     const hasActiveNode = useDecisionGraphState(({ decisionGraph, activeTab }) => {
       return (decisionGraph?.nodes ?? []).some((node) => node.id === activeTab);
     });
@@ -40,7 +35,7 @@ export const DecisionGraphWrapper = React.memo(
       <>
         <GraphSideToolbar />
         <div className={'grl-dg__graph'}>
-          <GraphTabs disabled={disableTabs} tabBarExtraContent={tabBarExtraContent} />
+          <GraphTabs />
           <Graph
             ref={ref}
             className={clsx([!hasActiveNode && 'active'])}

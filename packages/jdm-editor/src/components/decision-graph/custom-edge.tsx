@@ -1,9 +1,8 @@
-import { DeleteOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
-import clsx from 'clsx';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { IconButton } from '@mui/material';
+import type { EdgeProps } from '@xyflow/react';
+import { BaseEdge, EdgeLabelRenderer, getBezierPath } from '@xyflow/react';
 import React from 'react';
-import type { EdgeProps } from 'reactflow';
-import { BaseEdge, EdgeLabelRenderer, getBezierPath } from 'reactflow';
 import { match } from 'ts-pattern';
 
 import { useDecisionGraphActions, useDecisionGraphState, useEdgeDiff } from './context/dg-store.context';
@@ -47,16 +46,10 @@ export const CustomEdge: React.FC<EdgeProps> = (props) => {
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
           }}
         >
-          {!disabled && (
-            <Button
-              type='primary'
-              shape='round'
-              icon={<DeleteOutlined />}
-              danger
-              className={clsx('grl-edge-delete-button')}
-              data-visible={isHovered}
-              onClick={() => graphActions.removeEdges([id])}
-            />
+          {!disabled && isHovered && (
+            <IconButton color='error' size='small' onClick={() => graphActions.removeEdges([id])}>
+              <DeleteIcon />
+            </IconButton>
           )}
         </div>
       </EdgeLabelRenderer>

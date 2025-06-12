@@ -1,7 +1,6 @@
 import { type Variable } from '@gorules/zen-engine-wasm';
-import { Button, Popover, Typography } from 'antd';
-import clsx from 'clsx';
-import { ChevronDownIcon } from 'lucide-react';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Button, DialogActions, Popover, Typography } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 
 import type { CodeEditorRef } from '../../code-editor';
@@ -25,18 +24,16 @@ export const InputFieldEdit: React.FC<InputFieldEditProps> = ({
   onChange,
   onRemove,
   disabled,
-  className,
   variableType,
   inputData,
   referenceData,
-  ...props
 }) => {
-  const [open, setOpen] = useState(false);
   const [innerValue, setInnerValue] = useState(value);
   const codeEditor = useRef<CodeEditorRef>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   useEffect(() => {
-    if (open) {
+    if (anchorEl) {
       setInnerValue(value);
       if (!codeEditor.current) {
         return;
@@ -51,19 +48,22 @@ export const InputFieldEdit: React.FC<InputFieldEditProps> = ({
         }
       });
     }
-  }, [open]);
+  }, [anchorEl]);
 
   return (
-    <Popover
-      placement='bottomLeft'
-      trigger={['click']}
-      destroyTooltipOnHide
-      arrow={false}
-      open={open}
-      onOpenChange={(o) => setOpen(o)}
-      content={
+    <>
+      <Button
+        size='small'
+        color={!value ? 'success' : 'inherit'}
+        sx={{ textTransform: 'none' }}
+        onClick={(e) => setAnchorEl(e.currentTarget)}
+        endIcon={<ExpandMoreIcon fontSize={'small'} />}
+      >
+        {value}
+      </Button>
+      <Popover open={!!anchorEl} onClose={() => setAnchorEl(null)} anchorEl={anchorEl}>
         <div
-          style={{ width: 300 }}
+          style={{ width: 300, padding: 16 }}
           data-simulation='propagateWithTimeout'
           onKeyDownCapture={(e) => {
             const isSubmit = (e.ctrlKey || e.metaKey) && e.key === 'Enter';
@@ -74,13 +74,13 @@ export const InputFieldEdit: React.FC<InputFieldEditProps> = ({
 
             e.preventDefault();
             e.stopPropagation();
-            setOpen(false);
-            if (!disabled && isSubmit) {
-              onChange?.(innerValue ?? '');
+            setAnchorEl(null);
+            if (!disabled && isSubmit && innerValue && innerValue.trim()) {
+              onChange?.(innerValue.trim());
             }
           }}
         >
-          <Typography.Text style={{ fontSize: 12, display: 'block', marginBottom: 2 }}>Input Field</Typography.Text>
+          <Typography style={{ fontSize: 12, display: 'block', marginBottom: 2 }}>Input Field</Typography>
           <CodeEditor
             ref={codeEditor}
             value={innerValue}
@@ -88,44 +88,32 @@ export const InputFieldEdit: React.FC<InputFieldEditProps> = ({
             variableType={variableType}
             disabled={disabled}
           />
-          <div style={{ marginTop: 16 }}>
-            <CodeEditorPreview
-              expression={innerValue ?? ''}
-              inputData={inputData}
-              initial={referenceData ? { expression: referenceData.field, result: referenceData.value } : undefined}
-            />
-            <div className='grl-field-edit__footer'>
-              <ConfirmAction iconOnly onConfirm={onRemove} disabled={disabled} />
-              <Stack horizontal width='auto' verticalAlign='end'>
-                <Button size='small' type='text' onClick={() => setOpen(false)}>
-                  Cancel
-                </Button>
-                <Button
-                  size='small'
-                  type='primary'
-                  disabled={disabled}
-                  onClick={() => {
-                    onChange?.(innerValue ?? '');
-                    setOpen(false);
-                  }}
-                >
-                  Update
-                </Button>
-              </Stack>
-            </div>
-          </div>
+          <CodeEditorPreview
+            expression={innerValue ?? ''}
+            inputData={inputData}
+            initial={referenceData ? { expression: referenceData.field, result: referenceData.value } : undefined}
+          />
+          <DialogActions>
+            <ConfirmAction iconOnly onConfirm={onRemove} disabled={disabled} />
+            <Stack horizontal width='auto' verticalAlign='end'>
+              <Button size='small' onClick={() => setAnchorEl(null)}>
+                Cancel
+              </Button>
+              <Button
+                variant='contained'
+                disabled={disabled}
+                size='small'
+                onClick={() => {
+                  onChange?.(innerValue ?? '');
+                  setAnchorEl(null);
+                }}
+              >
+                Set value
+              </Button>
+            </Stack>
+          </DialogActions>
         </div>
-      }
-    >
-      <Typography.Text
-        type={!value ? 'secondary' : undefined}
-        className={clsx('grl-field-edit', className)}
-        onClick={() => setOpen(!open)}
-        {...props}
-      >
-        <span className='span-overflow'>{value || '-'}</span>
-        <ChevronDownIcon size={12} style={{ marginLeft: 4 }} />
-      </Typography.Text>
-    </Popover>
+      </Popover>
+    </>
   );
 };

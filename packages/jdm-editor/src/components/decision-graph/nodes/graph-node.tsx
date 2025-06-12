@@ -1,10 +1,9 @@
-import { BookOutlined } from '@ant-design/icons';
-import type { MenuProps } from 'antd';
-import { Button, Modal, Typography } from 'antd';
+import { Book } from '@mui/icons-material';
+import { Button } from '@mui/material';
+import type { HandleProps } from '@xyflow/react';
+import { Handle, Position } from '@xyflow/react';
 import clsx from 'clsx';
 import React from 'react';
-import type { HandleProps } from 'reactflow';
-import { Handle, Position } from 'reactflow';
 import { P, match } from 'ts-pattern';
 
 import { platform } from '../../../helpers/platform';
@@ -68,7 +67,7 @@ export const GraphNode = React.forwardRef<HTMLDivElement, GraphNodeProps>(
       specification.documentationUrl
         ? {
             key: 'documentation',
-            label: <SpacedText left='Documentation' right={<BookOutlined />} />,
+            label: <SpacedText left='Documentation' right={<Book fontSize='small' />} />,
             onClick: () => window.open(specification.documentationUrl, '_href'),
           }
         : null,
@@ -90,18 +89,7 @@ export const GraphNode = React.forwardRef<HTMLDivElement, GraphNodeProps>(
         danger: true,
         label: <SpacedText left='Delete' right={platform.shortcut('Backspace')} />,
         disabled,
-        onClick: () =>
-          Modal.confirm({
-            icon: null,
-            title: 'Delete node',
-            content: (
-              <Typography.Text>
-                Are you sure you want to delete <Typography.Text strong>{name}</Typography.Text> node.
-              </Typography.Text>
-            ),
-            okButtonProps: { danger: true },
-            onOk: () => graphActions.removeNodes([id]),
-          }),
+        onClick: () => graphActions.removeNodes([id]),
       },
     ].filter((i) => i !== false);
 
@@ -127,7 +115,7 @@ export const GraphNode = React.forwardRef<HTMLDivElement, GraphNodeProps>(
           />
         )}
         <DecisionNode
-          menuItems={menuItems as MenuProps['items']}
+          menuItems={menuItems as DecisionNodeProps['menuItems']}
           {...decisionNodeProps}
           disabled={disabled}
           icon={specification.icon}
@@ -148,7 +136,7 @@ export const GraphNode = React.forwardRef<HTMLDivElement, GraphNodeProps>(
                   ...(actions ?? []),
                   <Button
                     key='settings'
-                    type='text'
+                    variant='text'
                     style={{ marginLeft: 'auto' }}
                     onClick={() => {
                       setDetailsOpen(currentDetails === Details.Settings ? !detailsOpen : true);

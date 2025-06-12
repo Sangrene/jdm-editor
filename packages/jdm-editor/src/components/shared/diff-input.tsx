@@ -1,8 +1,8 @@
-import { Input, type InputProps } from 'antd';
+import { TextField, type TextFieldProps } from '@mui/material';
 import clsx from 'clsx';
 import React from 'react';
 
-export type DiffInputProps = InputProps & {
+export type DiffInputProps = TextFieldProps & {
   previousValue?: string;
   displayDiff?: boolean;
 };
@@ -12,7 +12,7 @@ export const DiffInput: React.FC<DiffInputProps> = ({ previousValue, displayDiff
     return (
       <div className={'diff-input-group'}>
         {(previousValue || '')?.length > 0 && (
-          <Input
+          <TextField
             {...rest}
             value={previousValue}
             onChange={undefined}
@@ -20,10 +20,10 @@ export const DiffInput: React.FC<DiffInputProps> = ({ previousValue, displayDiff
           />
         )}
         {((rest?.value || '') as string)?.length > 0 && (
-          <Input {...rest} className={clsx(rest.className, 'current-input')} />
+          <TextField {...rest} className={clsx(rest.className, 'current-input')} />
         )}
       </div>
     );
   }
-  return <Input {...rest} />;
+  return <TextField {...rest} />;
 };

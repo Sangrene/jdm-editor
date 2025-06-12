@@ -1,10 +1,11 @@
-import { ArrowRightOutlined, SyncOutlined } from '@ant-design/icons';
 import { VariableType } from '@gorules/zen-engine-wasm';
-import { Button, Form, Space } from 'antd';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import GridOnIcon from '@mui/icons-material/GridOn';
+import SyncIcon from '@mui/icons-material/Sync';
+import { Button, FormLabel } from '@mui/material';
 import equal from 'fast-deep-equal/es6/react';
 import { produce } from 'immer';
 import _ from 'lodash';
-import { Grid3x3Icon } from 'lucide-react';
 import React from 'react';
 import type { z } from 'zod';
 
@@ -30,11 +31,11 @@ export type NodeDecisionTableData = Omit<InferredContent, 'inputs' | 'outputs' |
 
 export const decisionTableSpecification: NodeSpecification<NodeDecisionTableData> = {
   type: NodeKind.DecisionTable,
-  icon: <Grid3x3Icon size='1em' />,
+  icon: <GridOnIcon sx={{ fontSize: '1em' }} />,
   displayName: 'Decision table',
   documentationUrl: 'https://gorules.io/docs/user-manual/decision-modeling/decisions/decision-tables',
   shortDescription: 'Rules spreadsheet',
-  renderTab: ({ id, manager }) => <TabDecisionTable id={id} manager={manager} />,
+  renderTab: ({ id }) => <TabDecisionTable id={id} />,
   getDiffContent: (current, previous) => {
     return produce(current, (draft) => {
       const fields: DiffMetadata['fields'] = {};
@@ -336,11 +337,11 @@ export const decisionTableSpecification: NodeSpecification<NodeDecisionTableData
       <GraphNode
         id={id}
         specification={specification}
-        name={data.name}
+        name={data.name as string}
         isSelected={selected}
-        helper={[executionMode === 'loop' && <SyncOutlined />, passThrough && <ArrowRightOutlined />]}
+        helper={[executionMode === 'loop' && <SyncIcon />, passThrough && <ArrowRightIcon />]}
         actions={[
-          <Button key='edit-table' type='text' onClick={() => graphActions.openTab(id)}>
+          <Button key='edit-table' variant='text' onClick={() => graphActions.openTab(id)}>
             Edit Table
           </Button>,
         ]}
@@ -349,8 +350,8 @@ export const decisionTableSpecification: NodeSpecification<NodeDecisionTableData
   },
   renderSettings: ({ id }) => {
     const graphActions = useDecisionGraphActions();
-    const inputType = useNodeType(id);
     const { contentDiff } = useNodeDiff(id);
+    const inputType = useNodeType(id);
 
     const { fields, disabled } = useDecisionGraphState(({ decisionGraph, disabled }) => {
       const content = (decisionGraph?.nodes ?? []).find((node) => node.id === id)?.content as NodeDecisionTableData;
@@ -375,81 +376,74 @@ export const decisionTableSpecification: NodeSpecification<NodeDecisionTableData
 
     return (
       <div className={'settings-form'}>
-        <Form.Item label={'Hit Policy'}>
-          <Space direction={'vertical'} size={2}>
-            <DiffRadio
-              size={'small'}
-              previousValue={contentDiff?.fields?.hitPolicy?.previousValue}
-              displayDiff={contentDiff?.fields?.hitPolicy?.status === 'modified'}
-              disabled={disabled}
-              value={fields?.hitPolicy}
-              onChange={(e) => updateNode({ hitPolicy: e?.target?.value })}
-              options={[
-                {
-                  value: 'first',
-                  label: 'First',
-                },
-                {
-                  value: 'collect',
-                  label: 'Collect',
-                },
-              ]}
-            />
-          </Space>
-        </Form.Item>
-        <Form.Item label='Passthrough'>
-          <DiffSwitch
-            disabled={disabled}
-            size={'small'}
-            displayDiff={contentDiff?.fields?.passThrough?.status === 'modified'}
-            checked={fields?.passThrough}
-            previousChecked={contentDiff?.fields?.passThrough?.previousValue}
-            onChange={(e) => updateNode({ passThrough: e })}
-          />
-        </Form.Item>
-        <Form.Item label='Input field'>
-          <DiffCodeEditor
-            variableType={inputType}
-            disabled={disabled}
-            displayDiff={contentDiff?.fields?.inputField?.status === 'modified'}
-            previousValue={contentDiff?.fields?.inputField?.previousValue}
-            style={{ fontSize: 12, lineHeight: '20px', width: '100%' }}
-            expectedVariableType={fields?.executionMode === 'loop' ? { Array: 'Any' } : undefined}
-            maxRows={4}
-            value={fields?.inputField ?? ''}
-            onChange={(val) => updateNode({ inputField: val?.trim() || null })}
-          />
-        </Form.Item>
-        <Form.Item label='Output path'>
-          <DiffInput
-            size={'small'}
-            readOnly={disabled}
-            displayDiff={contentDiff?.fields?.outputPath?.status === 'modified'}
-            previousValue={contentDiff?.fields?.outputPath?.previousValue}
-            value={fields?.outputPath ?? ''}
-            onChange={(e) => updateNode({ outputPath: e?.target?.value?.trim() || null })}
-          />
-        </Form.Item>
-        <Form.Item label='Execution mode'>
-          <DiffRadio
-            size={'small'}
-            disabled={disabled}
-            displayDiff={contentDiff?.fields?.executionMode?.status === 'modified'}
-            previousValue={contentDiff?.fields?.executionMode?.previousValue}
-            value={fields?.executionMode}
-            onChange={(e) => updateNode({ executionMode: e?.target?.value })}
-            options={[
-              {
-                value: 'single',
-                label: 'Single',
-              },
-              {
-                value: 'loop',
-                label: 'Loop',
-              },
-            ]}
-          />
-        </Form.Item>
+        <FormLabel>Execution mode</FormLabel>
+        <DiffRadio
+          radioOptions={{ size: 'small', disabled: disabled }}
+          previousValue={contentDiff?.fields?.hitPolicy?.previousValue}
+          displayDiff={contentDiff?.fields?.hitPolicy?.status === 'modified'}
+          value={fields?.hitPolicy}
+          onChange={(e) => updateNode({ hitPolicy: e?.target?.value as 'first' | 'collect' })}
+          options={[
+            {
+              value: 'first',
+              label: 'First',
+            },
+            {
+              value: 'collect',
+              label: 'Collect',
+            },
+          ]}
+        />
+        <FormLabel>Passthrough</FormLabel>
+        <DiffSwitch
+          disabled={disabled}
+          size={'small'}
+          displayDiff={contentDiff?.fields?.passThrough?.status === 'modified'}
+          checked={fields?.passThrough}
+          previousChecked={contentDiff?.fields?.passThrough?.previousValue}
+          onChange={(_, checked) => updateNode({ passThrough: checked })}
+        />
+        <FormLabel>Input field</FormLabel>
+        <DiffCodeEditor
+          variableType={inputType}
+          disabled={disabled}
+          displayDiff={contentDiff?.fields?.inputField?.status === 'modified'}
+          previousValue={contentDiff?.fields?.inputField?.previousValue}
+          style={{ fontSize: 12, lineHeight: '20px', width: '100%' }}
+          expectedVariableType={fields?.executionMode === 'loop' ? { Array: 'Any' } : undefined}
+          maxRows={4}
+          value={fields?.inputField ?? ''}
+          onChange={(val) => updateNode({ inputField: val?.trim() || null })}
+        />
+
+        <DiffInput
+          label='Output path'
+          sx={{ mt: 1 }}
+          size={'small'}
+          disabled={disabled}
+          displayDiff={contentDiff?.fields?.outputPath?.status === 'modified'}
+          previousValue={contentDiff?.fields?.outputPath?.previousValue}
+          value={fields?.outputPath ?? ''}
+          onChange={(e) => updateNode({ outputPath: e?.target?.value?.trim() || null })}
+        />
+        <FormLabel>Execution mode</FormLabel>
+        <DiffRadio
+          radioOptions={{ size: 'small', disabled: disabled }}
+          displayDiff={contentDiff?.fields?.executionMode?.status === 'modified'}
+          previousValue={contentDiff?.fields?.executionMode?.previousValue}
+          value={fields?.executionMode}
+          onChange={(e) => updateNode({ executionMode: e?.target?.value as 'single' | 'loop' })}
+          options={[
+            {
+              value: 'single',
+              label: 'Single',
+            },
+            {
+              value: 'loop',
+              label: 'Loop',
+            },
+          ]}
+        />
       </div>
     );
   },

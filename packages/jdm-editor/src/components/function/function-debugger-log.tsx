@@ -1,8 +1,6 @@
-import { Dropdown, Tooltip, message, theme } from 'antd';
+import { Tooltip, Typography } from '@mui/material';
 import React from 'react';
 import { JSONTree } from 'react-json-tree';
-
-import { copyToClipboard } from '../../helpers/utility';
 
 export type FunctionDebuggerLogProps = {
   lines: string[];
@@ -18,92 +16,67 @@ type JsonTheme = {
   info: string;
 };
 
-const themes: Record<'dark' | 'light', JsonTheme> = {
-  dark: {
-    string: '#CE9178',
-    number: '#B5CEA8',
-    constants: '#569CD6',
-    type: '#3DC9B0',
-    error: '#E51400',
-    info: 'rgba(0, 0, 0, 0.65)',
-  },
-  light: {
-    string: '#A31515',
-    number: '#098658',
-    constants: '#0000FF',
-    type: '#008080',
-    error: '#E51400',
-    info: 'rgba(0, 0, 0, 0.65)',
-  },
+const theme: JsonTheme = {
+  string: '#A31515',
+  number: '#098658',
+  constants: '#0000FF',
+  type: '#008080',
+  error: '#E51400',
+  info: 'rgba(0, 0, 0, 0.65)',
 };
 
 export const FunctionDebuggerLog: React.FC<FunctionDebuggerLogProps> = ({ lines, msSinceRun }) => {
-  const { token } = theme.useToken();
-  const jsonTheme = themes[token.mode ?? 'light'];
-
   return (
     <div className='grl-function__debugger__log'>
-      <Dropdown
-        trigger={['contextMenu']}
-        menu={{
-          items: [
-            {
-              key: 'copy',
-              label: 'Copy to clipboard',
-              onClick: async () => {
-                await copyToClipboard(lines.length === 1 ? lines[0] : `[${lines.join(', ')}]`);
-                message.success('Copied to clipboard');
-              },
-            },
-          ],
-        }}
-      >
-        <div className='grl-function__debugger__log__values'>
-          {lines.map((line, i) => {
-            const data = safeParseJson(line);
+      <div className='grl-function__debugger__log__values'>
+        {lines.map((line, i) => {
+          const data = safeParseJson(line);
 
-            return (
-              <JSONTree
-                key={i}
-                data={data}
-                shouldExpandNodeInitially={() => false}
-                labelRenderer={(keyPath: readonly (string | number)[], nodeType) => {
-                  const parts: React.ReactNode[] = [];
+          return (
+            <JSONTree
+              key={i}
+              data={data}
+              shouldExpandNodeInitially={() => false}
+              labelRenderer={(keyPath: readonly (string | number)[], nodeType) => {
+                const parts: React.ReactNode[] = [];
 
-                  const lastPart = keyPath?.[0];
-                  if (lastPart !== 'root') {
-                    parts.push(
-                      <>
-                        <span style={{ color: jsonTheme.constants }}>{lastPart}</span>
-                        {': '}
-                      </>,
-                    );
-                  }
+                const lastPart = keyPath?.[0];
+                if (lastPart !== 'root') {
+                  parts.push(
+                    <>
+                      <span style={{ color: theme.constants }}>{lastPart}</span>
+                      {': '}
+                    </>,
+                  );
+                }
 
-                  if (keyPath.length >= 1) {
-                    let paths = [...keyPath];
-                    paths.pop();
-                    paths = paths.reverse();
+                if (keyPath.length >= 1) {
+                  let paths = [...keyPath];
+                  paths.pop();
+                  paths = paths.reverse();
 
-                    parts.push(objectRenderer(jsonTheme)(lens(data, paths), nodeType));
-                  }
+                  parts.push(objectRenderer(theme)(lens(data, paths), nodeType));
+                }
 
-                  return <>{parts}</>;
-                }}
-                valueRenderer={valueRenderer(jsonTheme)}
-                theme={{
-                  base00: token.colorBgElevated,
-                  base03: token.colorTextBase,
-                  base0B: token.colorTextBase,
-                  base0D: token.colorTextBase,
-                }}
-              />
-            );
-          })}
-        </div>
-      </Dropdown>
+                return <>{parts}</>;
+              }}
+              valueRenderer={valueRenderer(theme)}
+              theme={{
+                base00: 'var(--grl-color-bg-elevated)',
+                base03: 'var(--grl-color-text-base)',
+                base0B: 'var(--grl-color-text-base)',
+                base0D: 'var(--grl-color-text-base)',
+              }}
+            />
+          );
+        })}
+      </div>
       <div className='grl-function__debugger__log__time'>
-        {msSinceRun !== null && <Tooltip title='Time since start of execution of script.'>{msSinceRun}ms</Tooltip>}
+        {msSinceRun !== null && (
+          <Tooltip title='Time since start of execution of script.'>
+            <Typography variant='body2'>{msSinceRun}ms</Typography>
+          </Tooltip>
+        )}
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import type { Monaco } from '@monaco-editor/react';
-import { Spin } from 'antd';
+import { CircularProgress } from '@mui/material';
 import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import { P, match } from 'ts-pattern';
 
@@ -66,7 +66,7 @@ export const TabFunction: React.FC<TabFunctionProps> = ({ id }) => {
   }, [monaco, onFunctionReady]);
 
   return (
-    <Suspense fallback={<Spin />}>
+    <Suspense fallback={<CircularProgress />}>
       <Function
         onMonacoReady={(monaco) => setMonaco(monaco)}
         value={kind === FunctionKind.Stable ? content.source : content}

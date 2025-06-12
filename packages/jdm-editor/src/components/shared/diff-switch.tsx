@@ -1,4 +1,4 @@
-import { Space, Switch, type SwitchProps } from 'antd';
+import { Switch, type SwitchProps } from '@mui/material';
 import React from 'react';
 
 import { ArrowDiffIcon } from '../arrow-diff-icon';
@@ -10,7 +10,7 @@ export type DiffSwitchProps = {
 
 export const DiffSwitch: React.FC<DiffSwitchProps> = ({ displayDiff, previousChecked, ...rest }) => {
   return (
-    <Space size={4}>
+    <React.Fragment>
       {displayDiff && (
         <>
           <Switch disabled={rest.disabled} size={'small'} checked={previousChecked} />
@@ -18,6 +18,6 @@ export const DiffSwitch: React.FC<DiffSwitchProps> = ({ displayDiff, previousChe
         </>
       )}
       <Switch size={'small'} {...rest} />
-    </Space>
+    </React.Fragment>
   );
 };

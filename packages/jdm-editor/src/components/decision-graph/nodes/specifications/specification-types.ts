@@ -1,7 +1,7 @@
 import { type VariableType } from '@gorules/zen-engine-wasm';
+import type { NodeProps } from '@xyflow/react';
 import type { DragDropManager } from 'dnd-core';
 import type React from 'react';
-import type { NodeProps } from 'reactflow';
 
 import type { DecisionNode } from '../../dg-types';
 import type { DecisionNodeProps } from '../decision-node';

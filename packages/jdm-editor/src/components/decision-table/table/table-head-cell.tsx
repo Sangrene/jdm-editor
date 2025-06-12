@@ -1,5 +1,7 @@
-import { PlusOutlined, SwapOutlined } from '@ant-design/icons';
-import { Button, Tooltip, Typography } from 'antd';
+import AddIcon from '@mui/icons-material/Add';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import { Button, Tooltip } from '@mui/material';
+import { Typography } from '@mui/material';
 import clsx from 'clsx';
 import React from 'react';
 
@@ -32,17 +34,16 @@ export const TableHeadCellInput: React.FC<TableHeadCellProps> = ({ configurable,
     <div className={'head-cell'}>
       <Stack horizontal horizontalAlign='space-between' verticalAlign='center'>
         <Stack gap={0} className={'text-wrapper'} verticalAlign={'center'}>
-          <Typography.Text className={'span-overflow grl-dt-text-primary'}>Inputs</Typography.Text>
+          <Typography>Inputs</Typography>
         </Stack>
         {configurable && (
           <div className={'cta-wrapper'}>
             {inputs?.length > 1 && (
               <Tooltip title='Reorder fields'>
                 <Button
-                  className='grl-dt-text-secondary'
-                  icon={<SwapOutlined />}
+                  startIcon={<SwapHorizIcon />}
                   size={'small'}
-                  type={'text'}
+                  variant={'text'}
                   disabled={disabled}
                   onClick={() => {
                     setDialog({
@@ -56,10 +57,9 @@ export const TableHeadCellInput: React.FC<TableHeadCellProps> = ({ configurable,
             )}
             <Tooltip title='Add input'>
               <Button
-                className='grl-dt-text-secondary'
                 size={'small'}
-                type={'text'}
-                icon={<PlusOutlined />}
+                variant={'text'}
+                startIcon={<AddIcon />}
                 disabled={disabled}
                 onClick={() => {
                   tableActions.addColumn('inputs', {
@@ -85,17 +85,16 @@ export const TableHeadCellOutput: React.FC<TableHeadCellProps> = ({ configurable
     <div className={'head-cell'}>
       <Stack horizontal horizontalAlign={'space-between'} verticalAlign={'center'}>
         <Stack gap={0} className={'text-wrapper'} verticalAlign={'center'}>
-          <Typography.Text className={'span-overflow grl-dt-text-primary'}>Outputs</Typography.Text>
+          <Typography className={'span-overflow grl-dt-text-primary'}>Outputs</Typography>
         </Stack>
         {configurable && (
           <div className={'cta-wrapper'}>
             {outputs?.length > 1 && (
               <Tooltip title='Reorder fields'>
                 <Button
-                  className='grl-dt-text-secondary'
-                  icon={<SwapOutlined />}
+                  startIcon={<SwapHorizIcon />}
                   size={'small'}
-                  type={'text'}
+                  variant={'text'}
                   disabled={disabled}
                   onClick={() => {
                     setDialog({
@@ -109,10 +108,9 @@ export const TableHeadCellOutput: React.FC<TableHeadCellProps> = ({ configurable
             )}
             <Tooltip title='Add output'>
               <Button
-                className='grl-dt-text-secondary'
                 size={'small'}
-                type={'text'}
-                icon={<PlusOutlined />}
+                variant={'text'}
+                startIcon={<AddIcon />}
                 disabled={disabled}
                 onClick={() => {
                   tableActions.addColumn('outputs', { id: crypto.randomUUID(), name: 'Output', field: 'output' });
@@ -156,9 +154,9 @@ export const TableHeadCellInputField: React.FC<TableHeadCellFieldProps> = ({ con
       <Stack horizontal horizontalAlign={'space-between'} verticalAlign={'center'}>
         <Stack gap={0} className={'text-wrapper'}>
           {schema?._diff?.fields?.name?.status === 'modified' && (
-            <Typography.Text className={clsx(['span-overflow', 'grl-dt-text-primary', 'text-removed'])}>
+            <Typography className={clsx(['span-overflow', 'grl-dt-text-primary', 'text-removed'])}>
               {schema?._diff?.fields?.name?.previousValue}
-            </Typography.Text>
+            </Typography>
           )}
           <TextEdit
             className={clsx(['span-overflow', 'grl-dt-text-primary'])}
@@ -168,13 +166,12 @@ export const TableHeadCellInputField: React.FC<TableHeadCellFieldProps> = ({ con
             }}
           />
           {schema?._diff?.fields?.field?.status && (
-            <Typography.Text
+            <Typography
               className={clsx(['span-overflow', 'grl-dt-text-secondary', 'text-removed'])}
-              type='secondary'
               style={{ fontSize: 12 }}
             >
               {schema?._diff?.fields?.field?.previousValue}
-            </Typography.Text>
+            </Typography>
           )}
           <InputFieldEdit
             value={schema.field}
@@ -206,9 +203,9 @@ export const TableHeadCellOutputField: React.FC<TableHeadCellFieldProps> = ({ co
       <Stack horizontal horizontalAlign='space-between' verticalAlign={'center'}>
         <Stack gap={0} className={'text-wrapper'} verticalAlign={'center'}>
           {schema?._diff?.fields?.name?.status === 'modified' && (
-            <Typography.Text className={clsx(['span-overflow', 'grl-dt-text-primary', 'text-removed'])}>
+            <Typography className={clsx(['span-overflow', 'grl-dt-text-primary', 'text-removed'])}>
               {schema?._diff?.fields?.name?.previousValue}
-            </Typography.Text>
+            </Typography>
           )}
           <TextEdit
             className={clsx(['span-overflow', 'grl-dt-text-primary'])}
@@ -218,13 +215,12 @@ export const TableHeadCellOutputField: React.FC<TableHeadCellFieldProps> = ({ co
             }}
           />
           {schema?._diff?.fields?.field?.status === 'modified' && (
-            <Typography.Text
+            <Typography
               className={clsx(['span-overflow', 'grl-dt-text-secondary', 'text-removed'])}
-              type='secondary'
               style={{ fontSize: 12 }}
             >
               {schema?._diff?.fields?.field?.previousValue}
-            </Typography.Text>
+            </Typography>
           )}
           <OutputFieldEdit
             value={schema.field}

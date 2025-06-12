@@ -1,7 +1,7 @@
-import { Input } from 'antd';
+import { TextField } from '@mui/material';
+import type { XYPosition } from '@xyflow/react';
 import clsx from 'clsx';
 import React, { useCallback, useMemo, useState } from 'react';
-import type { XYPosition } from 'reactflow';
 import { match } from 'ts-pattern';
 
 import { useDecisionGraphState } from '../context/dg-store.context';
@@ -96,12 +96,12 @@ export const GraphComponents: React.FC<GraphComponentsProps> = React.memo(({ inp
   return (
     <div>
       {customCount > 5 && (
-        <Input
-          placeholder={'Search components...'}
+        <TextField
+          sx={{ m: 1 }}
+          size='small'
+          label={'Search'}
           value={search}
           onChange={(e) => setSearch(e.target.value || '')}
-          allowClear
-          className={'grl-dg__aside__menu__components__search'}
         />
       )}
       <div className={'grl-dg__aside__menu__components'}>

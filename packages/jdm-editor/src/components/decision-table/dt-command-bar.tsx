@@ -1,12 +1,10 @@
-import {
-  ArrowDownOutlined,
-  ArrowUpOutlined,
-  CloseOutlined,
-  DeleteOutlined,
-  ExportOutlined,
-  ImportOutlined,
-} from '@ant-design/icons';
-import { Button, Divider, Popconfirm, Tooltip, message } from 'antd';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import CloseIcon from '@mui/icons-material/Close';
+import DeleteIcon from '@mui/icons-material/Delete';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import { Button, Divider, Tooltip } from '@mui/material';
 import React, { useRef } from 'react';
 
 import type { DecisionNode } from '../decision-graph';
@@ -42,10 +40,10 @@ export const DecisionTableCommandBar: React.FC = () => {
       await exportDecisionTable(name ?? 'table', [
         { ...decisionTable, name: 'decision table', id: crypto.randomUUID() },
       ]);
-      message.success('Excel file has been downloaded successfully!');
+      // message.success('Excel file has been downloaded successfully!');
     } catch (e) {
       console.error('Failed to download Excel file!', e);
-      message.error('Failed to download Excel file!');
+      // message.error('Failed to download Excel file!');
     }
   };
 
@@ -71,9 +69,9 @@ export const DecisionTableCommandBar: React.FC = () => {
         tableActions.setDecisionTable(newTable);
         listenerStore.getState().onChange?.(newTable);
       };
-      message.success('Excel file has been uploaded successfully!');
+      // message.success('Excel file has been uploaded successfully!');
     } catch {
-      message.error('Failed to upload Excel!');
+      // message.error('Failed to upload Excel!');
     }
   };
 
@@ -81,14 +79,14 @@ export const DecisionTableCommandBar: React.FC = () => {
     <>
       <Stack horizontal horizontalAlign={'space-between'} verticalAlign={'center'} className={'grl-dt__command-bar'}>
         <Stack gap={8} horizontal className='full-width'>
-          <Button type='text' size={'small'} icon={<ExportOutlined />} onClick={exportExcel}>
+          <Button variant='text' size={'small'} startIcon={<FileUploadIcon />} onClick={exportExcel}>
             Export Excel
           </Button>
           <Button
-            type='text'
+            variant='text'
             size={'small'}
             disabled={disabled}
-            icon={<ImportOutlined />}
+            startIcon={<FileDownloadIcon />}
             onClick={() => importExcel()}
           >
             Import Excel
@@ -96,33 +94,40 @@ export const DecisionTableCommandBar: React.FC = () => {
           {cursor && !disabled && (
             <>
               <Divider
-                type={'vertical'}
-                style={{
+                orientation='vertical'
+                sx={{
                   height: 24,
                 }}
               />
               <Tooltip title={'Add row below'}>
                 <Button
-                  type='text'
+                  variant='text'
                   size={'small'}
-                  icon={<ArrowDownOutlined />}
+                  startIcon={<ArrowDownwardIcon />}
                   onClick={() => tableActions.addRowBelow(cursor?.y)}
                 />
               </Tooltip>
               <Tooltip title={'Add row above'}>
                 <Button
-                  type='text'
+                  variant='text'
                   size={'small'}
-                  icon={<ArrowUpOutlined />}
+                  startIcon={<ArrowUpwardIcon />}
                   onClick={() => tableActions.addRowAbove(cursor?.y)}
                 />
               </Tooltip>
-              <Tooltip>
-                <Popconfirm title='Remove row?' okText='Remove' onConfirm={() => tableActions.removeRow(cursor?.y)}>
-                  <Button type='text' danger size={'small'} icon={<DeleteOutlined />} />
-                </Popconfirm>
-              </Tooltip>
-              <Button type='text' size={'small'} icon={<CloseOutlined />} onClick={() => tableActions.setCursor(null)}>
+              <Button
+                variant='text'
+                color='error'
+                size={'small'}
+                startIcon={<DeleteIcon />}
+                onClick={() => tableActions.removeRow(cursor?.y)}
+              />
+              <Button
+                variant='text'
+                size={'small'}
+                startIcon={<CloseIcon />}
+                onClick={() => tableActions.setCursor(null)}
+              >
                 Deselect
               </Button>
             </>
@@ -135,7 +140,7 @@ export const DecisionTableCommandBar: React.FC = () => {
           size={'small'}
           disabled={disabled || !configurable || disableHitPolicy}
           value={hitPolicy}
-          onSelect={(data) => tableActions.updateHitPolicy(data as HitPolicy)}
+          onChange={(e) => tableActions.updateHitPolicy(e.target.value as HitPolicy)}
           options={[
             {
               key: 'first',

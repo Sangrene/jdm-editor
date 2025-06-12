@@ -1,13 +1,15 @@
-import { DownOutlined } from '@ant-design/icons';
 import { type VariableType } from '@gorules/zen-engine-wasm';
-import { Button, Checkbox, Form, Typography, theme } from 'antd';
+import { ArrowDownward } from '@mui/icons-material';
+// import { Button, Typography, Checkbox, Box, FormLabel, FormControlLabel, IconButton } from '@mui/material';
+import { IconButton } from '@mui/material';
+import type { XYPosition } from '@xyflow/react';
 import type { DragDropManager } from 'dnd-core';
 import React, { useState } from 'react';
-import type { XYPosition } from 'reactflow';
-import { match } from 'ts-pattern';
 
-import { CodeEditor } from '../../../code-editor';
-import { useDecisionGraphActions, useDecisionGraphState } from '../../context/dg-store.context';
+// import { match } from 'ts-pattern';
+
+// import { CodeEditor } from '../../../code-editor';
+// import { useDecisionGraphActions, useDecisionGraphState } from '../../context/dg-store.context';
 import { type DecisionNode } from '../../dg-types';
 import { GraphNode } from '../graph-node';
 import type { InferTypeData, MinimalNodeProps, MinimalNodeSpecification } from '../specifications/specification-types';
@@ -128,15 +130,14 @@ export const createJdmNode = <
       ? n.renderNode
       : ({ id, specification, data, selected }) => {
           const [open, setOpen] = useState(false);
-          const { token } = theme.useToken();
-          const { updateNode } = useDecisionGraphActions();
-          const node = useDecisionGraphState((state) => (state.decisionGraph?.nodes || []).find((n) => n.id === id));
-          const nodeData = node?.content?.config;
+          // const { updateNode } = useDecisionGraphActions();
+          // const node = useDecisionGraphState((state) => (state.decisionGraph?.nodes || []).find((n) => n.id === id));
+          // const nodeData = node?.content?.config;
           return (
             <GraphNode
               id={id}
               specification={specification}
-              name={data.name}
+              name={data.name as string}
               isSelected={selected}
               noBodyPadding
               handleLeft={n.handleLeft}
@@ -144,24 +145,27 @@ export const createJdmNode = <
               actions={
                 n?.inputs
                   ? [
-                      <Button
+                      <IconButton
                         key='edit-table'
-                        type='text'
-                        style={{ marginLeft: 'auto', transform: open ? 'rotate(180deg)' : undefined }}
+                        size='small'
+                        sx={{ marginLeft: 'auto', transform: open ? 'rotate(180deg)' : undefined }}
                         onClick={() => setOpen((o) => !o)}
                       >
-                        <DownOutlined />
-                      </Button>,
+                        <ArrowDownward fontSize='small' />
+                      </IconButton>,
                     ]
                   : undefined
               }
             >
-              {open && n?.inputs && (
-                <Form
+              {/* TODO: Add form */}
+              {/* {open && n?.inputs && (
+                <form
                   className='grl-dn__cn__form'
-                  layout='vertical'
-                  initialValues={nodeData}
-                  onValuesChange={(_, values) => {
+                  value={nodeData}
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const formData = new FormData(e.target as HTMLFormElement);
+                    const values = Object.fromEntries(formData.entries());
                     updateNode(id, (draft) => {
                       draft.content.config = values;
                       return draft;
@@ -172,16 +176,14 @@ export const createJdmNode = <
                     const formItem = match({ control })
                       .with({ control: 'text' }, () => <CodeEditor type='template' />)
                       .with({ control: 'bool' }, () => (
-                        <Checkbox>
-                          <Typography.Text style={{ fontSize: token.fontSizeSM }}>{label}</Typography.Text>
-                        </Checkbox>
+                        <FormControlLabel control={<Checkbox name={name} />} label={label} />
                       ))
                       .exhaustive();
 
                     const outerLabel = match({ control })
                       .with({ control: 'bool' }, () => null)
                       .otherwise(() => (
-                        <Typography.Text style={{ fontSize: token.fontSizeSM }}>{label}</Typography.Text>
+                        <Typography>{label}</Typography>
                       ));
 
                     const valuePropName = match({ control })
@@ -189,21 +191,21 @@ export const createJdmNode = <
                       .otherwise(() => undefined);
 
                     return (
-                      <Form.Item
+                      <Box
                         key={name}
                         name={name as string}
-                        label={outerLabel}
                         valuePropName={valuePropName}
-                        style={{
+                        sx={{
                           marginBottom: 4,
                         }}
                       >
+                        <FormLabel>{outerLabel}</FormLabel>
                         {formItem}
-                      </Form.Item>
+                      </Box>
                     );
                   })}
-                </Form>
-              )}
+                </form>
+              )} */}
             </GraphNode>
           );
         },

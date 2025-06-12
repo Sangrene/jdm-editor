@@ -1,5 +1,5 @@
-import { CloseOutlined } from '@ant-design/icons';
-import { Button, Tooltip, Typography } from 'antd';
+import CloseIcon from '@mui/icons-material/Close';
+import { Button, Tooltip, Typography } from '@mui/material';
 import { Resizable } from 're-resizable';
 import React, { useMemo } from 'react';
 
@@ -7,7 +7,7 @@ import { useDecisionGraphActions, useDecisionGraphState } from './context/dg-sto
 
 const heightKey = 'jdmEditor:graphPanel:height';
 
-export const GraphPanel: React.FC = () => {
+export const GraphPanel = () => {
   const graphActions = useDecisionGraphActions();
   const { panels, activePanel: activePanelId } = useDecisionGraphState(({ panels, activePanel }) => ({
     panels,
@@ -46,21 +46,21 @@ export const GraphPanel: React.FC = () => {
       {!activePanel.hideHeader && (
         <div className={'grl-dg__panel__toolbar'}>
           <div className={'grl-dg__panel__toolbar__content'}>
-            <Typography.Text style={{ fontSize: 13 }}>{activePanel.title}</Typography.Text>
+            <Typography style={{ fontSize: 13 }}>{activePanel.title}</Typography>
           </div>
           <div className={'grl-dg__panel__toolbar__actions'}>
-            <Tooltip placement='topLeft' title={'Close panel'}>
+            <Tooltip title={'Close panel'}>
               <Button
                 size={'small'}
-                type={'text'}
-                icon={<CloseOutlined style={{ fontSize: 12 }} />}
+                variant='text'
+                startIcon={<CloseIcon style={{ fontSize: 12 }} />}
                 onClick={() => graphActions.setActivePanel(undefined)}
               />
             </Tooltip>
           </div>
         </div>
       )}
-      <div className={'grl-dg__panel__content'}>{activePanel?.renderPanel?.({})}</div>
+      <div className={'grl-dg__panel__content'}>{activePanel?.renderPanel?.({}) as React.ReactNode}</div>
     </Resizable>
   );
 };

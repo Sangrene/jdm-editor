@@ -1,6 +1,5 @@
-import type { ButtonProps } from 'antd';
-import { Button, Tooltip } from 'antd';
-import { TrashIcon } from 'lucide-react';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Button, type ButtonProps, Tooltip } from '@mui/material';
 import React, { useState } from 'react';
 import { P, match } from 'ts-pattern';
 
@@ -9,13 +8,14 @@ export type ConfirmActionProps = {
   text?: string;
   confirmText?: string;
   onConfirm?: () => void;
+  icon?: React.ReactNode;
 } & Omit<ButtonProps, 'children'>;
 
 export const ConfirmAction: React.FC<ConfirmActionProps> = ({
   iconOnly = false,
   text = 'Delete',
   confirmText = 'Really delete?',
-  icon = <TrashIcon size='1em' />,
+  icon = <DeleteIcon />,
   onClick,
   onBlur,
   onConfirm,
@@ -31,9 +31,9 @@ export const ConfirmAction: React.FC<ConfirmActionProps> = ({
   return (
     <Tooltip open={tooltipOpen} title={isConfirming ? confirmText : text}>
       <Button
-        type='text'
-        danger={isConfirming}
-        icon={icon}
+        variant='text'
+        color={isConfirming ? 'error' : 'inherit'}
+        startIcon={icon}
         disabled={disabled}
         onClick={(event) => {
           onClick?.(event);

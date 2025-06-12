@@ -1,4 +1,3 @@
-import { message } from 'antd';
 import exceljs from 'exceljs';
 import { P, match } from 'ts-pattern';
 
@@ -172,7 +171,7 @@ const parseSpreadsheetData = (spreadSheetData: any, defaultTable?: DecisionTable
     try {
       headerMeta = JSON.parse(header.note);
     } catch {
-      message.error('Header note can not be parsed!');
+      // message.error('Header note can not be parsed!');
     }
 
     return {

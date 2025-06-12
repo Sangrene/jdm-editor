@@ -1,19 +1,32 @@
-import { CloseOutlined, CompressOutlined, LeftOutlined, WarningOutlined } from '@ant-design/icons';
-import { Button, Modal, Tooltip, Typography, message, notification } from 'antd';
-import clsx from 'clsx';
-import equal from 'fast-deep-equal';
-import React, { type MutableRefObject, forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react';
-import type { Connection, Node, ProOptions, ReactFlowInstance, XYPosition } from 'reactflow';
-import ReactFlow, {
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import CloseIcon from '@mui/icons-material/Close';
+import CompressIcon from '@mui/icons-material/Compress';
+import WarningIcon from '@mui/icons-material/Warning';
+import { Button, Tooltip, Typography } from '@mui/material';
+import type {
+  Connection,
+  Edge,
+  EdgeTypes,
+  Node,
+  NodeTypes,
+  ProOptions,
+  ReactFlowInstance,
+  XYPosition,
+} from '@xyflow/react';
+import {
   Background,
   ControlButton,
   Controls,
+  ReactFlow,
   SelectionMode,
   getOutgoers,
   useEdgesState,
   useNodesState,
-} from 'reactflow';
-import 'reactflow/dist/style.css';
+} from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
+import clsx from 'clsx';
+import equal from 'fast-deep-equal';
+import React, { type MutableRefObject, forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { P, match } from 'ts-pattern';
 
 import { nodeSchema } from '../../../helpers/schema';
@@ -73,8 +86,8 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const reactFlowInstance = useRef<ReactFlowInstance>(null);
 
-  const nodesState = useNodesState([]);
-  const edgesState = useEdgesState([]);
+  const nodesState = useNodesState<Node>([]);
+  const edgesState = useEdgesState<Edge>([]);
 
   const [componentsOpened, setComponentsOpened] = useState(true);
 
@@ -112,9 +125,9 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
               specification={{
                 displayName: `${props.data?.kind}`,
                 color: 'var(--grl-color-error)',
-                icon: <WarningOutlined />,
+                icon: <WarningIcon />,
               }}
-              name={props?.data?.name}
+              name={props?.data?.name as string}
               isSelected={props.selected}
               displayError
               noBodyPadding
@@ -170,7 +183,7 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
         y: rect.height / 2,
       };
 
-      position = reactFlowInstance.current.project(rectCenter);
+      position = reactFlowInstance.current.screenToFlowPosition(rectCenter);
     }
 
     const customSpecification = match(type)
@@ -180,7 +193,7 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
         return allSpecifications.find((s) => s.type === type);
       });
     if (!customSpecification) {
-      message.error(`Unknown node type ${type} - ${component}.`);
+      // message.error(`Unknown node type ${type} - ${component}.`);
       return;
     }
 
@@ -215,7 +228,7 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
       })
       .otherwise(() => null);
     if (!newNode) {
-      message.error(`Unknown node type ${type} - ${component}.`);
+      // message.error(`Unknown node type ${type} - ${component}.`);
       return;
     }
 
@@ -231,10 +244,10 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
     if (parsed.success) {
       return graphActions.addNodes([nodeSchema.parse(newNode)]);
     }
-    message.error(parsed.error?.message);
+    // message.error(parsed.error?.message);
   };
 
-  const isValidConnection = (connection: Connection): boolean => {
+  const isValidConnection = (connection: Edge | Connection): boolean => {
     // Disallow self-reference
     if (connection.source === connection.target) {
       return false;
@@ -292,7 +305,7 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
       return;
     }
 
-    const position = reactFlowInstance.current.project({
+    const position = reactFlowInstance.current.screenToFlowPosition({
       x: event.clientX - reactFlowBounds.left,
       y: event.clientY - reactFlowBounds.top,
     }) as XYPosition;
@@ -306,7 +319,7 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
         const jsonData = JSON.parse(nodeData);
         graphActions.addNodes([nodeSchema.parse({ ...jsonData, position })]);
       } catch (err) {
-        notification.error({ message: 'Failed to create a node' });
+        // notification.error({ message: 'Failed to create a node' });
         console.error(err);
       }
 
@@ -371,7 +384,10 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
             }}
           >
             <Tooltip placement='right' title='Components'>
-              <Button icon={<LeftOutlined style={{ fontSize: 12 }} />} onClick={() => setComponentsOpened(true)} />
+              <Button
+                startIcon={<ArrowBackIcon style={{ fontSize: 12 }} />}
+                onClick={() => setComponentsOpened(true)}
+              />
             </Tooltip>
           </div>
         )}
@@ -406,24 +422,10 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
                 const selectedEdges = edges.filter((e) => e.selected);
 
                 if (selectedNodes.length > 0) {
-                  const length = selectedNodes.length;
-                  const text = length > 1 ? 'nodes' : 'node';
-                  Modal.confirm({
-                    icon: null,
-                    title: `Delete ${text}`,
-                    content: (
-                      <Typography.Text>
-                        Are you sure you want to delete {length > 1 ? `${length} ${text}` : text}?
-                      </Typography.Text>
-                    ),
-                    okButtonProps: { danger: true },
-                    onOk: () => {
-                      if (selectedEdges.length > 0) {
-                        graphActions.removeEdges(selectedEdges.map((e) => e.id));
-                      }
-                      graphActions.removeNodes(selectedNodes.map((n) => n.id));
-                    },
-                  });
+                  if (selectedEdges.length > 0) {
+                    graphActions.removeEdges(selectedEdges.map((e) => e.id));
+                  }
+                  graphActions.removeNodes(selectedNodes.map((n) => n.id));
                 } else if (selectedEdges.length > 0) {
                   graphActions.removeEdges(selectedEdges.map((e) => e.id));
                 }
@@ -450,8 +452,8 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
               snapGrid={[5, 5]}
               minZoom={0.25}
               selectionMode={SelectionMode.Partial}
-              nodeTypes={nodeTypes}
-              edgeTypes={edgeTypes}
+              nodeTypes={nodeTypes as NodeTypes}
+              edgeTypes={edgeTypes as EdgeTypes}
               onDrop={onDrop}
               onDragOver={onDragOver}
               onConnect={onConnect}
@@ -459,7 +461,7 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
               proOptions={reactFlowProOptions}
               nodesConnectable={!disabled}
               nodesDraggable={!disabled}
-              edgesUpdatable={!disabled}
+              edgesReconnectable={!disabled}
               onNodesChange={graphActions.handleNodesChange}
               onEdgesChange={graphActions.handleEdgesChange}
               onNodesDelete={(e) => {
@@ -472,7 +474,7 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
             >
               <Controls showInteractive={false}>
                 <ControlButton onClick={() => graphActions.toggleCompactMode()}>
-                  <CompressOutlined />
+                  <CompressIcon />
                 </ControlButton>
               </Controls>
               <Background color='var(--grl-color-border)' gap={20} />
@@ -483,17 +485,19 @@ export const Graph = forwardRef<GraphRef, GraphProps>(function GraphInner({ reac
           <div className={'grl-dg__aside__menu'}>
             <div className={'grl-dg__aside__menu__heading'}>
               <div className={'grl-dg__aside__menu__heading__text'}>
-                <Typography.Text strong style={{ marginBottom: 0 }}>
+                <Typography variant='body2' fontWeight='bold' style={{ marginBottom: 0 }}>
                   Components
-                </Typography.Text>{' '}
-                <Typography.Text type='secondary' style={{ fontSize: 10, marginLeft: 5 }}>
+                </Typography>{' '}
+                <Typography variant='body2' color='text.secondary' style={{ fontSize: 10, marginLeft: 5 }}>
                   (Drag-and-drop)
-                </Typography.Text>
+                </Typography>
               </div>
               <Button
-                type={'text'}
+                variant='text'
                 size='small'
-                icon={<CloseOutlined style={{ fontSize: 12 }} />}
+                sx={{ p: 0, minWidth: 0 }}
+                disableRipple
+                startIcon={<CloseIcon fontSize='small' />}
                 onClick={() => setComponentsOpened(false)}
               />
             </div>

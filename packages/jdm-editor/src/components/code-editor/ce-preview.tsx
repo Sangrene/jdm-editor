@@ -1,7 +1,7 @@
 import { type Variable } from '@gorules/zen-engine-wasm';
-import { Typography } from 'antd';
+import BugReportIcon from '@mui/icons-material/BugReport';
+import { Typography } from '@mui/material';
 import stringifyPretty from 'json-stringify-pretty-compact';
-import { BugIcon } from 'lucide-react';
 import React, { useMemo } from 'react';
 
 import { isWasmAvailable } from '../../helpers/wasm';
@@ -43,30 +43,42 @@ export const CodeEditorPreview: React.FC<CodeEditorPreviewProps> = ({
 
   return (
     <div>
-      <Typography.Text style={{ fontSize: 12 }}>
-        Live Preview <BugIcon size='1em' opacity={0.5} color='#077D16' />
-      </Typography.Text>
-      <Typography.Text style={{ fontSize: 12, display: 'block' }} type='secondary'>
+      <Typography variant='body2'>
+        Live Preview <BugReportIcon sx={{ fontSize: '1em', opacity: 0.5 }} />
+      </Typography>
+      <Typography variant='body2' color='text.secondary'>
         {preview?.type === 'initial' ? 'Based on simulation data' : 'Based on live calculation'}
-      </Typography.Text>
+      </Typography>
       <div className='grl-ce-preview'>
         {(preview?.type === 'success' || preview?.type === 'initial') && (
           <CodeEditor value={preview.value} disabled noStyle maxRows={3} />
         )}
         {preview?.type === 'none' && (
-          <Typography.Text type='secondary' ellipsis>
+          <Typography
+            variant='body2'
+            color='text.secondary'
+            sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+          >
             {preview.value}
-          </Typography.Text>
+          </Typography>
         )}
         {preview?.type === 'error' && (
-          <Typography.Text type='danger' ellipsis>
+          <Typography
+            variant='body2'
+            color='error.main'
+            sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+          >
             {preview.value}
-          </Typography.Text>
+          </Typography>
         )}
         {!preview && (
-          <Typography.Text type='secondary' ellipsis>
+          <Typography
+            variant='body2'
+            color='text.secondary'
+            sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+          >
             {noPreviewText}
-          </Typography.Text>
+          </Typography>
         )}
       </div>
     </div>

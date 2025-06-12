@@ -1,6 +1,4 @@
-import { theme } from 'antd';
-import type { DragDropManager } from 'dnd-core';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
@@ -17,20 +15,10 @@ import { Table } from './table/table';
 export type DecisionTableProps = {
   id?: string;
   tableHeight: string | number;
-  mountDialogsOnBody?: boolean;
-  manager?: DragDropManager;
 } & DecisionTableContextProps &
   DecisionTableEmptyType;
 
-export const DecisionTable: React.FC<DecisionTableProps> = ({
-  id,
-  tableHeight,
-  mountDialogsOnBody = false,
-  manager,
-  ...props
-}) => {
-  const { token } = theme.useToken();
-
+export const DecisionTable: React.FC<DecisionTableProps> = ({ id, tableHeight, ...props }) => {
   const [_, setMounted] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -38,29 +26,12 @@ export const DecisionTable: React.FC<DecisionTableProps> = ({
     setMounted(true);
   }, []);
 
-  const getContainer = () => ref.current as HTMLElement;
-
-  const dndProps = useMemo(() => {
-    if (manager) {
-      return {
-        manager,
-      };
-    }
-
-    return {
-      backend: HTML5Backend,
-      options: {
-        rootElement: ref.current,
-      },
-    };
-  }, [ref.current, manager]);
-
   return (
-    <div ref={ref} className={'grl-dt'} style={{ background: token.colorBgElevated }}>
+    <div ref={ref} className={'grl-dt'}>
       {ref.current && (
-        <DndProvider {...dndProps}>
+        <DndProvider backend={HTML5Backend}>
           <DecisionTableProvider>
-            <DecisionTableDialogProvider getContainer={mountDialogsOnBody ? undefined : getContainer}>
+            <DecisionTableDialogProvider>
               <DecisionTableCommandBar />
               <Table id={id} maxHeight={tableHeight} />
               <DecisionTableDialogs />
