@@ -1,4 +1,4 @@
-use crate::intellisense::recursive_set::RecursiveGetSet;
+use crate::variable::JsVariable;
 use gloo_utils::format::JsValueSerdeExt;
 use serde_json::Value;
 use std::hash::{DefaultHasher, Hash, Hasher};
@@ -58,6 +58,12 @@ impl JsVariableType {
         Self(vt)
     }
 
+    #[wasm_bindgen(js_name = "fromVariable")]
+    pub fn from_variable(value: &JsVariable) -> Self {
+        let vt = VariableType::from(value.var.to_value());
+        Self(vt)
+    }
+
     fn any() -> Self {
         Self(VariableType::Any)
     }
@@ -100,12 +106,7 @@ impl JsVariableType {
             return Self::any();
         }
 
-        let rc_vt = type_data.remove(0).kind;
-        if Rc::strong_count(&rc_vt) == 1 {
-            return Self(Rc::try_unwrap(rc_vt).unwrap());
-        }
-
-        Self((*rc_vt).clone())
+        Self(type_data.remove(0).kind)
     }
 
     pub fn merge(&self, other: &JsVariableType) -> Self {
@@ -114,7 +115,7 @@ impl JsVariableType {
 
     pub fn set(&mut self, path: &str, value: &JsVariableType) {
         let variable_type = value.0.clone();
-        self.0.set_type(path, variable_type);
+        self.0.dot_insert(path, variable_type);
     }
 
     #[wasm_bindgen(js_name = "setJson")]
@@ -122,11 +123,11 @@ impl JsVariableType {
         let js_value: JsValue = value.into();
         let variable_type = js_value.into_serde::<VariableType>().unwrap();
 
-        self.0.set_type(path, variable_type);
+        self.0.dot_insert(path, variable_type);
     }
 
     pub fn get(&self, path: &str) -> Self {
-        Self(self.0.get_type(path))
+        Self(self.0.dot(path).unwrap_or(VariableType::Any))
     }
 
     pub fn equal(&self, other: &JsVariableType) -> bool {
